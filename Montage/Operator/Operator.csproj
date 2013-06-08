@@ -100,7 +100,7 @@
     <Resource Include="Images\clapperboard.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MontageLib\VideoLib.csproj">
+    <ProjectReference Include="..\VideoLib\VideoLib.csproj">
       <Project>{F54F3A10-472A-421B-895F-EFD5A5086ACA}</Project>
       <Name>VideoLib</Name>
     </ProjectReference>
