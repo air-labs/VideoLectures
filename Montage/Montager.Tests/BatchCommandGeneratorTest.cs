@@ -37,7 +37,7 @@ namespace Montager.Tests
                 AudioSource = new ChunkSource { StartTime = 2000, File = "face", Duration = 1000 }
             };
             var cmds = chunk.CreateCommand().ToList();
-            Assert.AreEqual(2, cmds.Count);
+            Assert.AreEqual(3, cmds.Count);
             Assert.IsInstanceOfType(cmds[0], typeof(ExtractAudioCommand));
             {
                 var c = (ExtractAudioCommand)cmds[0];
@@ -46,13 +46,19 @@ namespace Montager.Tests
                 Assert.AreEqual(2000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
             }
-            Assert.IsInstanceOfType(cmds[1], typeof(SliceVideoAndMixAudioCommand));
+            Assert.IsInstanceOfType(cmds[1], typeof(SliceVideoCommand));
             {
-                var c = (SliceVideoAndMixAudioCommand)cmds[1];
+                var c = (SliceVideoCommand)cmds[1];
                 Assert.AreEqual("screen", c.VideoInput);
-                Assert.AreEqual("audio023.mp3", c.AudioInput);
+                Assert.AreEqual("video023.mp4", c.VideoOutput);
                 Assert.AreEqual(1000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
+            }
+            Assert.IsInstanceOfType(cmds[1], typeof(MixVideoAudioCommand));
+            {
+                var c = (MixVideoAudioCommand)cmds[1];
+                Assert.AreEqual("video023.mp4", c.VideoInput);
+                Assert.AreEqual("audio023.mp3", c.AudioInput);
                 Assert.AreEqual("chunk023.mp4", c.VideoOutput);
             }
 

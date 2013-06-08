@@ -22,6 +22,10 @@ namespace Montager
         public string Info;
         public ChunkSource VideoSource;
         public ChunkSource AudioSource;
+        public string TemporalAudioFile { get { return string.Format("audio{0:D3}.mp3", Id); } }
+        public string TemporalVideoFile { get { return string.Format("video{0:D3}.mp4", Id); } }
+        public string OutputVideoFile { get { return string.Format("chunk{0:D3}.mp4", Id); } }
+
         public override string ToString()
         {
             return "V:" + VideoSource.ToString() + (AudioSource != null ? "A:" + AudioSource.ToString() : "");
@@ -29,32 +33,35 @@ namespace Montager
 
         public IEnumerable<BatchCommand> CreateCommand()
         {
-            var  videoName=string.Format("chunk{0:D3}.mp4", Id);
             if (AudioSource == null)
                 yield return new SliceVideoCommand
                     {
                         VideoInput = VideoSource.File,
                         StartTime = VideoSource.StartTime,
                         Duration = VideoSource.Duration,
-                        VideoOutput = videoName
+                        VideoOutput = OutputVideoFile
                     };
             else
             {
-                var audioname=string.Format("audio{0:D3}.mp3",Id);
-                yield return new ExtractAudioCommand
+               yield return new ExtractAudioCommand
                 {
                     VideoInput=AudioSource.File,
                     StartTime=AudioSource.StartTime,
                     Duration=AudioSource.Duration,
-                    AudioOutput=audioname
+                    AudioOutput=TemporalAudioFile
                 };
-                yield return new SliceVideoAndMixAudioCommand
+               yield return new SliceVideoCommand
+               {
+                   VideoInput = VideoSource.File,
+                   StartTime = VideoSource.StartTime,
+                   Duration = VideoSource.Duration,
+                   VideoOutput = TemporalVideoFile
+               };
+                yield return new MixVideoAudioCommand
                 {
-                    VideoInput=VideoSource.File,
-                    StartTime=VideoSource.StartTime,
-                    Duration=VideoSource.Duration,
-                    AudioInput=audioname,
-                    VideoOutput=videoName
+                    VideoInput=TemporalVideoFile,
+                     AudioInput=TemporalAudioFile,
+                    VideoOutput=OutputVideoFile
                 };
             }
 

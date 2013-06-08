@@ -45,7 +45,7 @@
   <ItemGroup>
     <Compile Include="BatchOperations\BatchCommand.cs" />
     <Compile Include="BatchOperations\FFMPEGCommands.cs" />
-    <Compile Include="MontageOperations.cs" />
+    <Compile Include="Chunk.cs" />
     <Compile Include="Montager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

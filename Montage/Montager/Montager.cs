@@ -8,7 +8,18 @@ namespace Montager
 {
     public class Montager
     {
-        
+
+        public static List<BatchCommand> CreateBatch(List<Chunk> chunks)
+        {
+            var result = new List<BatchCommand>();
+            result.AddRange(chunks.SelectMany(z => z.CreateCommand()));
+            result.Add(new ConcatCommand
+            {
+                Result = "output.mp4",
+                Files = chunks.Select(z => z.OutputVideoFile).ToList()
+            });
+            return result;
+        }
 
 
 

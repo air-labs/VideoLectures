@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Diagnostics;
+using System.IO;
 
 namespace Montager
 {
@@ -11,6 +12,8 @@ namespace Montager
     {
         public void ExecuteFFMPEG(BatchCommandContext context, string artuments)
         {
+            Console.WriteLine("FFMPEG " + artuments);
+            Console.WriteLine();
             var process = new Process();
             process.StartInfo.FileName = context.FFMPEGPath;
             process.StartInfo.Arguments = artuments;
@@ -73,31 +76,46 @@ namespace Montager
         }
     }
 
-    public class SliceVideoAndMixAudioCommand : FFMPEGCommand
+    public class MixVideoAudioCommand : FFMPEGCommand
     {
         public string AudioInput;
         public string VideoInput;
         public string VideoOutput;
-        public int StartTime;
-        public int Duration;
+
 
         public override string Caption
         {
-            get { return string.Format("Копирование видео из {0} в {1} ({2}-{3}) с аудио из {4}", VideoInput, VideoOutput, StartTime, StartTime + Duration, AudioInput); }
+            get { return string.Format("Микширование видео из {0} и аудио из {1} в {2}", VideoInput, AudioInput, VideoOutput); }
         }
 
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -i {3} -vcodec copy -acodec copy {4}",
+                string.Format("-i {0} -i {1} -vcodec copy -acodec copy {2}",
                     VideoInput,
-                    MS(StartTime),
-                    MS(Duration),
                     AudioInput,
                     VideoOutput));
         }
 
     }
+
+    public class ConcatCommand : FFMPEGCommand
+    {
+        public List<string> Files = new List<string>();
+        public string Result;
+
+        public override string Caption
+        {
+            get { return "Объединение файлов"; }
+        }
+
+        public override void Execute(BatchCommandContext context)
+        {
+            var temp="ConcatFilesList.txt";
+            File.WriteAllText(temp, Files.Select(z => "file '" + z + "'").Aggregate((a, b) => a + "\n" + b));
+            ExecuteFFMPEG(context, "-f concat -i ConcatFilesList.txt -c copy " + Result);
+            File.Delete(temp);
+        }    }
 
 
 }
