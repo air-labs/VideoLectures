@@ -45,7 +45,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -vn -ac 2 -ar 44100 -ab 320k -f mp3 {3}",
+                string.Format("-i {0} -ss {1} -t {2} -ab 160k -ac 2 -ar 44100 -vn {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
@@ -53,7 +53,7 @@ namespace Montager
         }
     }
 
-    public class SliceVideoCommand : FFMPEGCommand
+    public class ExtractVideoCommand : FFMPEGCommand
     {
         public string VideoInput;
         public string VideoOutput;
@@ -90,8 +90,9 @@ namespace Montager
 
         public override void Execute(BatchCommandContext context)
         {
+
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -i {1} -vcodec copy -acodec copy {2}",
+                string.Format("-i {1} -i {0} -acodec copy -vcodec copy {2}",
                     VideoInput,
                     AudioInput,
                     VideoOutput));
@@ -101,6 +102,7 @@ namespace Montager
 
     public class ConcatCommand : FFMPEGCommand
     {
+        public bool AudioOnly = false;
         public List<string> Files = new List<string>();
         public string Result;
 
@@ -112,10 +114,16 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             var temp="ConcatFilesList.txt";
-            File.WriteAllText(temp, Files.Select(z => "file '" + z + "'").Aggregate((a, b) => a + "\n" + b));
-            ExecuteFFMPEG(context, "-f concat -i ConcatFilesList.txt -c copy " + Result);
+            File.WriteAllText(temp, Files.Select(z => "file '" + z + "'").Aggregate((a, b) => a + "\r\n" + b));
+            var args = "-f concat -i ConcatFilesList.txt ";
+            if (AudioOnly)
+                args += " -acodec copy ";
+            else
+                args += " -c copy ";
+            args+=Result;
+            ExecuteFFMPEG(context, args);
             File.Delete(temp);
-        }    }
+        }    }
 
 
 }

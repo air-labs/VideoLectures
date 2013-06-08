@@ -9,19 +9,110 @@ namespace Montager
     public class Montager
     {
 
-        public static List<BatchCommand> CreateBatch(List<Chunk> chunks)
+
+        #region Второй способ обработки
+        public static IEnumerable<BatchCommand> Processing2(List<Chunk> chunks, string outputFile)
         {
-            var result = new List<BatchCommand>();
-            result.AddRange(chunks.SelectMany(z => z.CreateCommand()));
-            result.Add(new ConcatCommand
-            {
-                Result = "output.mp4",
-                Files = chunks.Select(z => z.OutputVideoFile).ToList()
-            });
-            return result;
+            foreach (var e in chunks.SelectMany(z => Commands2(z))) yield return e;
+            foreach(var e in Aggregation2(chunks,outputFile)) yield return e;
         }
 
+        public static IEnumerable<BatchCommand> Aggregation2(List<Chunk> chunks, string outputFile)
+        {
+            yield return new ConcatCommand
+            {
+                Files = chunks.Select(z => z.TemporalAudioFile).ToList(),
+                Result = "TotalAudio.mp3",
+                AudioOnly = true
 
+            };
+            yield return new ConcatCommand
+            {
+                Files = chunks.Select(z => z.TemporalVideoFile).ToList(),
+                Result = "TotalVideo.mp4",
+            };
+            yield return new MixVideoAudioCommand
+            {
+                AudioInput = "TotalAudio.mp3",
+                VideoInput = "TotalVideo.mp4",
+                VideoOutput = outputFile
+            };
+
+        }
+
+        public static IEnumerable<BatchCommand> Commands2(Chunk chunk)
+        {
+            yield return new ExtractVideoCommand
+            {
+                VideoInput = chunk.VideoSource.File,
+                StartTime = chunk.VideoSource.StartTime,
+                Duration = chunk.VideoSource.Duration,
+                VideoOutput = chunk.TemporalVideoFile
+            };
+            var s = chunk.AudioSource ?? chunk.VideoSource;
+            yield return new ExtractAudioCommand
+            {
+                VideoInput = s.File,
+                StartTime = s.StartTime,
+                Duration = s.Duration,
+                AudioOutput = chunk.TemporalAudioFile
+            };
+        }
+        #endregion
+        #region Первый способ обработки
+        public static IEnumerable<BatchCommand> Processing1(List<Chunk> chunks, string outputFile)
+        {
+            foreach (var e in chunks.SelectMany(z => Commands1(z))) yield return e;
+            foreach(var e in Aggregation1(chunks,outputFile)) yield return e;
+        }
+        public static IEnumerable<BatchCommand> Aggregation1(List<Chunk> chunks, string outputFile)
+        {
+            yield return new ConcatCommand
+              {
+                  Files = chunks.Select(z => z.OutputVideoFile).ToList(),
+                  Result = outputFile
+              };
+        }
+        
+
+        public static IEnumerable<BatchCommand> Commands1(Chunk chunk)
+        {
+            if (chunk.AudioSource == null)
+            {
+                yield return new ExtractVideoCommand
+                    {
+                        VideoInput = chunk.VideoSource.File,
+                        StartTime = chunk.VideoSource.StartTime,
+                        Duration = chunk.VideoSource.Duration,
+                        VideoOutput = chunk.OutputVideoFile
+                    };
+            }
+            else
+            {
+               yield return new ExtractAudioCommand
+                {
+                    VideoInput=chunk.AudioSource.File,
+                    StartTime=chunk.AudioSource.StartTime,
+                    Duration=chunk.AudioSource.Duration,
+                    AudioOutput=chunk.TemporalAudioFile
+                };
+               yield return new ExtractVideoCommand
+               {
+                   VideoInput = chunk.VideoSource.File,
+                   StartTime = chunk.VideoSource.StartTime,
+                   Duration = chunk.VideoSource.Duration,
+                   VideoOutput = chunk.TemporalVideoFile
+               };
+                yield return new MixVideoAudioCommand
+                {
+                    VideoInput=chunk.TemporalVideoFile,
+                    AudioInput=chunk.TemporalAudioFile,
+                    VideoOutput=chunk.OutputVideoFile
+                };
+            }
+
+        }
+        #endregion
 
         public static List<Chunk> CreateChunks(List<MontageCommand> commands, string faceFile, string screenFile)
         {

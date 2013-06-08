@@ -6,3 +6,4 @@ bin
 *.suo
 *.trx
 
+/TestFiles/Work
