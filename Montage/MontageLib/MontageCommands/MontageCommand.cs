@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MontageLib
+namespace VideoLib
 {
     public enum MontageAction
     {
+        Start,
         Face,
-        Display,
+        Screen,
         Commit,
         Delete
 

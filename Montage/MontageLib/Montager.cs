@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MontageLib
+namespace VideoLib
 {
     public class Montager
     {
@@ -39,7 +39,7 @@ namespace MontageLib
                         yield return new SRTCommand(chunkName, startTime, e.Time);
                         chunkNum++;
                         break;
-                    case MontageAction.Display:
+                    case MontageAction.Screen:
                         yield return new SubVideoCommand(faceFile, chunkName + "_TMP1", startTime, e.Time);
                         yield return new ExtractAudioCommand(chunkName + "_TMP", chunkName);
                         yield return new SubVideoCommand(displayFile, chunkName + "TMP2", startTime, e.Time);

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace MontageLib
+namespace VideoLib
 {
     public class FileDeleteCommand : BatchCommand
     {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 
-namespace MontageLib
+namespace VideoLib
 {
     public abstract class FFMPEGCommand : BatchCommand
     {
