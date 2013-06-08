@@ -43,6 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BatchOperations\BatchCommand.cs" />
+    <Compile Include="BatchOperations\FFMPEGCommands.cs" />
     <Compile Include="MontageOperations.cs" />
     <Compile Include="Montager.cs" />
     <Compile Include="Program.cs" />

@@ -43,14 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BatchCommands\BatchCommand.cs" />
-    <Compile Include="BatchCommands\BatchCommandContext.cs" />
-    <Compile Include="BatchCommands\FFMPEGCommands.cs" />
-    <Compile Include="BatchCommands\FileCommand.cs" />
-    <Compile Include="BatchCommands\SRTCommand.cs" />
     <Compile Include="MontageCommands\MontageCommand.cs" />
     <Compile Include="MontageCommands\MontageCommandIO.cs" />
-    <Compile Include="Montager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

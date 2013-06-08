@@ -8,7 +8,7 @@ namespace Montager
 {
     public class Montager
     {
-
+        
 
 
 
@@ -36,6 +36,7 @@ namespace Montager
                     result.Add(new Chunk
                     {
                         Id = currentId++,
+                        Info="Face",
                         VideoSource = new ChunkSource
                            {
                                StartTime = currentTime,
@@ -47,6 +48,7 @@ namespace Montager
                     result.Add(new Chunk
                     {
                         Id = currentId++,
+                        Info="Screen",
                         VideoSource = new ChunkSource
                         {
                             StartTime = currentTime - screenLag,

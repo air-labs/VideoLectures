@@ -19,11 +19,45 @@ namespace Montager
     public class Chunk
     {
         public int Id;
+        public string Info;
         public ChunkSource VideoSource;
         public ChunkSource AudioSource;
         public override string ToString()
         {
             return "V:" + VideoSource.ToString() + (AudioSource != null ? "A:" + AudioSource.ToString() : "");
+        }
+
+        public IEnumerable<BatchCommand> CreateCommand()
+        {
+            var  videoName=string.Format("chunk{0:D3}.mp4", Id);
+            if (AudioSource == null)
+                yield return new SliceVideoCommand
+                    {
+                        VideoInput = VideoSource.File,
+                        StartTime = VideoSource.StartTime,
+                        Duration = VideoSource.Duration,
+                        VideoOutput = videoName
+                    };
+            else
+            {
+                var audioname=string.Format("audio{0:D3}.mp3",Id);
+                yield return new ExtractAudioCommand
+                {
+                    VideoInput=AudioSource.File,
+                    StartTime=AudioSource.StartTime,
+                    Duration=AudioSource.Duration,
+                    AudioOutput=audioname
+                };
+                yield return new SliceVideoAndMixAudioCommand
+                {
+                    VideoInput=VideoSource.File,
+                    StartTime=VideoSource.StartTime,
+                    Duration=VideoSource.Duration,
+                    AudioInput=audioname,
+                    VideoOutput=videoName
+                };
+            }
+
         }
 
     }
