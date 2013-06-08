@@ -14,13 +14,15 @@ namespace Montager
             var process = new Process();
             process.StartInfo.FileName = context.FFMPEGPath;
             process.StartInfo.Arguments = artuments;
+            process.StartInfo.UseShellExecute = false;
             process.Start();
             process.WaitForExit();
+
         }
 
         public string MS(int milliseconds)
         {
-            return string.Format("{0:0.00000}", ((double)milliseconds) / 1000);
+            return (milliseconds / 1000).ToString() + "." + milliseconds % 1000;
         }
     }
 
