@@ -51,9 +51,9 @@ namespace Montager.Tests
                 };
         }
 
-        static void Test(List<MontageCommand> actions, params Action<Chunk,int>[] checks)
+        static void Test(List<MontageCommand> actions, int faceFileSync, params Action<Chunk,int>[] checks)
         {
-            var chunks = Montager.CreateChunks(actions, faceFile, screenFile);
+            var chunks = Montager.CreateChunks(actions, faceFileSync, faceFile, screenFile);
             Assert.AreEqual(checks.Length, chunks.Count);
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -68,45 +68,48 @@ namespace Montager.Tests
         public void SimpleCommit()
         {
             var commands = CreateMontageCommands(
-                1000, MontageAction.Start,
-                2000, MontageAction.Commit,
-                3000, MontageAction.Delete);
+                1000, MontageAction.StartFace,
+                2000, MontageAction.StartScreen,
+                3000, MontageAction.Commit,
+                4000, MontageAction.Delete);
 
-            Test(commands,
-                IsFace(1000));
+            Test(commands,2000,
+                IsFace(3000));
         }
 
         [TestMethod()]
         public void CommitSequence()
         {
             var commands = CreateMontageCommands(
-                1000, MontageAction.Start,
-                2000, MontageAction.Commit,
+                1000, MontageAction.StartFace,
+                2000, MontageAction.StartScreen,
                 3000, MontageAction.Commit,
-                4000, MontageAction.Delete,
-                5000, MontageAction.Commit
+                4000, MontageAction.Commit,
+                5000, MontageAction.Delete,
+                6000, MontageAction.Commit
                 );
 
-            Test(commands,
-                IsFace(1000),
-                IsFace(2000),
-                IsFace(4000));
+            Test(commands,2000,
+                IsFace(3000),
+                IsFace(4000),
+                IsFace(6000));
 
         }
 
         [TestMethod()]
         public void ScreenFace()
         {
-            var commands = CreateMontageCommands(1000, MontageAction.Start
-                , 2000, MontageAction.Commit
-                , 3000, MontageAction.Screen
-                , 4000, MontageAction.Face
+            var commands = CreateMontageCommands(1000, MontageAction.StartFace
+                , 2000, MontageAction.StartScreen
+                , 3000, MontageAction.Commit
+                , 4000, MontageAction.Screen
+                , 5000, MontageAction.Face
                 );
 
-            Test(commands
-                , IsFace(1000)
-                , IsFace(2000)
-                , IsScreen(2000,3000)
+            Test(commands, 2000
+                , IsFace(3000)
+                , IsFace(4000)
+                , IsScreen(2000, 5000)
                 );
 
         }
@@ -114,17 +117,18 @@ namespace Montager.Tests
         [TestMethod()]
         public void ScreenFaceDelete()
         {
-            var commands = CreateMontageCommands(1000, MontageAction.Start
-                , 2000, MontageAction.Screen
-                , 3000, MontageAction.Delete
-                , 4000, MontageAction.Commit
-                , 5000, MontageAction.Face
+            var commands = CreateMontageCommands(1000, MontageAction.StartFace
+                , 2000, MontageAction.StartScreen
+                , 3000, MontageAction.Screen
+                , 4000, MontageAction.Delete
+                , 5000, MontageAction.Commit
+                , 6000, MontageAction.Face
                 );
 
-            Test(commands
-                , IsFace(1000)
-                , IsScreen(2000, 3000)
-                , IsScreen(3000, 4000)
+            Test(commands, 2000
+                , IsFace(3000)
+                , IsScreen(2000, 5000)
+                , IsScreen(3000, 6000)
                 );
 
         }

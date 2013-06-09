@@ -114,19 +114,24 @@ namespace Montager
         }
         #endregion
 
-        public static List<Chunk> CreateChunks(List<MontageCommand> commands, string faceFile, string screenFile)
+        public static List<Chunk> CreateChunks(List<MontageCommand> commands, int faceFileSync, string faceFile, string screenFile)
         {
             var result = new List<Chunk>();
-            if (commands[0].Action != MontageAction.Start)
-                throw new Exception("Expected Start as the first command");
-            int screenLag = commands[0].Time;
-            
-            int currentTime = screenLag;
+            if (commands[0].Action != MontageAction.StartFace)
+                throw new Exception("Expected StartFace as the first command");
+            int faceLogSync = commands[0].Time;
+
+            if (commands[1].Action != MontageAction.StartScreen)
+                throw new Exception("Expected StartScreen as the second command");
+            int screenSync = commands[1].Time;
+
+
+            int currentTime=screenSync;
             bool isFace=true;
             int currentId=0;
 
 
-            for (int i = 1; i < commands.Count; i++)
+            for (int i = 2; i < commands.Count; i++)
             {
                 if (commands[i].Action == MontageAction.Delete)
                 {
@@ -141,7 +146,7 @@ namespace Montager
                         Info="Face",
                         VideoSource = new ChunkSource
                            {
-                               StartTime = currentTime,
+                               StartTime = currentTime - faceLogSync + faceFileSync,
                                Duration = commands[i].Time - currentTime,
                                File = faceFile
                            }
@@ -153,13 +158,13 @@ namespace Montager
                         Info="Screen",
                         VideoSource = new ChunkSource
                         {
-                            StartTime = currentTime - screenLag,
+                            StartTime = currentTime - screenSync,
                             Duration = commands[i].Time - currentTime,
                             File = screenFile
                         },
                         AudioSource = new ChunkSource
                         {
-                            StartTime = currentTime,
+                            StartTime = currentTime - faceLogSync + faceFileSync,
                             Duration = commands[i].Time - currentTime,
                             File = faceFile
                         }

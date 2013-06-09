@@ -7,7 +7,8 @@ namespace VideoLib
 {
     public enum MontageAction
     {
-        Start,
+        StartFace,
+        StartScreen,
         Face,
         Screen,
         Commit,

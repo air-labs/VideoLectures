@@ -64,7 +64,7 @@ namespace Operator
                 case Key.Enter:
                     if (!started)
                     {
-                        action = MontageAction.Start;
+                        action = MontageAction.StartFace;
                         started = false;
                     }
                     else
