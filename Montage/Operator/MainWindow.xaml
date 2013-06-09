@@ -2,7 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Width="600" Height="400">
     <Window.Resources>
         <BitmapImage x:Key="face" UriSource="/Images/face.jpg"/>
         <BitmapImage x:Key="screen" UriSource="/Images/screen.jpg"/>
