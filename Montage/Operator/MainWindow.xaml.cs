@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using VideoLib;
 using System.Windows.Media.Animation;
+using System.IO;
 
 namespace Operator
 {
@@ -36,6 +37,12 @@ namespace Operator
             Log.Start();
             clockTimer.Start();
             KeyDown += new KeyEventHandler(MainWindowKeyDown);
+
+            var documentPath = "help.rtf";
+
+            var fileStream = File.Open(documentPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            TextRange textRange = new TextRange(Sufler.ContentStart, Sufler.ContentEnd);
+            textRange.Load(fileStream, DataFormats.Rtf);
         }
 
        
@@ -60,11 +67,18 @@ namespace Operator
                 case Key.NumPad1: action = MontageAction.Screen; break;
                 case Key.NumPad2: action = MontageAction.Face; break;
                 case Key.NumPad9:
-                    this.Viewer.ScrollToVerticalOffset(Viewer.VerticalOffset - 10);
+                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset - 10);
                     return;
                 case Key.NumPad6:
-                    this.Viewer.ScrollToVerticalOffset(Viewer.VerticalOffset + 10);
+                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset + 10);
                     return;
+                case Key.NumPad8:
+                    this.Viewer.Zoom += 20;
+                    return;
+                case Key.NumPad5:
+                    this.Viewer.Zoom -= 20;
+                    return;
+
                 default:
                     ShowStatus("question");
                     return;
