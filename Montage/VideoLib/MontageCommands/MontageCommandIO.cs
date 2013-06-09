@@ -13,6 +13,7 @@ namespace VideoLib
             using (var writer = new StreamWriter(filename))
             {
                 WriteVersion(writer);
+                WriteFSync(writer);
             }
         }
 
@@ -22,6 +23,14 @@ namespace VideoLib
             writer.WriteLine();
         }
 
+        static void WriteFSync(StreamWriter writer, int sync=0)
+        {
+            writer.WriteLine("Please write the time of sync signal in face video in the next line");
+            writer.WriteLine(sync);
+            writer.WriteLine();
+        }
+
+
         static void WriteCommand(StreamWriter writer, MontageCommand command)
         {
             writer.WriteLine(command.Time.ToString());
@@ -30,12 +39,13 @@ namespace VideoLib
         }
 
 
-        public static void WriteCommands(IEnumerable<MontageCommand> commands, string fileName)
+        public static void WriteCommands(MontageLog log, string fileName)
         {
             using (var writer = new StreamWriter(fileName))
             {
                 WriteVersion(writer);
-                foreach (var e in commands)
+                WriteFSync(writer, log.FaceFileSync);
+                foreach (var e in log.Commands)
                     WriteCommand(writer, e);
             }
         }
@@ -48,13 +58,16 @@ namespace VideoLib
             }
         }
 
-        public static List<MontageCommand> ReadCommands(string filename)
+        public static MontageLog ReadCommands(string filename)
         {
-            var list=new List<MontageCommand>();
+            var log = new MontageLog();
             using (var reader = new StreamReader(filename))
             {
-                reader.ReadLine();
-                reader.ReadLine();
+                reader.ReadLine(); //version
+                reader.ReadLine(); //empty line
+                reader.ReadLine(); //fsync prompt
+                log.FaceFileSync = int.Parse(reader.ReadLine());
+                reader.ReadLine(); //empty line
                 while (true)
                 {
                     var time = reader.ReadLine();
@@ -62,10 +75,10 @@ namespace VideoLib
                     var action = reader.ReadLine();
                     if (action == null) break;
                     reader.ReadLine();
-                    list.Add(new MontageCommand { Time = int.Parse(time), Action = (MontageAction)Enum.Parse(typeof(MontageAction), action) });
+                    log.Commands.Add(new MontageCommand { Time = int.Parse(time), Action = (MontageAction)Enum.Parse(typeof(MontageAction), action) });
                 }
             }
-            return list;
+            return log;
         }
 
     }

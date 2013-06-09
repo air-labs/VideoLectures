@@ -114,8 +114,10 @@ namespace Montager
         }
         #endregion
 
-        public static List<Chunk> CreateChunks(List<MontageCommand> commands, int faceFileSync, string faceFile, string screenFile)
+        public static List<Chunk> CreateChunks(MontageLog log, string faceFile, string screenFile)
         {
+            var commands = log.Commands;
+
             var result = new List<Chunk>();
             if (commands[0].Action != MontageAction.StartFace)
                 throw new Exception("Expected StartFace as the first command");
@@ -146,7 +148,7 @@ namespace Montager
                         Info="Face",
                         VideoSource = new ChunkSource
                            {
-                               StartTime = currentTime - faceLogSync + faceFileSync,
+                               StartTime = currentTime - faceLogSync + log.FaceFileSync,
                                Duration = commands[i].Time - currentTime,
                                File = faceFile
                            }
@@ -164,7 +166,7 @@ namespace Montager
                         },
                         AudioSource = new ChunkSource
                         {
-                            StartTime = currentTime - faceLogSync + faceFileSync,
+                            StartTime = currentTime - faceLogSync + log.FaceFileSync,
                             Duration = commands[i].Time - currentTime,
                             File = faceFile
                         }

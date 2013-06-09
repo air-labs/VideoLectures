@@ -21,4 +21,10 @@ namespace VideoLib
         public int Time;
         public MontageAction Action;
     }
+
+    public class MontageLog
+    {
+        public readonly List<MontageCommand> Commands = new List<MontageCommand>();
+        public int FaceFileSync;
+    }
 }

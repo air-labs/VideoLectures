@@ -14,11 +14,12 @@ namespace Montager.Tests
         static string faceFile="Face";
         static string screenFile="Screen";
 
-        static List<MontageCommand> CreateMontageCommands(params object[] data)
+        static MontageLog CreateMontageLog(int fileSync, params object[] data)
         {
-            var result = new List<MontageCommand>();
+            var result = new MontageLog();
+            result.FaceFileSync = fileSync;
             for (int i = 0; i < data.Length; i += 2)
-                result.Add(new MontageCommand { Time = (int)data[i], Action = (MontageAction)data[i + 1] });
+                result.Commands.Add(new MontageCommand { Time = (int)data[i], Action = (MontageAction)data[i + 1] });
             return result;
 
         }
@@ -51,9 +52,9 @@ namespace Montager.Tests
                 };
         }
 
-        static void Test(List<MontageCommand> actions, int faceFileSync, params Action<Chunk,int>[] checks)
+        static void Test(MontageLog actions, params Action<Chunk,int>[] checks)
         {
-            var chunks = Montager.CreateChunks(actions, faceFileSync, faceFile, screenFile);
+            var chunks = Montager.CreateChunks(actions, faceFile, screenFile);
             Assert.AreEqual(checks.Length, chunks.Count);
             for (int i = 0; i < chunks.Count; i++)
             {
@@ -67,20 +68,20 @@ namespace Montager.Tests
         [TestMethod()]
         public void SimpleCommit()
         {
-            var commands = CreateMontageCommands(
+            var commands = CreateMontageLog(2000,
                 1000, MontageAction.StartFace,
                 2000, MontageAction.StartScreen,
                 3000, MontageAction.Commit,
                 4000, MontageAction.Delete);
 
-            Test(commands,2000,
+            Test(commands,
                 IsFace(3000));
         }
 
         [TestMethod()]
         public void CommitSequence()
         {
-            var commands = CreateMontageCommands(
+            var commands = CreateMontageLog(2000,
                 1000, MontageAction.StartFace,
                 2000, MontageAction.StartScreen,
                 3000, MontageAction.Commit,
@@ -89,7 +90,7 @@ namespace Montager.Tests
                 6000, MontageAction.Commit
                 );
 
-            Test(commands,2000,
+            Test(commands,
                 IsFace(3000),
                 IsFace(4000),
                 IsFace(6000));
@@ -99,14 +100,15 @@ namespace Montager.Tests
         [TestMethod()]
         public void ScreenFace()
         {
-            var commands = CreateMontageCommands(1000, MontageAction.StartFace
+            var commands = CreateMontageLog(2000
+                , 1000, MontageAction.StartFace
                 , 2000, MontageAction.StartScreen
                 , 3000, MontageAction.Commit
                 , 4000, MontageAction.Screen
                 , 5000, MontageAction.Face
                 );
 
-            Test(commands, 2000
+            Test(commands
                 , IsFace(3000)
                 , IsFace(4000)
                 , IsScreen(2000, 5000)
@@ -117,7 +119,8 @@ namespace Montager.Tests
         [TestMethod()]
         public void ScreenFaceDelete()
         {
-            var commands = CreateMontageCommands(1000, MontageAction.StartFace
+            var commands = CreateMontageLog(2000
+                , 1000, MontageAction.StartFace
                 , 2000, MontageAction.StartScreen
                 , 3000, MontageAction.Screen
                 , 4000, MontageAction.Delete
@@ -125,7 +128,7 @@ namespace Montager.Tests
                 , 6000, MontageAction.Face
                 );
 
-            Test(commands, 2000
+            Test(commands
                 , IsFace(3000)
                 , IsScreen(2000, 5000)
                 , IsScreen(3000, 6000)
