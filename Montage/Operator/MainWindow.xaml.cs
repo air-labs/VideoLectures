@@ -24,7 +24,8 @@ namespace Operator
     {
         DispatcherTimer clockTimer;
         string filename = "log";
-    
+        bool started = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -38,8 +39,18 @@ namespace Operator
             clockTimer.Start();
             KeyDown += new KeyEventHandler(MainWindowKeyDown);
 
+            TextHolder.Text = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.";
+
+
             MontageCommandIO.Clear(filename);
       
+        }
+
+
+        void ShowStatus(string statusSource)
+        {
+            Status.SetResourceReference(Image.SourceProperty, statusSource);
+            ((Storyboard)FindResource("statusFadeout")).Begin(Status);
         }
 
         void MainWindowKeyDown(object sender, KeyEventArgs e)
@@ -50,20 +61,39 @@ namespace Operator
 
             switch (e.Key)
             {
-                case Key.D0: action = MontageAction.Start; break;
-                case Key.D1: action = MontageAction.Commit; break;
-                case Key.D2: action = MontageAction.Delete; break;
-                case Key.D3: action = MontageAction.Screen; break;
-                case Key.D4: action = MontageAction.Face; break;
-                default: return;
+                case Key.Enter:
+                    if (!started)
+                    {
+                        action = MontageAction.Start;
+                        started = false;
+                    }
+                    else
+                        action = MontageAction.Commit;
+                    break;
+                case Key.Decimal: action = MontageAction.Delete; break;
+                case Key.NumPad1: action = MontageAction.Screen; break;
+                case Key.NumPad2: action = MontageAction.Face; break;
+                case Key.NumPad9:
+                    this.Viewer.ScrollToVerticalOffset(Viewer.VerticalOffset - 10);
+                    return;
+                case Key.NumPad6:
+                    this.Viewer.ScrollToVerticalOffset(Viewer.VerticalOffset + 10);
+                    return;
+                default:
+                    ShowStatus("question");
+                    return;
             }
+
+
+            
 
             MontageCommandIO.AppendCommand(new MontageCommand { Time = (int)time, Action = action }, filename);
 
             if (action != MontageAction.Delete)
-                Status.SetResourceReference(Image.SourceProperty, "clapper");
+                ShowStatus("clapper");
             else
-                Status.SetResourceReference(Image.SourceProperty, "trash");
+                ShowStatus("trash");
+
 
             if (action == MontageAction.Face)
                 VideoSource.SetResourceReference(Image.SourceProperty, "face");
@@ -73,8 +103,7 @@ namespace Operator
 
             lastCommit = DateTime.Now; 
             
-            var statusFadeout = (Storyboard)FindResource("statusFadeout");
-            statusFadeout.Begin(Status);
+         
 
             var clockStoryboard = (Storyboard)FindResource("clock");
             clockStoryboard.Begin();
