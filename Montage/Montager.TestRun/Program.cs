@@ -10,7 +10,7 @@ namespace Montager.TestRun
     {
         static void Main(string[] args)
         {
-            Environment.CurrentDirectory = "..\\..\\..\\..\\TestFiles\\";
+            Environment.CurrentDirectory = "..\\..\\..\\..\\Video\\TestFiles\\";
             try
             {
                 Directory.CreateDirectory("Work");

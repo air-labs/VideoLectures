@@ -34,7 +34,6 @@ namespace Operator
             clockTimer.Interval = new TimeSpan(0, 0, 1);
             clockTimer.Tick += new EventHandler(TimerTick);
            
-            Log.Start();
             clockTimer.Start();
             KeyDown += new KeyEventHandler(MainWindowKeyDown);
 

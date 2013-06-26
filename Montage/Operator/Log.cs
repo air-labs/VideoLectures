@@ -8,24 +8,27 @@ namespace Operator
 {
     public static class Log
     {
-        public static string FileName = "log";
+        public static string FileName = "log.txt";
         static DateTime recordStartTime;
         static DateTime lastCommitTime;
         
         public static void Start()
         {
-            lastCommitTime=recordStartTime = DateTime.Now;
+            recordStartTime = DateTime.Now;
+            lastCommitTime = DateTime.Now;
             MontageCommandIO.Clear(FileName);
         }
 
         public static void Commit(MontageAction action)
         {
             lastCommitTime = DateTime.Now;
-            MontageCommandIO.AppendCommand(new MontageCommand
+            var time=(int)(lastCommitTime - recordStartTime).TotalMilliseconds;
+            var cmd=new MontageCommand
             {
                 Action = action,
-                Time = (int)(lastCommitTime - recordStartTime).TotalMilliseconds
-            },FileName);
+                Time = time 
+            };
+            MontageCommandIO.AppendCommand(cmd,FileName);
         }
 
         public static TimeSpan TimeFromLastCommit { get { return DateTime.Now - lastCommitTime; } }

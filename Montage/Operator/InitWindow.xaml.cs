@@ -24,6 +24,7 @@ namespace Operator
         public InitWindow()
         {
             InitializeComponent();
+            Log.Start();
             Prompt.Text = "Start camera recording\nMake a funny face and simultaneously press Enter.\nIt is to syncronize camera's video.\nDon't forget to place a sync time from video into a log file later";
             Window.GetWindow(this).KeyDown+=InitKeyDown;
             
@@ -32,6 +33,7 @@ namespace Operator
 
         void InitKeyDown(object sender, KeyEventArgs e)
         {
+            if (e.Key != Key.Enter) return;
             if (InitStage == 0)
             {
                 Log.Commit(VideoLib.MontageAction.StartFace);
