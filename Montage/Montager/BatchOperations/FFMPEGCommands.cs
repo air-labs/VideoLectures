@@ -76,6 +76,7 @@ namespace Montager
         }
     }
 
+
     public class MixVideoAudioCommand : FFMPEGCommand
     {
         public string AudioInput;
@@ -123,7 +124,10 @@ namespace Montager
             args+=Result;
             ExecuteFFMPEG(context, args);
             File.Delete(temp);
-        }    }
+        }
+    }
+
+
 
 
 }

@@ -19,7 +19,7 @@ namespace Montager
     public class Chunk
     {
         public int Id;
-        public string Info;
+        public bool IsFaceChunk;
         public ChunkSource VideoSource;
         public ChunkSource AudioSource;
         public string TemporalAudioFile { get { return string.Format("audio{0:D3}.mp3", Id); } }
