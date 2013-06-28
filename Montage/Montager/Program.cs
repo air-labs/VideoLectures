@@ -18,19 +18,23 @@ namespace Montager
         static void Main(string[] args)
         {
             Environment.CurrentDirectory = "..\\..\\..\\..\\Video\\Lectures";
-            DeletePattern("video*.mp4");
-            DeletePattern("audio*.mp3");
+            DeletePattern("video???.*");
+            DeletePattern("chunk???.*");
+            DeletePattern("audio???.mp3");
             DeletePattern("TotalVideo.mp4");
             DeletePattern("TotalAudio.mp3");
+            DeletePattern("result.*");
 
+            //Привести исходный desk-файл к тому же формату, что и video
+            //ffmpeg -i desktop.avi -vf scale=1280:720 -r 30 -qscale 0 desk1.avi
 
             var log = VideoLib.MontageCommandIO.ReadCommands("log.txt");
-            var chunks=Montager.CreateChunks(log,"face.wmv","desktop.avi");
+            var chunks=Montager.CreateChunks(log,"face.mp4","desk1.mpeg");
             var context = new BatchCommandContext
             {
                 FFMPEGPath = "C:\\ffmpeg\\bin\\ffmpeg.exe"
             };
-            foreach (var e in Montager.Processing2(chunks, "result.mp4"))
+            foreach (var e in Montager.Processing1(chunks, "result.avi"))
             {
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine(e.Caption);
