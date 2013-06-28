@@ -145,7 +145,7 @@ namespace Montager
                     result.Add(new Chunk
                     {
                         Id = currentId++,
-                        Info="Face",
+                        IsFaceChunk=true,
                         VideoSource = new ChunkSource
                            {
                                StartTime = currentTime - faceLogSync + log.FaceFileSync,
@@ -157,7 +157,7 @@ namespace Montager
                     result.Add(new Chunk
                     {
                         Id = currentId++,
-                        Info="Screen",
+                        IsFaceChunk=false,
                         VideoSource = new ChunkSource
                         {
                             StartTime = currentTime - screenSync,

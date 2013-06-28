@@ -33,6 +33,7 @@ namespace Montager.Tests
                     Assert.AreEqual(start, c.VideoSource.StartTime);
                     Assert.AreEqual(dur, c.VideoSource.Duration);
                     Assert.IsNull(c.AudioSource);
+                    Assert.IsTrue(c.IsFaceChunk);
                 };
         }
 
@@ -49,6 +50,8 @@ namespace Montager.Tests
                     Assert.AreEqual(faceFile, c.AudioSource.File);
                     Assert.AreEqual(astart, c.AudioSource.StartTime);
                     Assert.AreEqual(dur, c.AudioSource.Duration);
+
+                    Assert.IsFalse(c.IsFaceChunk);
                 };
         }
 
