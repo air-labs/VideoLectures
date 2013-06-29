@@ -31,16 +31,16 @@ namespace Montager.Tests
             {
                 var c = (ConcatCommand)res[1];
                 Assert.AreEqual(2, c.Files.Count);
-                Assert.AreEqual("video001.mp4", c.Files[0]);
-                Assert.AreEqual("video002.mp4", c.Files[1]);
-                Assert.AreEqual("TotalVideo.mp4", c.Result);
+                Assert.AreEqual("video001.avi", c.Files[0]);
+                Assert.AreEqual("video002.avi", c.Files[1]);
+                Assert.AreEqual("TotalVideo.avi", c.Result);
                 Assert.AreEqual(false, c.AudioOnly);
             }
             Assert.IsInstanceOfType(res[2], typeof(MixVideoAudioCommand));
             {
                 var c = (MixVideoAudioCommand)res[2];
                 Assert.AreEqual("TotalAudio.mp3", c.AudioInput);
-                Assert.AreEqual("TotalVideo.mp4", c.VideoInput);
+                Assert.AreEqual("TotalVideo.avi", c.VideoInput);
                 Assert.AreEqual("output", c.VideoOutput);
             }
         }
@@ -51,6 +51,7 @@ namespace Montager.Tests
         {
             var chunk = new Chunk
             {
+                IsFaceChunk=true,
                 Id = 23,
                 VideoSource = new ChunkSource { StartTime = 1000, File = "face", Duration = 1000 }
               
@@ -58,11 +59,11 @@ namespace Montager.Tests
 
             var cmds = Montager.Commands2(chunk).ToList();
             Assert.AreEqual(2, cmds.Count);
-            Assert.IsInstanceOfType(cmds[0], typeof(ExtractVideoCommand));
+            Assert.IsInstanceOfType(cmds[0], typeof(ExtractFaceVideoCommand));
             {
-                var c = (ExtractVideoCommand)cmds[0];
+                var c = (ExtractFaceVideoCommand)cmds[0];
                 Assert.AreEqual("face", c.VideoInput);
-                Assert.AreEqual("video023.mp4", c.VideoOutput);
+                Assert.AreEqual("video023.avi", c.VideoOutput);
                 Assert.AreEqual(1000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
             }
@@ -82,6 +83,7 @@ namespace Montager.Tests
         {
             var chunk = new Chunk
             {
+                IsFaceChunk=false,
                 Id = 23,
                 VideoSource = new ChunkSource { StartTime = 1000, File = "screen", Duration = 1000 },
                 AudioSource = new ChunkSource { StartTime = 2000, File = "face", Duration = 1000 }
@@ -89,11 +91,11 @@ namespace Montager.Tests
        
             var cmds = Montager.Commands2(chunk).ToList();
             Assert.AreEqual(2, cmds.Count);
-            Assert.IsInstanceOfType(cmds[0], typeof(ExtractVideoCommand));
+            Assert.IsInstanceOfType(cmds[0], typeof(ExtractScreenVideoCommand));
             {
-                var c = (ExtractVideoCommand)cmds[0];
+                var c = (ExtractScreenVideoCommand)cmds[0];
                 Assert.AreEqual("screen", c.VideoInput);
-                Assert.AreEqual("video023.mp4", c.VideoOutput);
+                Assert.AreEqual("video023.avi", c.VideoOutput);
                 Assert.AreEqual(1000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
             }
@@ -111,13 +113,13 @@ namespace Montager.Tests
         [TestMethod()]
         public void FaceTest()
         {
-            var chunk = new Chunk { Id = 23, VideoSource = new ChunkSource { StartTime = 1000, File = "face", Duration = 1000 } };
+            var chunk = new Chunk { IsFaceChunk=true, Id = 23, VideoSource = new ChunkSource { StartTime = 1000, File = "face", Duration = 1000 } };
             var cmds = Montager.Commands1(chunk).ToList();
             Assert.AreEqual(1, cmds.Count);
-            Assert.IsInstanceOfType(cmds[0], typeof(ExtractVideoCommand));
-            var c = (ExtractVideoCommand)cmds[0];
+            Assert.IsInstanceOfType(cmds[0], typeof(ExtractFaceVideoCommand));
+            var c = (ExtractFaceVideoCommand)cmds[0];
             Assert.AreEqual("face", c.VideoInput);
-            Assert.AreEqual("chunk023.mp4", c.VideoOutput);
+            Assert.AreEqual("chunk023.avi", c.VideoOutput);
             Assert.AreEqual(1000, c.StartTime);
             Assert.AreEqual(1000, c.Duration);
         }
@@ -128,6 +130,7 @@ namespace Montager.Tests
         {
             var chunk = new Chunk
             {
+                IsFaceChunk=false,
                 Id = 23,
                 VideoSource = new ChunkSource { StartTime = 1000, File = "screen", Duration = 1000 },
                 AudioSource = new ChunkSource { StartTime = 2000, File = "face", Duration = 1000 }
@@ -142,20 +145,20 @@ namespace Montager.Tests
                 Assert.AreEqual(2000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
             }
-            Assert.IsInstanceOfType(cmds[1], typeof(ExtractVideoCommand));
+            Assert.IsInstanceOfType(cmds[1], typeof(ExtractScreenVideoCommand));
             {
-                var c = (ExtractVideoCommand)cmds[1];
+                var c = (ExtractScreenVideoCommand)cmds[1];
                 Assert.AreEqual("screen", c.VideoInput);
-                Assert.AreEqual("video023.mp4", c.VideoOutput);
+                Assert.AreEqual("video023.avi", c.VideoOutput);
                 Assert.AreEqual(1000, c.StartTime);
                 Assert.AreEqual(1000, c.Duration);
             }
             Assert.IsInstanceOfType(cmds[2], typeof(MixVideoAudioCommand));
             {
                 var c = (MixVideoAudioCommand)cmds[2];
-                Assert.AreEqual("video023.mp4", c.VideoInput);
+                Assert.AreEqual("video023.avi", c.VideoInput);
                 Assert.AreEqual("audio023.mp3", c.AudioInput);
-                Assert.AreEqual("chunk023.mp4", c.VideoOutput);
+                Assert.AreEqual("chunk023.avi", c.VideoOutput);
             }
 
         }

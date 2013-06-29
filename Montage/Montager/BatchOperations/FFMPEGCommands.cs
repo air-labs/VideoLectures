@@ -53,7 +53,7 @@ namespace Montager
         }
     }
 
-    public class ExtractVideoCommand : FFMPEGCommand
+    public abstract class ExtractVideoCommand : FFMPEGCommand
     {
         public string VideoInput;
         public string VideoOutput;
@@ -64,7 +64,24 @@ namespace Montager
         {
             get { return string.Format("Копирование видео из {0} в {1} ({2}-{3})", VideoInput, VideoOutput, StartTime, StartTime + Duration); }
         }
+    }
 
+
+    public class ExtractFaceVideoCommand : ExtractVideoCommand
+    {
+        public override void Execute(BatchCommandContext context)
+        {
+            ExecuteFFMPEG(context,
+                string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
+                    VideoInput,
+                    MS(StartTime),
+                    MS(Duration),
+                    VideoOutput));
+        }
+    }
+
+    public class ExtractScreenVideoCommand : ExtractVideoCommand
+    {
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,

@@ -29,12 +29,12 @@ namespace Montager
             yield return new ConcatCommand
             {
                 Files = chunks.Select(z => z.TemporalVideoFile).ToList(),
-                Result = "TotalVideo.mp4",
+                Result = "TotalVideo.avi",
             };
             yield return new MixVideoAudioCommand
             {
                 AudioInput = "TotalAudio.mp3",
-                VideoInput = "TotalVideo.mp4",
+                VideoInput = "TotalVideo.avi",
                 VideoOutput = outputFile
             };
 
@@ -42,13 +42,22 @@ namespace Montager
 
         public static IEnumerable<BatchCommand> Commands2(Chunk chunk)
         {
-            yield return new ExtractVideoCommand
-            {
-                VideoInput = chunk.VideoSource.File,
-                StartTime = chunk.VideoSource.StartTime,
-                Duration = chunk.VideoSource.Duration,
-                VideoOutput = chunk.TemporalVideoFile
-            };
+            if (chunk.IsFaceChunk)
+                yield return new ExtractFaceVideoCommand
+                {
+                    VideoInput = chunk.VideoSource.File,
+                    StartTime = chunk.VideoSource.StartTime,
+                    Duration = chunk.VideoSource.Duration,
+                    VideoOutput = chunk.TemporalVideoFile
+                };
+            else
+                yield return new ExtractScreenVideoCommand
+                {
+                    VideoInput = chunk.VideoSource.File,
+                    StartTime = chunk.VideoSource.StartTime,
+                    Duration = chunk.VideoSource.Duration,
+                    VideoOutput = chunk.TemporalVideoFile
+                };
             var s = chunk.AudioSource ?? chunk.VideoSource;
             yield return new ExtractAudioCommand
             {
@@ -77,9 +86,9 @@ namespace Montager
 
         public static IEnumerable<BatchCommand> Commands1(Chunk chunk)
         {
-            if (chunk.AudioSource == null)
+            if (chunk.IsFaceChunk)
             {
-                yield return new ExtractVideoCommand
+                yield return new ExtractFaceVideoCommand
                     {
                         VideoInput = chunk.VideoSource.File,
                         StartTime = chunk.VideoSource.StartTime,
@@ -96,7 +105,7 @@ namespace Montager
                     Duration=chunk.AudioSource.Duration,
                     AudioOutput=chunk.TemporalAudioFile
                 };
-               yield return new ExtractVideoCommand
+               yield return new ExtractScreenVideoCommand
                {
                    VideoInput = chunk.VideoSource.File,
                    StartTime = chunk.VideoSource.StartTime,
