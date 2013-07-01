@@ -29,7 +29,7 @@ namespace Montager
             //ffmpeg -i desktop.avi -vf scale=1280:720 -r 30 -qscale 0 desk1.avi
 
             var log = VideoLib.MontageCommandIO.ReadCommands("log.txt");
-            var chunks=Montager.CreateChunks(log,"face.mp4","desk1.mpeg");
+            var chunks=Montager.CreateChunks(log,"face.mp4","desktop.avi");
             var context = new BatchCommandContext
             {
                 FFMPEGPath = "C:\\ffmpeg\\bin\\ffmpeg.exe"

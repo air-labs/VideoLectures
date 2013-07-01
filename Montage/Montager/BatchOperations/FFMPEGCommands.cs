@@ -20,7 +20,14 @@ namespace Montager
             process.StartInfo.UseShellExecute = false;
             process.Start();
             process.WaitForExit();
-
+            if (process.ExitCode != 0)
+            {
+                Console.BackgroundColor = ConsoleColor.Red;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.WriteLine("ERROR");
+                Console.ReadKey();
+            }
+            
         }
 
         public string MS(int milliseconds)
@@ -72,7 +79,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
+                string.Format("-i {0} -ss {1} -t {2} -qscale 5 {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
@@ -85,7 +92,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
+                string.Format("-i {0} -ss {1} -t {2} -vf scale=1280:720 -r 30 -qscale 5 {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
