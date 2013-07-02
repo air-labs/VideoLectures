@@ -37,27 +37,27 @@
                                 Storyboard.TargetProperty="Color"
                                 From="Green"
                                 To="Yellow"
-                                Duration="0:0:5"/>
+                                Duration="0:0:30"/>
                 <ColorAnimation 
                                 Storyboard.TargetName="ClockFore"
                                 Storyboard.TargetProperty="Color"
                                 From="Yellow"
                                 To="Red"
-                                BeginTime="0:0:5"
-                                Duration="0:0:5"/>
+                                BeginTime="0:0:30"
+                                Duration="0:0:30"/>
                 <ColorAnimation
                                 Storyboard.TargetName="ClockFore"
                                 Storyboard.TargetProperty="Color"
                                 From="Red"
                                 To="Black"
-                                BeginTime="0:0:10"
+                                BeginTime="0:01:00"
                                 Duration="0"/>
                 <ColorAnimation
                                 Storyboard.TargetName="ClockBack"
                                 Storyboard.TargetProperty="Color"
                                 From="Transparent"
                                 To="Red"
-                                BeginTime="0:0:10"
+                                BeginTime="0:01:00"
                                 Duration="0:0:0.5"
                                 AutoReverse="True"
                                 RepeatBehavior="Forever"/>
