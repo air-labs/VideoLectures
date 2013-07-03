@@ -12,7 +12,7 @@ namespace Montager
     {
         public void ExecuteFFMPEG(BatchCommandContext context, string artuments)
         {
-            context.batFile.WriteLine("ffmpeg " + context);
+            context.batFile.WriteLine("ffmpeg " + artuments);
             
             /*Console.WriteLine("FFMPEG " + artuments);
             Console.WriteLine();

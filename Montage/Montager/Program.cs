@@ -17,21 +17,30 @@ namespace Montager
 
         static void Main(string[] args)
         {
-            DeletePattern("video???.*");
-            DeletePattern("chunk???.*");
-            DeletePattern("audio???.mp3");
-            DeletePattern("TotalVideo.mp4");
-            DeletePattern("TotalAudio.mp3");
-            DeletePattern("result.*");
+            if (args.Length < 1)
+            {
+                Console.WriteLine("Montager.exe <folder>");
+                Console.ReadKey();
+                return;
+            }
+
+            Environment.CurrentDirectory = args[0];
+
+          
+
+            var batFile = new StreamWriter("MakeChunks.bat");
+            batFile.WriteLine("rmdir /s /q chunks");
+            batFile.WriteLine("mkdir chunks");
+            batFile.WriteLine("cd chunks");
 
             //Привести исходный desk-файл к тому же формату, что и video
             //ffmpeg -i desktop.avi -vf scale=1280:720 -r 30 -qscale 0 desk1.avi
 
             var log = VideoLib.MontageCommandIO.ReadCommands("log.txt");
-            var chunks=Montager.CreateChunks(log,"face.mp4","desktop.avi");
+            var chunks=Montager.CreateChunks(log,"..\\face.mp4","..\\desktop.avi");
             var context = new BatchCommandContext
             {
-                batFile=new StreamWriter("MakeChunks.bat")
+                batFile=batFile
             };
             foreach (var e in Montager.Processing1(chunks, "result.avi"))
             {
