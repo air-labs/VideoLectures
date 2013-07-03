@@ -12,7 +12,9 @@ namespace Montager
     {
         public void ExecuteFFMPEG(BatchCommandContext context, string artuments)
         {
-            Console.WriteLine("FFMPEG " + artuments);
+            context.batFile.WriteLine("ffmpeg " + context);
+            
+            /*Console.WriteLine("FFMPEG " + artuments);
             Console.WriteLine();
             var process = new Process();
             process.StartInfo.FileName = context.FFMPEGPath;
@@ -27,7 +29,7 @@ namespace Montager
                 Console.WriteLine("ERROR");
                 Console.ReadKey();
             }
-            
+            */
         }
 
         public string MS(int milliseconds)

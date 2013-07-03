@@ -11,7 +11,7 @@ namespace Montager
     public class BatchCommandContext
     {
         public string FFMPEGPath;
-        public StreamWriter SRT;
+        public StreamWriter batFile;
     }
 
     public abstract class BatchCommand

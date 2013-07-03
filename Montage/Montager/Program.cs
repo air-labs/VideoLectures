@@ -17,7 +17,6 @@ namespace Montager
 
         static void Main(string[] args)
         {
-            Environment.CurrentDirectory = "..\\..\\..\\..\\Video\\Lectures";
             DeletePattern("video???.*");
             DeletePattern("chunk???.*");
             DeletePattern("audio???.mp3");
@@ -32,7 +31,7 @@ namespace Montager
             var chunks=Montager.CreateChunks(log,"face.mp4","desktop.avi");
             var context = new BatchCommandContext
             {
-                FFMPEGPath = "C:\\ffmpeg\\bin\\ffmpeg.exe"
+                batFile=new StreamWriter("MakeChunks.bat")
             };
             foreach (var e in Montager.Processing1(chunks, "result.avi"))
             {
@@ -41,6 +40,9 @@ namespace Montager
                 Console.ForegroundColor = ConsoleColor.Gray;
                 e.Execute(context);
             }
+            context.batFile.Close();
+
+            File.WriteAllLines("ConcatFilesList.txt", chunks.Select(z => z.OutputVideoFile).ToList());
         }
     }
 }
