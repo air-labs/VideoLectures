@@ -79,7 +79,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -qscale 5 {3}",
+                string.Format("-i {0} -ss {1} -t {2} -vf scale=1024:576 -qscale 5 {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
@@ -92,7 +92,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -vf scale=1280:720 -r 30 -qscale 5 {3}",
+                string.Format("-i {0} -ss {1} -t {2} -vf scale=1024:576 -r 30 -qscale 5 {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
@@ -147,7 +147,7 @@ namespace Montager
                 args += " -c copy ";
             args+=Result;
             ExecuteFFMPEG(context, args);
-            File.Delete(temp);
+            //File.Delete(temp);
         }
     }
 

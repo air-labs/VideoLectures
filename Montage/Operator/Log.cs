@@ -11,11 +11,13 @@ namespace Operator
         public static string FileName = "log.txt";
         static DateTime recordStartTime;
         static DateTime lastCommitTime;
+        static int Id;
         
         public static void Start()
         {
             recordStartTime = DateTime.Now;
             lastCommitTime = DateTime.Now;
+            Id = 0;
             MontageCommandIO.Clear(FileName);
         }
 
@@ -26,9 +28,11 @@ namespace Operator
             var cmd=new MontageCommand
             {
                 Action = action,
-                Time = time 
+                Time = time ,
+                Id = Log.Id,
             };
             MontageCommandIO.AppendCommand(cmd,FileName);
+            Id++;
         }
 
         public static TimeSpan TimeFromLastCommit { get { return DateTime.Now - lastCommitTime; } }

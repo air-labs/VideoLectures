@@ -18,6 +18,7 @@ namespace VideoLib
 
     public class MontageCommand
     {
+        public int Id;
         public int Time;
         public MontageAction Action;
     }

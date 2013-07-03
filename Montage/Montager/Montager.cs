@@ -71,7 +71,7 @@ namespace Montager
         #region Первый способ обработки
         public static IEnumerable<BatchCommand> Processing1(List<Chunk> chunks, string outputFile)
         {
-            foreach (var e in chunks.SelectMany(z => Commands1(z))) yield return e;
+   //         foreach (var e in chunks.SelectMany(z => Commands1(z))) yield return e;
             foreach(var e in Aggregation1(chunks,outputFile)) yield return e;
         }
         public static IEnumerable<BatchCommand> Aggregation1(List<Chunk> chunks, string outputFile)
@@ -153,7 +153,7 @@ namespace Montager
                 if (isFace)
                     result.Add(new Chunk
                     {
-                        Id = currentId++,
+                        Id = commands[i].Id,
                         IsFaceChunk=true,
                         VideoSource = new ChunkSource
                            {
@@ -165,7 +165,7 @@ namespace Montager
                 else
                     result.Add(new Chunk
                     {
-                        Id = currentId++,
+                        Id = commands[i].Id,
                         IsFaceChunk=false,
                         VideoSource = new ChunkSource
                         {

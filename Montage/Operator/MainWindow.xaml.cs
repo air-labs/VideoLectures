@@ -66,10 +66,10 @@ namespace Operator
                 case Key.NumPad1: action = MontageAction.Screen; break;
                 case Key.NumPad2: action = MontageAction.Face; break;
                 case Key.NumPad9:
-                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset - 10);
+                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset - 100);
                     return;
                 case Key.NumPad6:
-                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset + 10);
+                    this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset + 100);
                     return;
                 case Key.NumPad8:
                     this.Viewer.Zoom += 20;

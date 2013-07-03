@@ -19,7 +19,7 @@ namespace VideoLib
 
         static void WriteVersion(StreamWriter writer)
         {
-            writer.WriteLine("Montager v1");
+            writer.WriteLine("Montager v2");
             writer.WriteLine();
         }
 
@@ -33,6 +33,7 @@ namespace VideoLib
 
         static void WriteCommand(StreamWriter writer, MontageCommand command)
         {
+            writer.WriteLine(command.Id.ToString());
             writer.WriteLine(command.Time.ToString());
             writer.WriteLine(command.Action.ToString());
             writer.WriteLine();
@@ -61,21 +62,29 @@ namespace VideoLib
         public static MontageLog ReadCommands(string filename)
         {
             var log = new MontageLog();
+            int version = 0;
+            int id = 0;
             using (var reader = new StreamReader(filename))
             {
-                reader.ReadLine(); //version
+                var ver=reader.ReadLine(); //version
+                if (ver == "Montager v2") version = 1;
+
                 reader.ReadLine(); //empty line
                 reader.ReadLine(); //fsync prompt
                 log.FaceFileSync = int.Parse(reader.ReadLine());
                 reader.ReadLine(); //empty line
                 while (true)
                 {
+                    if (version > 0)
+                        reader.ReadLine(); //ID команды
+
                     var time = reader.ReadLine();
                     if (time == null) break;
                     var action = reader.ReadLine();
                     if (action == null) break;
                     reader.ReadLine();
-                    log.Commands.Add(new MontageCommand { Time = int.Parse(time), Action = (MontageAction)Enum.Parse(typeof(MontageAction), action) });
+                    log.Commands.Add(new MontageCommand { Id = id, Time = int.Parse(time), Action = (MontageAction)Enum.Parse(typeof(MontageAction), action) });
+                    id++;
                 }
             }
             return log;
