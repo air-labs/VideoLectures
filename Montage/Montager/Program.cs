@@ -25,8 +25,12 @@ namespace Montager
             }
 
             Environment.CurrentDirectory = args[0];
+            var log = VideoLib.MontageCommandIO.ReadCommands("log.txt");
+            var chunks = Montager.CreateChunks(log, "..\\face.mp4", "..\\desktop.avi");
+            
 
-          
+            File.WriteAllLines("ConcatFilesList.txt", chunks.Select(z => "file 'chunks\\"+z.OutputVideoFile+"'").ToList());
+        
 
             var batFile = new StreamWriter("MakeChunks.bat");
             batFile.WriteLine("rmdir /s /q chunks");
@@ -36,8 +40,6 @@ namespace Montager
             //Привести исходный desk-файл к тому же формату, что и video
             //ffmpeg -i desktop.avi -vf scale=1280:720 -r 30 -qscale 0 desk1.avi
 
-            var log = VideoLib.MontageCommandIO.ReadCommands("log.txt");
-            var chunks=Montager.CreateChunks(log,"..\\face.mp4","..\\desktop.avi");
             var context = new BatchCommandContext
             {
                 batFile=batFile
@@ -50,8 +52,6 @@ namespace Montager
                 e.Execute(context);
             }
             context.batFile.Close();
-
-            File.WriteAllLines("ConcatFilesList.txt", chunks.Select(z => z.OutputVideoFile).ToList());
         }
     }
 }
