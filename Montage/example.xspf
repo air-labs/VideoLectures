@@ -4,21 +4,9 @@
 	<trackList>
 		<track>
 			<location>file:///C:/Users/yura/Downloads/2%20-%204%20-%2001.04%20-%20The%20Grimm%20Brothers%20Natural%20Symbols%20and%20Psychology%20(1659).mp4</location>
-			<duration>1019148</duration>
-			<extension application="http://www.videolan.org/vlc/playlist/0">
-				<vlc:id>0</vlc:id>
-			</extension>
 		</track>
 		<track>
 			<location>file:///C:/Users/yura/Downloads/2%20-%207%20-%2001.07%20-%20The%20Grimm%20Brothers%20Cinderella%20-%20Girls%20Boys%20Economics%20and%20Fairy%20Godmothers.mp4</location>
-			<duration>542256</duration>
-			<extension application="http://www.videolan.org/vlc/playlist/0">
-				<vlc:id>1</vlc:id>
-			</extension>
 		</track>
 	</trackList>
-	<extension application="http://www.videolan.org/vlc/playlist/0">
-			<vlc:item tid="0"/>
-			<vlc:item tid="1"/>
-	</extension>
 </playlist>
