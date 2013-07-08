@@ -20,6 +20,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Montager.TestRun", "Montage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xspf2list", "xspf2list\xspf2list.csproj", "{B1E64367-D107-4DEB-BCF2-A524D4BFBCD7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler", "Assembler\Assembler.csproj", "{C964E015-1AEC-4F16-A87D-3293048EC3D7}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Video.vsmdi
@@ -93,6 +95,16 @@ Global
 		{B1E64367-D107-4DEB-BCF2-A524D4BFBCD7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B1E64367-D107-4DEB-BCF2-A524D4BFBCD7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B1E64367-D107-4DEB-BCF2-A524D4BFBCD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C964E015-1AEC-4F16-A87D-3293048EC3D7}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

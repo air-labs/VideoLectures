@@ -54,7 +54,7 @@ namespace Montager
         public override void Execute(BatchCommandContext context)
         {
             ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -ab 160k -ac 2 -ar 44100 -vn {3}",
+                string.Format("-i {0} -ss {1} -t {2} -acodec copy -vn {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
@@ -62,12 +62,22 @@ namespace Montager
         }
     }
 
-    public abstract class ExtractVideoCommand : FFMPEGCommand
+    public class ExtractVideoCommand : FFMPEGCommand
     {
         public string VideoInput;
         public string VideoOutput;
         public int StartTime;
         public int Duration;
+
+        public override void Execute(BatchCommandContext context)
+        {
+            ExecuteFFMPEG(context,
+                string.Format("-i {0} -ss {1} -t {2} -acodec copy -vcodec copy {3}",
+                    VideoInput,
+                    MS(StartTime),
+                    MS(Duration),
+                    VideoOutput));
+        }
 
         public override string Caption
         {
@@ -78,28 +88,11 @@ namespace Montager
 
     public class ExtractFaceVideoCommand : ExtractVideoCommand
     {
-        public override void Execute(BatchCommandContext context)
-        {
-            ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
-                    VideoInput,
-                    MS(StartTime),
-                    MS(Duration),
-                    VideoOutput));
-        }
     }
 
     public class ExtractScreenVideoCommand : ExtractVideoCommand
     {
-        public override void Execute(BatchCommandContext context)
-        {
-            ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -vf scale=1280:720 -r 30 -qscale 0 {3}",
-                    VideoInput,
-                    MS(StartTime),
-                    MS(Duration),
-                    VideoOutput));
-        }
+        
     }
 
 
