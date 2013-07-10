@@ -37,19 +37,24 @@ namespace Assembler
                         .Select(z=> new FileInfo(z).Name)
                         .ToArray();
 
-                
-            var bat=new StreamWriter(args[0]+"\\Assemble.bat");
+            var list = new StreamWriter(args[0]+"\\FileList.txt");
+            var bat=new StreamWriter(args[0]+"\\AssembleLow.bat");
             bat.WriteLine("del chunks\\new*.*");
             var concat = "";
             foreach (var e in tracks)
             {
                 var z=new FileInfo(e);
                 bat.WriteLine("ffmpeg -i chunks\\" + z.Name+" -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k chunks\\"+"new-" + z.Name);
+                list.WriteLine("file 'chunks\\" + z.Name + "'");
                 if (concat != "") concat += "|";
                 concat += "chunks\\new-" + z.Name;
             }
             bat.WriteLine("ffmpeg -i \"concat:" + concat + "\" -c copy result.avi");
             bat.Close();
+            list.Close();
+            File.WriteAllText(args[0] + "\\AssemblyHigh.bat",
+                "ffmpeg -f concat -i FileList.txt -qscale 0 result.avi");
+
 
 
         }

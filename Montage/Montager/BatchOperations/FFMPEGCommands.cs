@@ -53,12 +53,24 @@ namespace Montager
 
         public override void Execute(BatchCommandContext context)
         {
-            ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -acodec copy -vn {3}",
-                    VideoInput,
-                    MS(StartTime),
-                    MS(Duration),
-                    AudioOutput));
+            if (context.LD)
+            {
+                ExecuteFFMPEG(context,
+                    string.Format("-i {0} -ss {1} -t {2} -acodec copy -vn {3}",
+                        VideoInput,
+                        MS(StartTime),
+                        MS(Duration),
+                        AudioOutput));
+            }
+            else
+            {
+                ExecuteFFMPEG(context,
+                    string.Format("-i {0} -ss {1} -t {2} -vn -qscale 0 {3}",
+                        VideoInput,
+                        MS(StartTime),
+                        MS(Duration),
+                        AudioOutput));
+            }
         }
     }
 
@@ -71,12 +83,25 @@ namespace Montager
 
         public override void Execute(BatchCommandContext context)
         {
-            ExecuteFFMPEG(context,
-                string.Format("-i {0} -ss {1} -t {2} -acodec copy -vcodec copy {3}",
+            if (context.LD)
+            {
+                ExecuteFFMPEG(context,
+                    string.Format("-i {0} -ss {1} -t {2} -acodec copy -vcodec copy {3}",
+                        VideoInput,
+                        MS(StartTime),
+                        MS(Duration),
+                        VideoOutput));
+            }
+            else
+            {
+
+                ExecuteFFMPEG(context,
+                string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
                     VideoInput,
                     MS(StartTime),
                     MS(Duration),
                     VideoOutput));
+            }
         }
 
         public override string Caption
@@ -110,12 +135,12 @@ namespace Montager
 
         public override void Execute(BatchCommandContext context)
         {
-
             ExecuteFFMPEG(context,
                 string.Format("-i {1} -i {0} -acodec copy -vcodec copy {2}",
                     VideoInput,
                     AudioInput,
                     VideoOutput));
+
         }
 
     }
