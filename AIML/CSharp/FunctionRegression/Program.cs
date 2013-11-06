@@ -14,9 +14,10 @@ namespace FunctionRegression
 {
     static class Program
     {
-        static Func<double, double> Function = z => Math.Sin(5*z*Math.PI)* z * z;
-        static int[] Sizes = new int[] { 1, 30, 1 };
-
+        static int BaseSize = 50;
+        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z)/2+0.5;
+        static int[] Sizes = new int[] { 1, 40, 40, 1 };
+        static int ErrorHistoryCount = 10000;
 
 
 
@@ -29,11 +30,33 @@ namespace FunctionRegression
         static double[][] Answers;
         static ConcurrentQueue<double> Errors = new ConcurrentQueue<double>();
 
+
+        static BackPropagationLearning teacher;
+        static ActivationNetwork network;
+        static Random rnd = new Random();
+
+
+        static void MakeIteration()
+        {
+            var w = GetWeigts();
+  
+            var sampleNumber = rnd.Next(Inputs.Length);
+            for (sampleNumber=0;sampleNumber<Inputs.Length;sampleNumber++)
+            for (int i = 0; i < 5; i++)
+                Errors.Enqueue(teacher.Run(Inputs[sampleNumber], Answers[sampleNumber]));
+        }
+
+        static double[] GetWeigts()
+        {
+            return network.Layers.SelectMany(z => z.Neurons).SelectMany(z => z.Weights).ToArray();
+        }
+
+
         static void Learning()
         {
             Inputs = Enumerable
-                        .Range(0, 20)
-                        .Select(z => z / 20.0)
+                        .Range(0, BaseSize)
+                        .Select(z => z / (double)BaseSize)
                         .Select(z => new[] { z })
                         .ToArray();
             Answers = Inputs
@@ -42,24 +65,31 @@ namespace FunctionRegression
                         .Select(z => new[] { z })
                         .ToArray();
 
-            var network = new ActivationNetwork(
-                new BipolarSigmoidFunction(),
+            network = new ActivationNetwork(
+                new SigmoidFunction(),
                 Sizes[0],
                 Sizes.Skip(1).ToArray()
                 );
 
-            var teacher = new BackPropagationLearning(network);
-            teacher.LearningRate = 1;
-            teacher.Momentum = 0.001;
+            foreach (var l in network.Layers)
+                foreach (var n in l.Neurons)
+                    for (int i = 0; i < n.Weights.Length; i++)
+                        n.Weights[i] = rnd.NextDouble() * 2 - 1;
+
+
+            teacher = new BackPropagationLearning(network);
+            teacher.LearningRate = 2;
+            teacher.Momentum = 0.1;
 
             while(true)
             {
                 var watch = new Stopwatch();
                 watch.Start();
-                while(watch.ElapsedMilliseconds<1000)
+                while(watch.ElapsedMilliseconds<200)
                 {
-                    var currentError=teacher.RunEpoch(Inputs, Answers);
-                    Errors.Enqueue(currentError);
+                    Errors.Enqueue(teacher.RunEpoch(Inputs, Answers));
+                    //MakeIteration();
+
                 }
                 watch.Stop();
 
@@ -75,6 +105,8 @@ namespace FunctionRegression
         static Series computedFunction;
         static Series errorFunction;
 
+        static List<double> errorBuffer = new List<double>();
+
         static void UpdateCharts()
         {
             targetFunction.Points.Clear();
@@ -84,10 +116,14 @@ namespace FunctionRegression
                 targetFunction.Points.Add(new DataPoint(Inputs[i][0], Answers[i][0]));
                 computedFunction.Points.Add(new DataPoint(Inputs[i][0], Outputs[i]));
             }
-
-            double error;
-            while (Errors.TryDequeue(out error))
-                errorFunction.Points.Add(error);
+            
+            errorBuffer.AddRange(Errors);
+            var exceed=errorBuffer.Count-ErrorHistoryCount;
+            if (exceed>0)
+            errorBuffer.RemoveRange(0,exceed);
+            errorFunction.Points.Clear();
+            for (int i = 0; i < errorBuffer.Count; i++)
+                errorFunction.Points.Add(errorBuffer[i]);
 
         }
 
@@ -134,7 +170,17 @@ namespace FunctionRegression
                     },
                     new Chart
                     {
-                        ChartAreas = { new ChartArea() } ,
+                        ChartAreas = 
+                        { 
+                            new ChartArea
+                            {
+                                AxisX =
+                                {
+                                    Minimum=0,
+                                    Maximum=ErrorHistoryCount
+                                }
+                            }
+                        } ,
                         Series= { errorFunction },
                         Dock=DockStyle.Bottom
                     }
