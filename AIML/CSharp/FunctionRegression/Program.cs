@@ -23,8 +23,6 @@ namespace FunctionRegression
 
 
 
-
-
         static double[][] Inputs;
         static double[] Outputs;
         static double[][] Answers;
@@ -78,7 +76,6 @@ namespace FunctionRegression
                 while(watch.ElapsedMilliseconds<200)
                 {
                     Errors.Enqueue(teacher.RunEpoch(Inputs, Answers));
-                 
                 }
                 watch.Stop();
 
