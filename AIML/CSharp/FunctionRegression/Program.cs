@@ -15,7 +15,7 @@ namespace FunctionRegression
     static class Program
     {
         static int BaseSize = 50;
-        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z)/2+0.5;
+        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z);
         static int[] Sizes = new int[] { 1, 40, 40, 1 };
         static int ErrorHistoryCount = 10000;
 
@@ -35,16 +35,6 @@ namespace FunctionRegression
         static ActivationNetwork network;
         static Random rnd = new Random();
 
-
-        static void MakeIteration()
-        {
-            var w = GetWeigts();
-  
-            var sampleNumber = rnd.Next(Inputs.Length);
-            for (sampleNumber=0;sampleNumber<Inputs.Length;sampleNumber++)
-            for (int i = 0; i < 5; i++)
-                Errors.Enqueue(teacher.Run(Inputs[sampleNumber], Answers[sampleNumber]));
-        }
 
         static double[] GetWeigts()
         {
@@ -88,8 +78,7 @@ namespace FunctionRegression
                 while(watch.ElapsedMilliseconds<200)
                 {
                     Errors.Enqueue(teacher.RunEpoch(Inputs, Answers));
-                    //MakeIteration();
-
+                 
                 }
                 watch.Stop();
 
@@ -116,11 +105,13 @@ namespace FunctionRegression
                 targetFunction.Points.Add(new DataPoint(Inputs[i][0], Answers[i][0]));
                 computedFunction.Points.Add(new DataPoint(Inputs[i][0], Outputs[i]));
             }
-            
-            errorBuffer.AddRange(Errors);
+
+            double error;
+            while(Errors.TryDequeue(out error))
+                errorBuffer.Add(error);
             var exceed=errorBuffer.Count-ErrorHistoryCount;
             if (exceed>0)
-            errorBuffer.RemoveRange(0,exceed);
+              errorBuffer.RemoveRange(0,exceed);
             errorFunction.Points.Clear();
             for (int i = 0; i < errorBuffer.Count; i++)
                 errorFunction.Points.Add(errorBuffer[i]);
