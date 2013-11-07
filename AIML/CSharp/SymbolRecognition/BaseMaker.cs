@@ -15,11 +15,11 @@ namespace SymbolRecognition
         public int InputSize { get; private set; }
         public int OutputSize { get; private set; }
 
-        int size = 16;
+        static int size = 16;
         Bitmap bigBitmap;
         Bitmap bitmap;
         Graphics graphics;
-        Font font = new Font("Times new Roman", (int)(size * 0.8));
+        public  Font Font = new Font("Arial", (int)(size * 0.8));
         Random rnd=new Random();
 
         public string Symbols;
@@ -34,7 +34,7 @@ namespace SymbolRecognition
             graphics.TranslateTransform(size / 2, size / 2);
             graphics.RotateTransform(angle);
             graphics.TranslateTransform(-size / 2, -size / 2);
-            graphics.DrawString(symbol.ToString(), font, Brushes.Black, new Rectangle(0, 0, size, size),
+            graphics.DrawString(symbol.ToString(), Font, Brushes.Black, new Rectangle(0, 0, size, size),
                 new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             var inputVector = new double[InputSize];
             int ptr = 0;
@@ -44,13 +44,10 @@ namespace SymbolRecognition
             return inputVector;
         }
 
-        public Tuple<double[], int> GenerateRandom()
+        public double[] GenerateRandom(int index)
         {
-            var index=rnd.Next(OutputSize);
             var angle = rnd.NextDouble() * (MaxAngle - MinAngle) + MinAngle;
-            return new Tuple<double[], int>(
-                GenerateSymbol(Symbols[index], (float)angle),
-                index);
+            return GenerateSymbol(Symbols[index], (float)angle);
         }
 
         public void Generate()

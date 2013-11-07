@@ -9,18 +9,15 @@ using System.Windows.Forms;
 using System.Windows.Forms.DataVisualization.Charting;
 using AForge.Neuro;
 using AForge.Neuro.Learning;
+using Common;
 
 namespace FunctionRegression
 {
     static class Program
     {
         static int BaseSize = 50;
-        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z);
+        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z)*0.5+0.5;
         static int[] Sizes = new int[] { 1, 40, 40, 1 };
-        static int ErrorHistoryCount = 10000;
-
-
-
 
 
         static double[][] Inputs;
@@ -89,9 +86,8 @@ namespace FunctionRegression
         static Form form;
         static Series targetFunction;
         static Series computedFunction;
-        static Series errorFunction;
+        static HistoryChart history;
 
-        static List<double> errorBuffer = new List<double>();
 
         static void UpdateCharts()
         {
@@ -103,16 +99,9 @@ namespace FunctionRegression
                 computedFunction.Points.Add(new DataPoint(Inputs[i][0], Outputs[i]));
             }
 
+            history.AddRange(Errors);
             double error;
-            while(Errors.TryDequeue(out error))
-                errorBuffer.Add(error);
-            var exceed=errorBuffer.Count-ErrorHistoryCount;
-            if (exceed>0)
-              errorBuffer.RemoveRange(0,exceed);
-            errorFunction.Points.Clear();
-            for (int i = 0; i < errorBuffer.Count; i++)
-                errorFunction.Points.Add(errorBuffer[i]);
-
+            while (Errors.TryDequeue(out error));
         }
 
 
@@ -136,12 +125,16 @@ namespace FunctionRegression
                 Color = Color.Green,
                 BorderWidth = 2
             };
-            errorFunction = new Series()
-            {
-                ChartType = SeriesChartType.Line,
-                Color = Color.Blue,
-                BorderWidth = 2,
-            };
+
+            history = new HistoryChart
+                    {
+                        HistoryLength = 1000,
+                        DataFunction =
+                        {
+                            Color = Color.Blue
+                        },
+                        Dock = DockStyle.Bottom
+                    };
 
             form = new Form()
             {
@@ -156,22 +149,7 @@ namespace FunctionRegression
                         Series = { targetFunction, computedFunction },
                         Dock= DockStyle.Top
                     },
-                    new Chart
-                    {
-                        ChartAreas = 
-                        { 
-                            new ChartArea
-                            {
-                                AxisX =
-                                {
-                                    Minimum=0,
-                                    Maximum=ErrorHistoryCount
-                                }
-                            }
-                        } ,
-                        Series= { errorFunction },
-                        Dock=DockStyle.Bottom
-                    }
+                    history
                 }
             };
 
