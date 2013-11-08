@@ -95,7 +95,26 @@ $$
 \begin{enumerate}
  \item[A1] $A\rightarrow(B\rightarrow A)$
  \item[A2] $\left[A\rightarrow(B\rightarrow C)\right]\rightarrow\left[(A\rightarrow B)\rightarrow(A\rightarrow C)\right]$
+ \item[A3] $(\neg A\rightarrow \neg B)\rightarrow\left[(\neg A\rightarrow B)\rightarrow A\right]$
 \end{enumerate}
+\end{frame}
+
+\begin{frame}\frametitle{$X\rightarrow X$?}
+$$
+\begin{array}{l l}
+\uncover<+->{A2 & \left[A\rightarrow(B\rightarrow C)\right]\rightarrow\left[(A\rightarrow B)\rightarrow(A\rightarrow C)\right]}\\
+\uncover<+->{& A=X,\ B=X\rightarrow X,\ C=X}\\
+\uncover<+->{L1 & \left[X\rightarrow((X\rightarrow X)\rightarrow X)\right]\rightarrow\left[(X\rightarrow (X\rightarrow X))\rightarrow(X\rightarrow X)\right]}\\
+\uncover<+->{A1 & A\rightarrow(B\rightarrow A)} \\
+\uncover<+->{& A=X,\ B=X\rightarrow X}\\
+\uncover<+->{L2 & X\rightarrow((X\rightarrow X) \rightarrow X)} \\
+\uncover<+->{MP & (X\rightarrow (X\rightarrow X))\rightarrow(X\rightarrow X)} \\
+\uncover<+->{A1 & A\rightarrow(B\rightarrow A)} \\
+\uncover<+->{& A=X,\ B=X}\\
+\uncover<+->{L3 & X\rightarrow (X\rightarrow X)} \\
+\uncover<+->{MP & X\rightarrow X}
+\end{array}
+$$
 
 \end{frame}
 
@@ -157,8 +176,19 @@ $$
 $$
 \end{frame}
 
+\section{Метод резолюций}
+
+\begin{frame}\frametitle{Правило резолюций}
+{\huge
+$$
+\frac{A\vee B,\ \neg A \vee C}{B \vee C}
+$$
+}
+\end{frame}
 
 
+
+\end{frame}
 
 
 \end{document}
