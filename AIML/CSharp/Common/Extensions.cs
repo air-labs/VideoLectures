@@ -9,7 +9,7 @@ namespace Common
 {
     public static class Extensions
     {
-        public static void ForEachWeight(this ActivationNetwork network, Func<double, double> modifier)
+        public static void ForEachWeight(this Network network, Func<double, double> modifier)
         {     
             foreach (var l in network.Layers)
                 foreach (var n in l.Neurons)

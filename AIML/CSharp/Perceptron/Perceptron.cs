@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge.Neuro;
 using AForge.Neuro.Learning;
+using Common;
 
 namespace Perceptron
 {
@@ -124,13 +125,7 @@ namespace Perceptron
             Application.Run(form);
         }
 
-        class MyForm : Form
-        {
-            public MyForm()
-            {
-                DoubleBuffered = true;
-            }
-        }
+
     }
 }
 
