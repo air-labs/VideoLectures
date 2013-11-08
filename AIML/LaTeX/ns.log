@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.6.24)  5 NOV 2013 14:33
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=latex 2013.6.24)  8 NOV 2013 17:41
 entering extended mode
  %&-line parsing enabled.
-**logic.tex
-(./logic.tex
+**ns.tex
+(./ns.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, usenglishmax, dumylang, noh
 yphenation, farsi, arabic, croatian, bulgarian, ukrainian, russian, czech, slov
@@ -1095,38 +1095,140 @@ Package: xstring 2009/06/05 v1.5c String manipulations (C Tellechea)
 )
 (/usr/share/texmf-texlive/tex/latex/multirow/multirow.sty
 \bigstrutjot=\dimen179
-) (./logic.aux
+)
+(/usr/share/texmf-texlive/tex/generic/xypic/xy.sty
+(/usr/share/texmf-texlive/tex/generic/xypic/xy.tex Bootstrap'ing: catcodes,
+docmode, (/usr/share/texmf-texlive/tex/generic/xypic/xyrecat.tex)
+(/usr/share/texmf-texlive/tex/generic/xypic/xyidioms.tex)
+
+ Xy-pic version 3.7 <1999/02/16>
+ Copyright (c) 1991-1998 by Kristoffer H. Rose <krisrose@ens-lyon.fr>
+ Xy-pic is free software: see the User's Guide for details.
+
+Loading kernel: messages; fonts; allocations: state,
+\X@c=\dimen180
+\Y@c=\dimen181
+\U@c=\dimen182
+\D@c=\dimen183
+\L@c=\dimen184
+\R@c=\dimen185
+\Edge@c=\toks46
+\X@p=\dimen186
+\Y@p=\dimen187
+\U@p=\dimen188
+\D@p=\dimen189
+\L@p=\dimen190
+\R@p=\dimen191
+\Edge@p=\toks47
+\X@origin=\dimen192
+\Y@origin=\dimen193
+\X@xbase=\dimen194
+\Y@xbase=\dimen195
+\X@ybase=\dimen196
+\Y@ybase=\dimen197
+\X@min=\dimen198
+\Y@min=\dimen199
+\X@max=\dimen200
+\Y@max=\dimen201
+\lastobjectbox@=\box54
+\zerodotbox@=\box55
+\almostz@=\dimen202
+ direction,
+\d@X=\dimen203
+\d@Y=\dimen204
+\K@=\count153
+\KK@=\count154
+\Direction=\count155
+\K@dXdY=\dimen205
+\K@dYdX=\dimen206
+\xyread@=\read2
+\xywrite@=\write6
+\csp@=\count156
+\quotPTK@=\dimen207
+
+utility macros; pictures: \xy, positions,
+\swaptoks@@=\toks48
+\connectobjectbox@@=\box56
+ objects,
+\styletoks@=\toks49
+ decorations;
+kernel objects: directionals, circles, text; options; algorithms: directions,
+edges, connections;  Xy-pic loaded)
+Package: xy 1999/02/16 Xy-pic version 3.7
+
+(/usr/share/texmf-texlive/tex/generic/xypic/xyall.tex
+ Xy-pic option: All features v.3.3
+(/usr/share/texmf-texlive/tex/generic/xypic/xycurve.tex
+ Xy-pic option: Curve and Spline extension v.3.7 curve,
+\crv@cnt@=\count157
+\crvpts@=\toks50
+\splinebox@=\box57
+\splineval@=\dimen208
+\splinedepth@=\dimen209
+\splinetol@=\dimen210
+\splinelength@=\dimen211
+ circles,
+\L@=\dimen212
+ loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xyframe.tex
+ Xy-pic option: Frame and Bracket extension v.3.7 loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xycmtip.tex
+ Xy-pic option: Computer Modern tip extension v.3.3
+(/usr/share/texmf-texlive/tex/generic/xypic/xytips.tex
+ Xy-pic option: More Tips extension v.3.3 loaded) loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xyline.tex
+ Xy-pic option: Line styles extension v.3.6
+\xylinethick@=\dimen213
+ loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xyrotate.tex
+ Xy-pic option: Rotate and Scale extension v.3.3 loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xycolor.tex
+ Xy-pic option: Colour extension v.3.3 loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xymatrix.tex
+ Xy-pic option: Matrix feature v.3.4
+\Row=\count158
+\Col=\count159
+\queue@=\toks51
+\queue@@=\toks52
+\qcount@=\count160
+\qcount@@=\count161
+\matrixsize@=\count162
+ loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xyarrow.tex
+ Xy-pic option: Arrow and Path feature v.3.5 path, \ar, loaded)
+(/usr/share/texmf-texlive/tex/generic/xypic/xygraph.tex
+ Xy-pic option: Graph feature v.3.7 loaded) loaded)) (./ns.aux
 LaTeX Font Info:    Try loading font information for T2A+cmss on input line 19.
 
 
 (/usr/share/texmf-texlive/tex/latex/cyrillic/t2acmss.fd
 File: t2acmss.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 ))
-\openout1 = `logic.aux'.
+\openout1 = `ns.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 8.
-LaTeX Font Info:    Try loading font information for T2A+cmr on input line 8.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 9.
+LaTeX Font Info:    ... okay on input line 9.
+LaTeX Font Info:    Checking defaults for T2A/cmr/m/n on input line 9.
+LaTeX Font Info:    Try loading font information for T2A+cmr on input line 9.
 
 (/usr/share/texmf-texlive/tex/latex/cyrillic/t2acmr.fd
 File: t2acmr.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    ... okay on input line 9.
 
 *geometry auto-detecting driver*
 *geometry detected driver: dvips*
@@ -1170,7 +1272,7 @@ driver: dvips
 (1in=72.27pt, 1cm=28.45pt)
 -----------------------
 ABD: EveryShipout initializing macros
-Package hyperref Info: Link coloring OFF on input line 8.
+Package hyperref Info: Link coloring OFF on input line 9.
 
 (/usr/share/texmf-texlive/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
@@ -1178,58 +1280,58 @@ Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 (/usr/share/texmf-texlive/tex/latex/oberdiek/refcount.sty
 Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
-\c@section@level=\count153
+\c@section@level=\count163
 )
-LaTeX Info: Redefining \ref on input line 8.
-LaTeX Info: Redefining \pageref on input line 8.
- (./logic.out)
-(./logic.out)
-\@outlinefile=\write6
-\openout6 = `logic.out'.
+LaTeX Info: Redefining \ref on input line 9.
+LaTeX Info: Redefining \pageref on input line 9.
+ (./ns.out)
+(./ns.out)
+\@outlinefile=\write7
+\openout7 = `ns.out'.
 
-\AtBeginShipoutBox=\box54
+\AtBeginShipoutBox=\box58
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
-(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 8.
+(Font)                  OT1/cmr/m/n --> OT1/cmss/m/n on input line 9.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 8.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 9.
 \symnumbers=\mathgroup6
 \sympureletters=\mathgroup7
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 8.
-LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 8.
+(Font)                  OT1/cmss/m/n --> OT1/cmr/m/n on input line 9.
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 8.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 8.
-LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 8.
+(Font)                  OT1/cmr/bx/n --> OT1/cmss/bx/n on input line 9.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 8.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/m/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 8.
-LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 8.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/m/n on input line 9.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
-(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 8.
+(Font)                  OT1/cmr/m/it --> OT1/cmss/m/it on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 8.
-LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 8.
+(Font)                  OT1/cmr/bx/it --> OT1/cmss/m/it on input line 9.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 8.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 8.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/m/n on input line 9.
 LaTeX Font Info:    Overwriting symbol font `numbers' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 8.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 9.
 LaTeX Font Info:    Overwriting symbol font `pureletters' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 8.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathrm' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 8.
+(Font)                  OT1/cmss/bx/n --> OT1/cmr/bx/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 8.
+(Font)                  OT1/cmss/bx/n --> OT1/cmss/bx/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 8.
+(Font)                  OT1/cmss/m/n --> OT1/cmss/bx/n on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
-(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 8.
+(Font)                  OT1/cmss/m/it --> OT1/cmss/bx/it on input line 9.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 8.
+(Font)                  OT1/cmtt/m/n --> OT1/cmtt/bx/n on input line 9.
 
 (/usr/share/texmf/tex/latex/beamer/base/translator/dicts/translator-basic-dicti
 onary/translator-basic-dictionary-English.dict
@@ -1254,24 +1356,24 @@ Dictionary: translator-numbers-dictionary, Language: English
 (/usr/share/texmf/tex/latex/beamer/base/translator/dicts/translator-theorem-dic
 tionary/translator-theorem-dictionary-English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
-) (./logic.nav)
-LaTeX Font Info:    Try loading font information for U+msa on input line 21.
+) (./ns.nav)
+LaTeX Font Info:    Try loading font information for U+msa on input line 32.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2009/06/22 v3.00 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 21.
+LaTeX Font Info:    Try loading font information for U+msb on input line 32.
 
 (/usr/share/texmf-texlive/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2009/06/22 v3.00 AMS symbols B
-)
+) <xymatrix 3x3 179>
 
 LaTeX Font Warning: Font shape `T2A/cmss/m/n' in size <4> not available
-(Font)              size <5> substituted on input line 21.
+(Font)              size <5> substituted on input line 32.
 
 [1
 
-] [2
+] <xymatrix 3x3 179> <xymatrix 3x3 224> [2
 
 ] [3
 
@@ -1281,143 +1383,29 @@ LaTeX Font Warning: Font shape `T2A/cmss/m/n' in size <4> not available
 
 ] [6
 
-] [7
-
-] [8
-
-] [9
-
 ]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
+\tf@nav=\write8
+\openout8 = `ns.nav'.
 
-[10
+\tf@toc=\write9
+\openout9 = `ns.toc'.
 
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
+\tf@snm=\write10
+\openout10 = `ns.snm'.
 
-[11
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[12
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[13
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[14
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[15
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[16
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[17
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[18
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[19
-
-]
-Overfull \hbox (2.40105pt too wide) detected at line 119
-[]
- []
-
-[20
-
-]
-Overfull \hbox (58.35521pt too wide) in paragraph at lines 144--144
-[][]  
- []
-
-[21
-
-] [22
-
-] [23
-
-] [24
-
-] [25
-
-] [26
-
-] [27
-
-] [28
-
-] [29
-
-] [30
-
-] [31
-
-] [32
-
-] [33
-
-]
-\tf@nav=\write7
-\openout7 = `logic.nav'.
-
-\tf@toc=\write8
-\openout8 = `logic.toc'.
-
-\tf@snm=\write9
-\openout9 = `logic.snm'.
-
- (./logic.aux)
+ (./ns.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 16620 strings out of 493849
- 291884 string characters out of 1152846
- 368102 words of memory out of 3000000
- 19462 multiletter control sequences out of 15000+50000
- 21878 words of font info for 71 fonts, out of 3000000 for 9000
+ 18730 strings out of 493849
+ 316632 string characters out of 1152846
+ 433721 words of memory out of 3000000
+ 21525 multiletter control sequences out of 15000+50000
+ 14694 words of font info for 49 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 49i,14n,53p,996b,561s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 49i,16n,53p,418b,739s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on logic.dvi (33 pages, 332752 bytes).
+Output written on ns.dvi (6 pages, 67224 bytes).

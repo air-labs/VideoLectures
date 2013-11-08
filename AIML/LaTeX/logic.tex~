@@ -29,7 +29,7 @@ $\therefore$ & Все страны Южной Америки -- республи
 $\therefore$ & Все страны Европы -- республики \\
 \end{tabular}
 \begin{flushright}
-\uncover{\includegraphics[width=4cm]{EnglishQueen.jpg}}
+% \uncover{\includegraphics[width=4cm]{EnglishQueen.jpg}}
 \end{flushright}
 \end{frame}
 
@@ -43,7 +43,7 @@ $\therefore$ & Все страны Европы -- республики \\
 $\therefore$ & Все республики -- страны Южной Америки\\
 \end{tabular}
 \begin{flushright}
-\uncover{\includegraphics[width=4cm]{Merkel.jpg}}
+% \uncover{\includegraphics[width=4cm]{Merkel.jpg}}
 \end{flushright}
 \end{frame}
 
@@ -186,9 +186,15 @@ $$
 }
 \end{frame}
 
-
-
+\begin{frame}\frametitle{Правило резолюций}
+Есть список сложных вещей, надо его воссоздать
 \end{frame}
+
+\begin{frame}\frametitle{Метод резолюций}
+ 
+\end{frame}
+
+
 
 
 \end{document}

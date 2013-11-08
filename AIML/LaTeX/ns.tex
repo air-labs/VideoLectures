@@ -1,0 +1,156 @@
+\documentclass[24pt,pdf,hyperref={unicode}]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{xstring}
+\usepackage{multirow}
+\usepackage[all]{xy}
+\begin{document}
+
+\section{Персептрон}
+
+\begin{frame}\frametitle{Персептрон}
+\begin{columns}
+\column{0.5\textwidth}
+$$
+\xymatrix
+{
+x_1 \ar@{->}[rd]^{w_1} \\
+x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
+x_3 \ar@{->}[ru]_{w_3} \\
+}
+$$
+\column{0.5\textwidth}
+$$
+y=f\left(\sum_{i=1}^{n}w_ix_i\right)
+$$\\[1cm]
+$$
+f(x)={\rm sign}(x)
+$$
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Вес активации}
+\begin{columns}
+\column{0.5\textwidth}
+$$
+\xymatrix
+{
+x_1 \ar@{->}[rd]^{w_1} \\
+x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
+x_3 \ar@{->}[ru]_{w_3} \\
+}
+$$
+\column{0.5\textwidth}
+$$
+\xymatrix
+{
+x_1 \ar@{->}[rd]^{w_1} & x_0\equiv 1 \ar@{->}[d]^{w_0}\\
+x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
+x_3 \ar@{->}[ru]_{w_3} \\
+}
+$$
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Реализация конъюнкции}
+\begin{columns}
+\column{0.5\textwidth}
+$$
+\begin{array}{c c | c}
+x_1 & x_2 & x_1\wedge x_2 \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 0 \\
+1 & 0 & 0 \\
+1 & 1 & 1 \\
+\end{array}
+$$
+\column{0.5\textwidth}
+$$
+\left\{
+\begin{array}{l l l l l l}
+ w_0       & < & 0 \\
+ w_0 + w_1 & < & 0 \\
+ w_0 + w_2 & < & 0 \\
+ w_0 + w_1 + w_2 & > & 0 \\
+\end{array}
+\right.
+$$\\[1cm]
+\uncover<2>{
+$$
+\begin{array}{l}
+ w_0 = 3 \\
+ w_1 = 2 \\
+ w_2 = 2 \\
+\end{array}
+$$
+}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}\frametitle{Реализация дизъюнкции}
+\begin{columns}
+\column{0.5\textwidth}
+$$
+\begin{array}{c c | c}
+x_1 & x_2 & x_1\vee x_2 \\
+\hline
+0 & 0 & 0 \\
+0 & 1 & 1 \\
+1 & 0 & 1 \\
+1 & 1 & 1 \\
+\end{array}
+$$
+\column{0.5\textwidth}
+$$
+\left\{
+\begin{array}{l l l l l l}
+ w_0       & < & 0 \\
+ w_0 + w_1 & > & 0 \\
+ w_0 + w_2 & > & 0 \\
+ w_0 + w_1 + w_2 & > & 0 \\
+\end{array}
+\right.
+$$\\[1cm]
+$$
+\begin{array}{l}
+ w_0 = 1 \\
+ w_1 = 2 \\
+ w_2 = 2 \\
+\end{array}
+$$
+\end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Геометрическая интерпретация}
+в PP
+\end{frame}
+
+\begin{frame}\frametitle{Обучение персептрона}
+Тут про советчиков, м.б. тоже в PP
+\end{frame}
+
+\section{Обратное распространение ошибки}
+
+\begin{frame}\frametitle{Обучающая выборка}
+
+\begin{tabular}{l l}
+ $(I_1,\ldots,I_n)$ & входные вектора (штзг\\
+ $(O_1,\ldots,O_n)$ & входные вектора \\
+ $(I_1,\ldots,I_n)$ & входные вектора \\
+\end{tabular}
+
+
+\end{frame}
+
+
+
+
+
+
+
+\end{document}
