@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge.Neuro;
@@ -11,7 +13,7 @@ using Common;
 
 namespace SelfOrganizingNetworks
 {
-    static class Program
+    static class SelfOrganizing
     {
         static Random rnd = new Random(1);
         static double[][] Inputs;
@@ -19,8 +21,8 @@ namespace SelfOrganizingNetworks
         static Form form;
         static DistanceNetwork network;
         static SOMLearning learning;
-        static Timer timer;
         static int iterationCount=500;
+        
 
         static void GenerateInputs(List<double[]> points, double x, double y, int count, double radius)
         {
@@ -42,55 +44,95 @@ namespace SelfOrganizingNetworks
             Inputs = list.ToArray();
         }
 
-        static void Learning(object sender, EventArgs sd)
+        static void Learning()
         {
-            iterationCount--;
-            if (iterationCount < 0 ) timer.Stop();
-            learning.RunEpoch(Inputs);
+            while (!form.Created) ;
+            int drawIterations = 100;
 
-
-            map = new MapElement[NetworkSize, NetworkSize];
-            int number = 0;
-            for (int x = 0; x < NetworkSize; x++)
-                for (int y = 0; y < NetworkSize; y++)
-                {
-                    var neuron = network.Layers[0].Neurons[x * NetworkSize + y];
-                    map[x, y] = new MapElement { X = neuron.Weights[0], Y = neuron.Weights[1], Id= number++ };
-                }
-
-            foreach (var e in Inputs)
+            for (int iterNum = 0; iterNum < iterationCount; iterNum++)
             {
-                network.Compute(e);
-                var winner = network.GetWinner();
-                map[winner / NetworkSize, winner % NetworkSize].IsActive = true;
-            }
+                for (int i=0;i<Inputs.Length;i++)
+                {
+                    //learning.Run(Inputs[i]);
+                    learning.Run(Inputs[rnd.Next(Inputs.Length)]);
 
-            form.BeginInvoke(new Action<bool>(form.Invalidate), true);
+                    if (i % drawIterations == 0)
+                    {
+
+
+                        var map = new MapElement[NetworkSize, NetworkSize];
+                        int number = 0;
+                        for (int x = 0; x < NetworkSize; x++)
+                            for (int y = 0; y < NetworkSize; y++)
+                            {
+                                var neuron = network.Layers[0].Neurons[x * NetworkSize + y];
+                                map[x, y] = new MapElement { X = (float)neuron.Weights[0], Y = (float)neuron.Weights[1], Id = number++ };
+                            }
+
+                        foreach (var e in Inputs)
+                        {
+                            network.Compute(e);
+                            var winner = network.GetWinner();
+                            map[winner / NetworkSize, winner % NetworkSize].IsActive = true;
+                        }
+
+                        var space = new int[W, H];
+                        for (int x=0;x<W;x++)
+                            for (int y = 0; y < H; y++)
+                            {
+                                var xx = (double)x / W;
+                                var yy = (double)y / H;
+                                network.Compute(new[] { xx, yy });
+                                space[x, y] = network.GetWinner();
+                            }
+
+
+                       queue.Enqueue(new DrawingTask { map=map, space=space }); 
+                      //  Thread.Sleep(100);
+                    }
+                }
+            }
         }
 
+        const int W=200;
+        const int H = 200;
+        static ConcurrentQueue<DrawingTask> queue = new ConcurrentQueue<DrawingTask>();
         static MapElement[,] map;
+        static int[,] space;
         static int selected=-1;
         static MyUserControl pointsPanel;
         static MyUserControl networkPanel;
         static MyUserControl networkGraphControl;
+       
+        static Brush GetBrush(MapElement element)
+        {
+            if (element.Id == selected) return Brushes.Red;
+            else if (element.IsActive) return Brushes.Green;
+            else return Brushes.LightGray;
+        }
 
         #region NetworkGraph
         static void DrawGraph(object sender, PaintEventArgs args)
         {
+            if (map == null) return;
             var g = args.Graphics;
             var W = pointsPanel.ClientSize.Width - 20;
             var H = pointsPanel.ClientSize.Height - 20;
-            var unit=1f/W;
+            var unit=2f/W;
             g.Clear(Color.White);
             g.TranslateTransform(10, 10);
-            g.ScaleTransform(W, H);
+            var pen=new Pen(Color.FromArgb(100,Color.LightGray));
             foreach (var e in map)
             {
-                g.FillEllipse(e.IsActive?Brushes.Green:Brushes.LightGray,
-                    (float)e.X-unit,
-                    (float)e.Y-unit,
-                    2*unit,
-                    2*unit);
+                g.FillEllipse(GetBrush(e),
+                    e.X*W-2,
+                    e.Y*W-2,
+                    4,
+                    4);
+                if (e.MapX != NetworkSize - 1)
+                    g.DrawLine(pen, W * e.X, H * e.Y, W * map[e.MapX + 1, e.MapY].X, H * map[e.MapX + 1, e.MapY].Y);
+                if (e.MapY != NetworkSize - 1)
+                    g.DrawLine(pen, W * e.X, H * e.Y, W * map[e.MapX, e.MapY+1].X, H * map[e.MapX, e.MapY+1].Y);
             }
         }
         #endregion
@@ -99,13 +141,26 @@ namespace SelfOrganizingNetworks
         static void DrawPoints(object sender, PaintEventArgs aegs)
         {
             var g = aegs.Graphics;
-            var W = pointsPanel.ClientSize.Width-20 ;
-            var H = pointsPanel.ClientSize.Height - 20;
             g.Clear(Color.White);
-            g.TranslateTransform(10, 10);
+
+            if (space != null && map!=null)
+            {
+                for (int x=0;x<W;x++)
+                    for (int y = 0; y < H; y++)
+                    {
+                        var n = map.Cast<MapElement>().Where(z => z.Id == space[x, y]).FirstOrDefault();
+                        if (n == null) continue;
+                        if (!n.IsActive) continue;
+                        var color = Color.FromArgb(255 - n.MapX * 128 / NetworkSize, 255 - n.MapY * 128 / NetworkSize, 255);
+                        g.FillRectangle(new SolidBrush(color), x, y, 1, 1);
+                    }
+
+            }
+
+
             foreach (var e in Inputs)
             {
-                g.FillEllipse(Brushes.Blue,
+                g.FillEllipse(Brushes.Black,
                     (int)(W* e[0]) - 2,
                     (int)(H * e[1]) - 2,
                     4, 4);
@@ -118,6 +173,7 @@ namespace SelfOrganizingNetworks
                (int)(m.Y * H) - 20,
                40, 40);
 
+            
             
         }
 
@@ -135,24 +191,14 @@ namespace SelfOrganizingNetworks
         {
             if (map == null) return;
             var g = aegs.Graphics;
-            var W = networkPanel.ClientSize.Width - 20;
-            var H = networkPanel.ClientSize.Height - 20;
- 
             for (int x = 0; x < NetworkSize; x++)
                 for (int y = 0; y < NetworkSize; y++)
                 {
                     var p = map[x, y].DisplayLocation = new Point(10+x * W / NetworkSize, 10+y * H / NetworkSize);
 
-                    Brush color=null;
-                    if (selected==map[x,y].Id)
-                        color=Brushes.Red;
-                    else if (map[x,y].IsActive)
-                        color=Brushes.Green;
-                    else
-                        color=Brushes.LightGray;
 
                     g.FillEllipse(
-                        color,
+                        GetBrush(map[x,y]),
                         p.X - 5,
                         p.Y - 5,
                         10, 10);
@@ -185,13 +231,20 @@ namespace SelfOrganizingNetworks
 
         class MapElement
         {
-            public double X;
-            public double Y;
+            public float X;
+            public float Y;
             public int Id;
             public Point DisplayLocation;
             public bool IsActive;
             public int MapX { get { return Id / NetworkSize; } }
             public int MapY { get { return Id % NetworkSize; } }
+
+        }
+
+        class DrawingTask
+        {
+            public int[,] space;
+            public MapElement[,] map;
 
         }
 
@@ -206,8 +259,8 @@ namespace SelfOrganizingNetworks
                 for (int y = 0; y < NetworkSize; y++)
                 {
                     var n = network.Layers[0].Neurons[x * NetworkSize + y];
-                    n.Weights[0] = (double)x / NetworkSize;
-                    n.Weights[1] = (double)y / NetworkSize;
+                    n.Weights[0] = rnd.NextDouble() * 0.2 + 0.4;
+                    n.Weights[1] = rnd.NextDouble() * 0.2 + 0.4;
                 }
             learning = new SOMLearning(network, NetworkSize, NetworkSize);
             learning.LearningRadius = 3;
@@ -221,27 +274,43 @@ namespace SelfOrganizingNetworks
             pointsPanel.Paint += DrawPoints;
             networkPanel = new MyUserControl() { Dock = DockStyle.Fill  };
             networkPanel.Paint += DrawNetwork;
-            networkPanel.MouseMove += MouseMove;
-            pointsPanel.MouseMove += pointsPanel_MouseMove;
             networkGraphControl = new MyUserControl { Dock = DockStyle.Fill  };
+            networkGraphControl.Paint += DrawGraph;
             var table = new TableLayoutPanel() { Dock = DockStyle.Fill, RowCount=2, ColumnCount=2 };
             table.Controls.Add(pointsPanel, 0, 0);
             table.Controls.Add(networkPanel, 0, 1);
             table.Controls.Add(networkGraphControl, 1, 0);
-            table.RowStyles[0].Height = 300;// table.RowStyles[1].Height = table.ColumnStyles[0].Width = table.ColumnStyles[1].Width = 300;
-            
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+            table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+
             form = new Form()
             {
-                Size = new Size(600, 600),
+                ClientSize = new Size(2*W, 2*H),
                 Controls = 
                 {
                    table
                 }
             };
-            timer = new Timer();
-            timer.Tick += Learning;
-            timer.Interval = 200;
+
+            var timer = new System.Windows.Forms.Timer();
+            timer.Tick += (s, a) =>
+                {
+                    DrawingTask task;
+                    if (queue.TryDequeue(out task))
+                    {
+                        map = task.map;
+                        space = task.space;
+                        form.Invalidate(true);
+                    }
+                };
+            timer.Interval = 10;
             timer.Start();
+
+
+            new Action(Learning).BeginInvoke(null, null);
             Application.Run(form);
 
         }
