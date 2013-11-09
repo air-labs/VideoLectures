@@ -17,7 +17,7 @@ namespace SelfOrganizingNetworks
     {
         static Random rnd = new Random(1);
         static double[][] Inputs;
-        static int NetworkSize = 15;
+        static int NetworkSize = 10;
         static Form form;
         static DistanceNetwork network;
         static SOMLearning learning;
@@ -88,7 +88,6 @@ namespace SelfOrganizingNetworks
 
 
                        queue.Enqueue(new DrawingTask { map=map, space=space }); 
-                      //  Thread.Sleep(100);
                     }
                 }
             }
@@ -145,14 +144,15 @@ namespace SelfOrganizingNetworks
 
             if (space != null && map!=null)
             {
-                for (int x=0;x<W;x++)
-                    for (int y = 0; y < H; y++)
+                int Lag = 3;
+                for (int x=0;x<W;x+=Lag)
+                    for (int y = 0; y < H; y+=Lag)
                     {
                         var n = map.Cast<MapElement>().Where(z => z.Id == space[x, y]).FirstOrDefault();
                         if (n == null) continue;
                         if (!n.IsActive) continue;
                         var color = Color.FromArgb(255 - n.MapX * 128 / NetworkSize, 255 - n.MapY * 128 / NetworkSize, 255);
-                        g.FillRectangle(new SolidBrush(color), x, y, 1, 1);
+                        g.FillRectangle(new SolidBrush(color), x, y, Lag, Lag);
                     }
 
             }
