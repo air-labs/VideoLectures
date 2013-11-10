@@ -15,15 +15,14 @@ namespace SelfOrganizingNetworks
 {
     static class SelfOrganizing
     {
-        static Random rnd = new Random(1);
         static double[][] Inputs;
-        static int NetworkSize = 10;
-        static Form form;
+        static Random rnd = new Random(1);
+        static int NetworkSize = 5;
         static DistanceNetwork network;
         static SOMLearning learning;
-        static int iterationCount=500;
-        
+        static int iterationsBetweenDrawing=100;
 
+        #region Обучение сети 
         static void GenerateInputs(List<double[]> points, double x, double y, int count, double radius)
         {
             for (int i = 0; i < count; i++)
@@ -46,63 +45,55 @@ namespace SelfOrganizingNetworks
 
         static void Learning()
         {
-            while (!form.Created) ;
-            int drawIterations = 100;
+            for (int i = 0; i<iterationsBetweenDrawing ; i++)
+                learning.Run(Inputs[rnd.Next(Inputs.Length)]);
+            
+            
+             map = new MapElement[NetworkSize, NetworkSize];
+             int number = 0;
+             for (int x = 0; x < NetworkSize; x++)
+                 for (int y = 0; y < NetworkSize; y++)
+                 {
+                     var neuron = network.Layers[0].Neurons[x * NetworkSize + y];
+                     map[x, y] = new MapElement { X = (float)neuron.Weights[0], Y = (float)neuron.Weights[1], Id = number++ };
+                 }
 
-            for (int iterNum = 0; iterNum < iterationCount; iterNum++)
-            {
-                for (int i=0;i<Inputs.Length;i++)
-                {
-                    //learning.Run(Inputs[i]);
-                    learning.Run(Inputs[rnd.Next(Inputs.Length)]);
-
-                    if (i % drawIterations == 0)
-                    {
-
-
-                        var map = new MapElement[NetworkSize, NetworkSize];
-                        int number = 0;
-                        for (int x = 0; x < NetworkSize; x++)
-                            for (int y = 0; y < NetworkSize; y++)
-                            {
-                                var neuron = network.Layers[0].Neurons[x * NetworkSize + y];
-                                map[x, y] = new MapElement { X = (float)neuron.Weights[0], Y = (float)neuron.Weights[1], Id = number++ };
-                            }
-
-                        foreach (var e in Inputs)
-                        {
-                            network.Compute(e);
-                            var winner = network.GetWinner();
-                            map[winner / NetworkSize, winner % NetworkSize].IsActive = true;
-                        }
-
-                        var space = new int[W, H];
-                        for (int x=0;x<W;x++)
-                            for (int y = 0; y < H; y++)
-                            {
-                                var xx = (double)x / W;
-                                var yy = (double)y / H;
-                                network.Compute(new[] { xx, yy });
-                                space[x, y] = network.GetWinner();
-                            }
-
-
-                       queue.Enqueue(new DrawingTask { map=map, space=space }); 
-                    }
-                }
-            }
+             foreach (var e in Inputs)
+             {
+                 network.Compute(e);
+                 var winner = network.GetWinner();
+                 map[winner / NetworkSize, winner % NetworkSize].IsActive = true;
+             }
         }
 
-        const int W=200;
-        const int H = 200;
-        static ConcurrentQueue<DrawingTask> queue = new ConcurrentQueue<DrawingTask>();
+
+                    //var space = new int[W, H];
+                    //for (int x = 0; x < W; x++)
+                    //    for (int y = 0; y < H; y++)
+                    //    {
+                    //        var xx = (double)x / W;
+                    //        var yy = (double)y / H;
+                    //        network.Compute(new[] { xx, yy });
+                    //        space[x, y] = network.GetWinner();
+                    //    }
+
+    
+    
+        #endregion
+
+        static Form form; 
         static MapElement[,] map;
-        static int[,] space;
-        static int selected=-1;
         static MyUserControl pointsPanel;
         static MyUserControl networkPanel;
         static MyUserControl networkGraphControl;
-        static bool paused;
+        static int[,] space;
+        static Bitmap spaceBitmap;
+        static int selected = -1;
+       
+        
+        #region Рисование
+
+       
 
         static Brush GetBrush(MapElement element)
         {
@@ -111,7 +102,7 @@ namespace SelfOrganizingNetworks
             else return Brushes.LightGray;
         }
 
-        #region NetworkGraph
+       
         static void DrawGraph(object sender, PaintEventArgs args)
         {
             if (map == null) return;
@@ -134,50 +125,120 @@ namespace SelfOrganizingNetworks
                     g.DrawLine(pen, W * e.X, H * e.Y, W * map[e.MapX, e.MapY+1].X, H * map[e.MapX, e.MapY+1].Y);
             }
         }
-        #endregion
-        #region Points panel
 
         static void DrawPoints(object sender, PaintEventArgs aegs)
         {
             var g = aegs.Graphics;
             g.Clear(Color.White);
 
-            if (paused && space != null && map!=null)
-            {
-                int Lag = 3;
-                for (int x=0;x<W;x+=Lag)
-                    for (int y = 0; y < H; y+=Lag)
-                    {
-                        var n = map.Cast<MapElement>().Where(z => z.Id == space[x, y]).FirstOrDefault();
-                        if (n == null) continue;
-                        if (!n.IsActive) continue;
-                        var color = Color.FromArgb(255 - n.MapX * 128 / NetworkSize, 255 - n.MapY * 128 / NetworkSize, 255);
-                        g.FillRectangle(new SolidBrush(color), x, y, Lag, Lag);
-                    }
+            var W = pointsPanel.ClientSize.Width;
+            var H = pointsPanel.ClientSize.Height;
 
-            }
+            if (spaceBitmap != null)
+                g.DrawImage(spaceBitmap, 0, 0);
+
+            
 
 
             foreach (var e in Inputs)
             {
                 g.FillEllipse(Brushes.Black,
-                    (int)(W* e[0]) - 2,
+                    (int)(W * e[0]) - 2,
                     (int)(H * e[1]) - 2,
                     4, 4);
             }
-            if (map == null) return;
-            if (selected == -1) return;
-            var m = map.Cast<MapElement>().Where(z => z.Id == selected).First();
-            g.DrawEllipse(Pens.Red,
-               (int)(m.X * W) - 20,
-               (int)(m.Y * H) - 20,
-               40, 40);
 
-            
-            
+            if (space != null && selected!=-1)
+            {
+                for (int x = 0; x < W; x++)
+                    for (int y = 0; y < H; y++)
+                        if (space[x, y] == selected)
+                            g.FillRectangle(Brushes.Red, x, y, 1, 1);
+
+            }
+
         }
 
-        static void pointsPanel_MouseMove(object sender, MouseEventArgs e)
+        static void DrawConnection(Graphics g, MapElement n1, MapElement n2)
+        {
+            if (!n1.IsActive || !n2.IsActive) return;
+            var distance = Math.Sqrt(Math.Pow(n1.X - n2.X, 2) + Math.Pow(n1.Y - n2.Y, 2));
+            distance = Math.Min(1, distance * 10);
+            var Pen = new Pen(Color.FromArgb((int)(distance * 128 + 120), Color.Green),2);
+            g.DrawLine(Pen, n1.DisplayLocation, n2.DisplayLocation);
+        }
+
+        static void DrawNetwork(object sender, PaintEventArgs aegs)
+        {
+            if (map == null) return;
+            var W = pointsPanel.ClientSize.Width - 20;
+            var H = pointsPanel.ClientSize.Height - 20;
+            
+            var g = aegs.Graphics;
+            for (int x = 0; x < NetworkSize; x++)
+                for (int y = 0; y < NetworkSize; y++)
+                    map[x, y].DisplayLocation = new Point(10 + x * W / NetworkSize, 10 + y * H / NetworkSize);
+
+            for (int x = 0; x < NetworkSize; x++)
+                for (int y = 0; y < NetworkSize; y++)
+                {
+                    if (x != NetworkSize - 1) DrawConnection(g, map[x, y], map[x + 1, y]);
+                    if (y != NetworkSize - 1) DrawConnection(g, map[x, y], map[x, y + 1]);
+                    g.FillEllipse(
+                       GetBrush(map[x, y]),
+                       map[x, y].DisplayLocation.X - 5,
+                       map[x, y].DisplayLocation.Y - 5,
+                       10, 10);
+                }
+        }
+        #endregion
+        #region Исследование после обучения
+
+        static System.Windows.Forms.Timer timer;
+        static bool paused;
+
+        static void PauseResume(object sender, EventArgs e)
+        {
+            paused = !paused;
+            if (paused)
+            {
+                timer.Stop();
+                MakeSpace();
+                pointsPanel.MouseMove += PointMouseMove;
+                networkPanel.MouseMove += NetworkMouseMove;
+            }
+            else
+            {
+                selected = -1;
+                spaceBitmap = null;
+                timer.Start();
+            }
+            form.Invalidate(true);
+        }
+
+
+        static void MakeSpace()
+        {
+            var Colors = new[] { Color.Orange, Color.LightGray, Color.LightGreen, Color.LightBlue, Color.LightYellow, Color.LightCoral, Color.LightCyan };
+
+            space = new int[pointsPanel.ClientSize.Width, pointsPanel.ClientSize.Height];
+            spaceBitmap = new Bitmap(pointsPanel.ClientSize.Width,pointsPanel.ClientSize.Height);
+            for (int x=0;x<spaceBitmap.Width;x++)
+                for (int y = 0; y < spaceBitmap.Height; y++)
+                {
+                    network.Compute(new double[] { (double)x / spaceBitmap.Width, (double)y / spaceBitmap.Height });
+                    var winner = network.GetWinner();
+                    space[x, y] = winner;
+                    var winnerX = winner / NetworkSize;
+                    var winnerY = winner % NetworkSize;
+                    var winnerColor = Colors[(2 * winnerX + 3 * winnerY) % Colors.Length];
+                    spaceBitmap.SetPixel(x, y, winnerColor);
+                }
+
+        }
+
+
+        static void PointMouseMove(object sender, MouseEventArgs e)
         {
             var x = (double)(e.X - 10) / pointsPanel.Width;
             var y = (double)(e.Y - 10) / pointsPanel.Height;
@@ -185,43 +246,9 @@ namespace SelfOrganizingNetworks
             selected = network.GetWinner();
             form.Invalidate(true);
         }
-        #endregion
-        #region Network panel
+       
 
-        static void DrawConnection(Graphics g, MapElement n1, MapElement n2)
-        {
-            if (!n1.IsActive || !n2.IsActive) return;
-            var distance = Math.Sqrt(Math.Pow(n1.X - n2.X, 2)+Math.Pow(n1.Y - n2.Y, 2));
-            distance = Math.Min(1, distance * 10);
-            var Pen = new Pen(new SolidBrush(Color.FromArgb(255 - (int)(distance * 255), 255, 255 - (int)(distance * 255))),5);
-            g.DrawLine(Pen,n1.DisplayLocation, n2.DisplayLocation);
-        }
-
-        static void DrawNetwork(object sender, PaintEventArgs aegs)
-        {
-            if (map == null) return;
-            var g = aegs.Graphics;
-            for (int x = 0; x < NetworkSize; x++)
-                for (int y = 0; y < NetworkSize; y++)
-                   map[x, y].DisplayLocation = new Point(10 + x * W / NetworkSize, 10 + y * H / NetworkSize);
-
-
-                   
-               
-            for (int x = 0; x < NetworkSize; x++)
-                for (int y = 0; y < NetworkSize; y++)
-                {
-                    if (x != NetworkSize - 1) DrawConnection(g, map[x, y], map[x + 1, y]);
-                    if (y != NetworkSize - 1) DrawConnection(g, map[x, y], map[x, y + 1]);
-                     g.FillEllipse(
-                        GetBrush(map[x, y]),
-                        map[x,y].DisplayLocation.X - 5,
-                        map[x,y].DisplayLocation.Y - 5,
-                        10, 10);
-                }
-        }
-
-        static void MouseMove(object sender, MouseEventArgs e)
+        static void NetworkMouseMove(object sender, MouseEventArgs e)
         {
             if (map == null) return;
             foreach (var m in map)
@@ -232,7 +259,7 @@ namespace SelfOrganizingNetworks
                     {
                         selected = m.Id;
                         form.Invalidate(true);
-                     }
+                    }
                     return;
                 }
             }
@@ -257,12 +284,6 @@ namespace SelfOrganizingNetworks
 
         }
 
-        class DrawingTask
-        {
-            public int[,] space;
-            public MapElement[,] map;
-
-        }
 
         /// <summary>
         /// The main entry point for the application.
@@ -283,32 +304,23 @@ namespace SelfOrganizingNetworks
             learning.LearningRate = 0.2;
 
 
-
             GenerateInputs();
-            var thread = new Thread(Learning) { IsBackground = true };
-
+         
             pointsPanel = new MyUserControl() { Dock= DockStyle.Fill};
             pointsPanel.Paint += DrawPoints;
             networkPanel = new MyUserControl() { Dock = DockStyle.Fill  };
             networkPanel.Paint += DrawNetwork;
             networkGraphControl = new MyUserControl { Dock = DockStyle.Fill  };
             networkGraphControl.Paint += DrawGraph;
-            var pause = new Button() { Text = "Pause" };
-            pause.Click += (s, a) =>
-                {
-                    if (!paused)
-                        thread.Suspend();
-                    else
-                        thread.Resume();
-                    form.Invalidate(true);
-                    paused = !paused;
-                };
+            var pauseButton = new Button { Text = "Pause/Resume" };
+            pauseButton.Click+=PauseResume;
 
             var table = new TableLayoutPanel() { Dock = DockStyle.Fill, RowCount=2, ColumnCount=2 };
             table.Controls.Add(pointsPanel, 0, 0);
             table.Controls.Add(networkPanel, 0, 1);
             table.Controls.Add(networkGraphControl, 1, 0);
-            table.Controls.Add(pause, 1, 1);
+            table.Controls.Add(pauseButton,1,1);
+           // table.Controls.Add(pause, 1, 1);
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
@@ -320,28 +332,18 @@ namespace SelfOrganizingNetworks
 
             form = new Form()
             {
-                ClientSize = new Size(2*W, 2*H),
+                ClientSize = new Size(600, 600),
                 Controls = 
                 {
                    table
                 }
             };
 
-            var timer = new System.Windows.Forms.Timer();
-            timer.Tick += (s, a) =>
-                {
-                    DrawingTask task;
-                    if (queue.TryDequeue(out task))
-                    {
-                        map = task.map;
-                        space = task.space;
-                        form.Invalidate(true);
-                    }
-                };
-            timer.Interval = 10;
+            timer = new System.Windows.Forms.Timer();
+            timer.Tick += (sender, args) => { Learning(); form.Invalidate(true); };
+            timer.Interval = 100;
             timer.Start();
 
-            thread.Start();
 
             Application.Run(form);
 
