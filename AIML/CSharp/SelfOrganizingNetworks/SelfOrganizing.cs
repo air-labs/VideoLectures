@@ -102,7 +102,8 @@ namespace SelfOrganizingNetworks
         static MyUserControl pointsPanel;
         static MyUserControl networkPanel;
         static MyUserControl networkGraphControl;
-       
+        static bool paused;
+
         static Brush GetBrush(MapElement element)
         {
             if (element.Id == selected) return Brushes.Red;
@@ -117,7 +118,6 @@ namespace SelfOrganizingNetworks
             var g = args.Graphics;
             var W = pointsPanel.ClientSize.Width - 20;
             var H = pointsPanel.ClientSize.Height - 20;
-            var unit=2f/W;
             g.Clear(Color.White);
             g.TranslateTransform(10, 10);
             var pen=new Pen(Color.FromArgb(100,Color.LightGray));
@@ -142,7 +142,7 @@ namespace SelfOrganizingNetworks
             var g = aegs.Graphics;
             g.Clear(Color.White);
 
-            if (space != null && map!=null)
+            if (paused && space != null && map!=null)
             {
                 int Lag = 3;
                 for (int x=0;x<W;x+=Lag)
@@ -187,20 +187,36 @@ namespace SelfOrganizingNetworks
         }
         #endregion
         #region Network panel
+
+        static void DrawConnection(Graphics g, MapElement n1, MapElement n2)
+        {
+            if (!n1.IsActive || !n2.IsActive) return;
+            var distance = Math.Sqrt(Math.Pow(n1.X - n2.X, 2)+Math.Pow(n1.Y - n2.Y, 2));
+            distance = Math.Min(1, distance * 10);
+            var Pen = new Pen(new SolidBrush(Color.FromArgb(255 - (int)(distance * 255), 255, 255 - (int)(distance * 255))),5);
+            g.DrawLine(Pen,n1.DisplayLocation, n2.DisplayLocation);
+        }
+
         static void DrawNetwork(object sender, PaintEventArgs aegs)
         {
             if (map == null) return;
             var g = aegs.Graphics;
             for (int x = 0; x < NetworkSize; x++)
                 for (int y = 0; y < NetworkSize; y++)
+                   map[x, y].DisplayLocation = new Point(10 + x * W / NetworkSize, 10 + y * H / NetworkSize);
+
+
+                   
+               
+            for (int x = 0; x < NetworkSize; x++)
+                for (int y = 0; y < NetworkSize; y++)
                 {
-                    var p = map[x, y].DisplayLocation = new Point(10+x * W / NetworkSize, 10+y * H / NetworkSize);
-
-
-                    g.FillEllipse(
-                        GetBrush(map[x,y]),
-                        p.X - 5,
-                        p.Y - 5,
+                    if (x != NetworkSize - 1) DrawConnection(g, map[x, y], map[x + 1, y]);
+                    if (y != NetworkSize - 1) DrawConnection(g, map[x, y], map[x, y + 1]);
+                     g.FillEllipse(
+                        GetBrush(map[x, y]),
+                        map[x,y].DisplayLocation.X - 5,
+                        map[x,y].DisplayLocation.Y - 5,
                         10, 10);
                 }
         }
@@ -269,21 +285,37 @@ namespace SelfOrganizingNetworks
 
 
             GenerateInputs();
-            
+            var thread = new Thread(Learning) { IsBackground = true };
+
             pointsPanel = new MyUserControl() { Dock= DockStyle.Fill};
             pointsPanel.Paint += DrawPoints;
             networkPanel = new MyUserControl() { Dock = DockStyle.Fill  };
             networkPanel.Paint += DrawNetwork;
             networkGraphControl = new MyUserControl { Dock = DockStyle.Fill  };
             networkGraphControl.Paint += DrawGraph;
+            var pause = new Button() { Text = "Pause" };
+            pause.Click += (s, a) =>
+                {
+                    if (!paused)
+                        thread.Suspend();
+                    else
+                        thread.Resume();
+                    form.Invalidate(true);
+                    paused = !paused;
+                };
+
             var table = new TableLayoutPanel() { Dock = DockStyle.Fill, RowCount=2, ColumnCount=2 };
             table.Controls.Add(pointsPanel, 0, 0);
             table.Controls.Add(networkPanel, 0, 1);
             table.Controls.Add(networkGraphControl, 1, 0);
+            table.Controls.Add(pause, 1, 1);
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
             table.RowStyles.Add(new RowStyle(SizeType.Percent, 50f));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
             table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+
+          
+
 
 
             form = new Form()
@@ -309,8 +341,8 @@ namespace SelfOrganizingNetworks
             timer.Interval = 10;
             timer.Start();
 
+            thread.Start();
 
-            new Action(Learning).BeginInvoke(null, null);
             Application.Run(form);
 
         }
