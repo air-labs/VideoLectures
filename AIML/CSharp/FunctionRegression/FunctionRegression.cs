@@ -13,11 +13,11 @@ using Common;
 
 namespace FunctionRegression
 {
-    static class Program
+    static class FunctionRegression
     {
-        static int BaseSize = 50;
-        static Func<double, double> Function = z => z * Math.Sin(5*Math.PI*z)*0.5+0.5;
-        static int[] Sizes = new int[] { 1, 40, 40, 1 };
+        static Range LearningRange = new Range(0, 1, 0.01);
+        static Func<double, double> Function = z => z * Math.Sin(10*z)*0.5+0.5;
+        static int[] Sizes = new int[] { 1, 40, 40, 40, 1 };
 
 
         static double[][] Inputs;
@@ -28,39 +28,18 @@ namespace FunctionRegression
 
         static BackPropagationLearning teacher;
         static ActivationNetwork network;
-        static Random rnd = new Random();
-
-
-        static double[] GetWeigts()
-        {
-            return network.Layers.SelectMany(z => z.Neurons).SelectMany(z => z.Weights).ToArray();
-        }
-
+        static Random rnd = new Random(1);
 
         static void Learning()
         {
-            Inputs = Enumerable
-                        .Range(0, BaseSize)
-                        .Select(z => z / (double)BaseSize)
-                        .Select(z => new[] { z })
-                        .ToArray();
-            Answers = Inputs
-                        .Select(z => z[0])
-                        .Select(Function)
-                        .Select(z => new[] { z })
-                        .ToArray();
+
 
             network = new ActivationNetwork(
                 new SigmoidFunction(),
                 Sizes[0],
                 Sizes.Skip(1).ToArray()
                 );
-
-            foreach (var l in network.Layers)
-                foreach (var n in l.Neurons)
-                    for (int i = 0; i < n.Weights.Length; i++)
-                        n.Weights[i] = rnd.NextDouble() * 2 - 1;
-
+            network.ForEachWeight(z => rnd.NextDouble() * 2 - 1);
 
             teacher = new BackPropagationLearning(network);
             teacher.LearningRate = 2;
@@ -84,41 +63,41 @@ namespace FunctionRegression
         }
 
         static Form form;
-        static Series targetFunction;
         static Series computedFunction;
         static HistoryChart history;
 
 
         static void UpdateCharts()
         {
-            targetFunction.Points.Clear();
             computedFunction.Points.Clear();
             for (int i = 0; i < Inputs.Length; i++)
-            {
-                targetFunction.Points.Add(new DataPoint(Inputs[i][0], Answers[i][0]));
-                computedFunction.Points.Add(new DataPoint(Inputs[i][0], Outputs[i]));
-            }
-
+               computedFunction.Points.Add(new DataPoint(Inputs[i][0], Outputs[i]));
+       
             history.AddRange(Errors);
             double error;
             while (Errors.TryDequeue(out error));
         }
 
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-           
+            Inputs = LearningRange.GenerateSamples();
+            Answers = Inputs
+                        .Select(z => z[0])
+                        .Select(Function)
+                        .Select(z => new[] { z })
+                        .ToArray();
 
-            targetFunction = new Series()
+            var targetFunction = new Series()
             {
                 ChartType = SeriesChartType.Line,
                 Color = Color.Red,
                 BorderWidth = 2
             };
+            for (int i = 0; i < Inputs.Length; i++)
+                targetFunction.Points.Add(new DataPoint(Inputs[i][0], Answers[i][0]));
+
             computedFunction = new Series()
             {
                 ChartType = SeriesChartType.Line,

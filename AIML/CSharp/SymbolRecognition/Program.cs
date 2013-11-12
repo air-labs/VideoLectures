@@ -39,7 +39,7 @@ namespace SymbolRecognition
             var network = new ActivationNetwork(
                 new SigmoidFunction(),
                 baseMaker.InputSize,
-                20,20,
+                40,40,
                 baseMaker.OutputSize
                 );
             network.Randomize();
@@ -50,7 +50,7 @@ namespace SymbolRecognition
 
             var teacher = new BackPropagationLearning(network);
             teacher.LearningRate = 2;
-            teacher.Momentum = 0.1;
+            teacher.Momentum = 0;
 
             while (true)
             {
@@ -58,10 +58,10 @@ namespace SymbolRecognition
                 watch.Start();
                 while (watch.ElapsedMilliseconds < 200)
                 {
-                    //for (int i = 0; i < baseMaker.Inputs.Length; i++)
-                    //    for (int j = 0; j < 30; j++)
-                    //        teacher.Run(baseMaker.Inputs[i], baseMaker.Answers[i]);
-                    ForEachWeight(network, n => n * 0.99);
+                    var i = rnd.Next(baseMaker.Inputs.Length);
+                        for (int j = 0; j < 10; j++)
+                            teacher.Run(baseMaker.Inputs[i], baseMaker.Answers[i]);
+                    ForEachWeight(network, n => n * 0.995);
                     teacher.RunEpoch(baseMaker.Inputs, baseMaker.Answers);
                     
                         
@@ -139,7 +139,7 @@ namespace SymbolRecognition
                 Symbols = "abcdefgh",
                 MinAngle = 0,
                 MaxAngle = 60,
-                DeltaAngle = 10
+                DeltaAngle = 5
             };
             baseMaker.Generate();
            // baseMaker.ShowBitmap();
