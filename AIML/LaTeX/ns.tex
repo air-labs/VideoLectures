@@ -6,6 +6,9 @@
 \usepackage{xstring}
 \usepackage{multirow}
 \usepackage[all]{xy}
+
+
+\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
 \begin{document}
 
 \section{Персептрон}
@@ -134,21 +137,96 @@ $$
 Тут про советчиков, м.б. тоже в PP
 \end{frame}
 
-\section{Обратное распространение ошибки}
+\begin{frametitle}\frametitle{Функция XOR}
+ 
+\end{frametitle}
 
-\begin{frame}\frametitle{Обучающая выборка}
+\begin{frametitle}\frametitle{Функция XOR}
+ 
+\end{frametitle}
 
-\begin{tabular}{l l}
- $(I_1,\ldots,I_n)$ & входные вектора (штзг\\
- $(O_1,\ldots,O_n)$ & входные вектора \\
- $(I_1,\ldots,I_n)$ & входные вектора \\
-\end{tabular}
+\begin{frametitle}\frametitle{Многослойный персептрон}
+ 
+\end{frametitle}
 
+
+
+
+\section{Обратное распространение ошибки-1}
+
+
+
+% \begin{frame}\frametitle{Основные определения}
+% \begin{tabular}{l l}
+%  $\mathcal{I}=(I_1,\ldots,I_k)$ & входные вектора размерности $n$\\
+%  $\mathcal{A}=(A_1,\ldots,A_k)$ & правильные выходные вектора размерности $m$\\
+%  $(\mathcal{I},\mathcal{A})$ & обучающая выборка 
+%  $N(I_i):\mathbb{R}^n\rightarrow\mathbb{R}^m$ & функция, соответствующая нейронной сети \\
+%  $O_i=N(I_i) $ & ответ нейронной сети размерности $n$ \\
+% \end{tabular}\\[2cm]
+% 
+% Функция ошибки:
+% $$
+% E(O_i,A_i)=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2
+% $$
+% 
+% 
+% \end{frame}
+% 
+% 
+% 
+
+\begin{frame}\frametitle{Частные производные}
+Функция $n$ переменных:
+$$
+F:\mathbb{R}^n\rightarrow\mathbb{R} 
+$$
+$$
+F(x_1,\ldots,x_n)
+$$
+Частная производная по $i$-й переменной:
+$$
+\dd{F}{x_i}(x_1,\ldots,x_n)=\lim_{\varepsilon\rightarrow 0}\frac{F(x_1,x_2,\ldots,x_i+\varepsilon,\ldots,x_n)-F(x_1,x_2,\ldots,x_i,\ldots,x_n)}{\varepsilon}
+$$
+$$
+\dd{F}{x_i}:\mathbb{R}^n\rightarrow\mathbb{R}
+$$
+
+\end{frame}
+\uncover<+->{}
+\begin{frame}\frametitle{Частные производные}
+$$
+F(x,y,z,u)=x^3+y^u+\sin z^2u^3
+$$
+$$
+\begin{array}{l l}
+\dd{F}{x} = & \uncover<+->{3x^2} \\
+\dd{F}{y}= & \uncover<+->{uy^u-1} \\
+\dd{F}{z}= & \uncover<+->{(-\cos z^2u^3)(u^32z)}
+\end{array}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Производная сложной функции}
+
+\end{frame}
+
+\begin{frame}\frametitle{Градиент}
+\uncover<+->{}
+$$
+\nabla F = \left(\dd{F}{x_1},\dd{F}{x_2},\ldots,\dd{F}{x_n}\right)
+$$
+$$
+\nabla F : \uncover<+->{\mathbb{R}^n\rightarrow\mathbb{R}^n}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Градиентный спуск}
 
 \end{frame}
 
 
-
+\section{Обратное распространение ошибки-2}
 
 
 
