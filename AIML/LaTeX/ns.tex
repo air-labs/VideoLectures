@@ -137,6 +137,11 @@ $$
 Тут про советчиков, м.б. тоже в PP
 \end{frame}
 
+
+
+
+\section{Многослойный персептрон}
+
 \begin{frametitle}\frametitle{Функция XOR}
  
 \end{frametitle}
@@ -150,31 +155,27 @@ $$
 \end{frametitle}
 
 
+\begin{frame}\frametitle{Постановка задачи}
+{\bf Дано:}
+\begin{tabular}{p{4cm} p{6cm}}
+ $\mathcal{I}=(I_1,\ldots,I_k)$ & входные вектора размерности $n$\\[0.1cm]
+ $\mathcal{A}=(A_1,\ldots,A_k)$ & правильные выходные вектора размерности $m$\\[0.1cm]
+ $(\mathcal{I},\mathcal{A})$ & обучающая выборка  \\[0.1cm]
+ $N(W,I)$ & функция, соответствующая нейронной сети \\[0.1cm]
+ $O_i=N(W,I_i)$ & ответ нейронной сети, вектор размерности $m$ \\[0.1cm]
+$E(O_i,A_i)$ & \\
+$=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2 $ & функция ошибки \\
+ \end{tabular}\\[1cm]
+{\bf Найти:}
+вектор $W$ такой, что $\sum_{i=1}^k E(N(W,I_i)-A_i)\rightarrow \min$
+\end{frame}
 
 
-\section{Обратное распространение ошибки-1}
+\begin{frame}\frametitle{Обучение онлайн}
+Решим задачу для одной пары $(I,A)$ \\[2cm]
 
-
-
-% \begin{frame}\frametitle{Основные определения}
-% \begin{tabular}{l l}
-%  $\mathcal{I}=(I_1,\ldots,I_k)$ & входные вектора размерности $n$\\
-%  $\mathcal{A}=(A_1,\ldots,A_k)$ & правильные выходные вектора размерности $m$\\
-%  $(\mathcal{I},\mathcal{A})$ & обучающая выборка 
-%  $N(I_i):\mathbb{R}^n\rightarrow\mathbb{R}^m$ & функция, соответствующая нейронной сети \\
-%  $O_i=N(I_i) $ & ответ нейронной сети размерности $n$ \\
-% \end{tabular}\\[2cm]
-% 
-% Функция ошибки:
-% $$
-% E(O_i,A_i)=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2
-% $$
-% 
-% 
-% \end{frame}
-% 
-% 
-% 
+В этом случае $E(N(W_i,I)-A)$ является функцией от вектора весов $E=E(W)$. 
+\end{frame}
 
 \begin{frame}\frametitle{Частные производные}
 Функция $n$ переменных:
@@ -186,7 +187,10 @@ F(x_1,\ldots,x_n)
 $$
 Частная производная по $i$-й переменной:
 $$
-\dd{F}{x_i}(x_1,\ldots,x_n)=\lim_{\varepsilon\rightarrow 0}\frac{F(x_1,x_2,\ldots,x_i+\varepsilon,\ldots,x_n)-F(x_1,x_2,\ldots,x_i,\ldots,x_n)}{\varepsilon}
+\dd{F}{x_i}(x_1,\ldots,x_n)=
+$$
+$$
+=\lim_{\varepsilon\rightarrow 0}\frac{F(x_1,x_2,\ldots,x_i+\varepsilon,\ldots,x_n)-F(x_1,x_2,\ldots,x_i,\ldots,x_n)}{\varepsilon}
 $$
 $$
 \dd{F}{x_i}:\mathbb{R}^n\rightarrow\mathbb{R}
@@ -208,6 +212,39 @@ $$
 \end{frame}
 
 \begin{frame}\frametitle{Производная сложной функции}
+$$
+F=F(x_1,\ldots,x_n)
+$$
+$$
+G_i=G_i(y_1,\ldots,y_m)
+$$
+$$
+H(y_1,\ldots,y_n)=F(G_1(y_1,\ldots,y_m),\ldots, G_n(y_1,\ldots,y_n))
+$$
+$$
+\dd{H}{y_i}=\sum_{j=1}^{n}\dd{H}{G_j}\dd{G_j}{y_i}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Производная сложной функции}
+\uncover<+->{}
+$$
+F(x_1,\ldots,x_n)=\sum_{k=1}{n} a_ix_i
+$$
+$$
+G_i(y_1,\ldots,y_m)=\sum_{k=1}{m}y_k^i
+$$
+$$
+H(y_1,\ldots,y_n)=F(G_1(y_1,\ldots,y_m),\ldots, G_n(y_1,\ldots,y_n))
+$$
+\uncover<+->{
+$$
+\dd{F}{G_i}=a_i,\ \dd{G_i}{y_j}=iy_j^{i-1}
+$$
+}
+$$
+\dd{H}{y_j}=\uncover<+->{\sum_{i=1}^{n}\dd{H}{G_i}\dd{G_i}{y_j}=\sum_{i=1}^{n} a_iiy_j^{i-1}}
+$$
 
 \end{frame}
 
@@ -225,8 +262,11 @@ $$
 
 \end{frame}
 
+\begin{frame}\frametitle{Градиентный спуск}
+ 
 
-\section{Обратное распространение ошибки-2}
+\end{frame}
+
 
 
 

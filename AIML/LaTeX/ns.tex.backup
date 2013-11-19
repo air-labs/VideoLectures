@@ -137,7 +137,46 @@ $$
 Тут про советчиков, м.б. тоже в PP
 \end{frame}
 
-\section{Обратное распространение ошибки}
+
+
+
+\section{Многослойный персептрон}
+
+\begin{frametitle}\frametitle{Функция XOR}
+ 
+\end{frametitle}
+
+\begin{frametitle}\frametitle{Функция XOR}
+ 
+\end{frametitle}
+
+\begin{frametitle}\frametitle{Многослойный персептрон}
+ 
+\end{frametitle}
+
+
+\begin{frame}\frametitle{Постановка задачи}
+{\bf Дано:}
+\begin{tabular}{p{4cm} p{6cm}}
+ $\mathcal{I}=(I_1,\ldots,I_k)$ & входные вектора размерности $n$\\[0.1cm]
+ $\mathcal{A}=(A_1,\ldots,A_k)$ & правильные выходные вектора размерности $m$\\[0.1cm]
+ $(\mathcal{I},\mathcal{A})$ & обучающая выборка  \\[0.1cm]
+ $N(W,I)$ & функция, соответствующая нейронной сети \\[0.1cm]
+ $O_i=N(W,I_i)$ & ответ нейронной сети, вектор размерности $m$ \\[0.1cm]
+$E(O_i,A_i)$ & \\
+$=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2 $ & функция ошибки \\
+ \end{tabular}\\[1cm]
+{\bf Найти:}
+вектор $W$ такой, что $\sum_{i=1}^k E(N(W,I_i)-A_i)\rightarrow \min$
+\end{frame}
+
+
+\begin{frame}\frametitle{Обучение онлайн}
+Решим задачу для одной пары $(I,A)$ \\[2cm]
+
+В этом случае $E(N(W_i,I)-A)$ является функцией от вектора весов $E=E(W)$. 
+\end{frame}
+
 \begin{frame}\frametitle{Частные производные}
 Функция $n$ переменных:
 $$
@@ -148,39 +187,80 @@ F(x_1,\ldots,x_n)
 $$
 Частная производная по $i$-й переменной:
 $$
-\dd{F}{x_i}=\lim_{\varepsilon\rightarrow 0}\frac{F(x_1,x_2,\ldots,x_i+\varepsilon,\ldots,x_n)-F(x_1,x_2,\ldots,x_i,\ldots,x_n)}{\varepsilon}
+\dd{F}{x_i}(x_1,\ldots,x_n)=
 $$
-\end{frame}
+$$
+=\lim_{\varepsilon\rightarrow 0}\frac{F(x_1,x_2,\ldots,x_i+\varepsilon,\ldots,x_n)-F(x_1,x_2,\ldots,x_i,\ldots,x_n)}{\varepsilon}
+$$
+$$
+\dd{F}{x_i}:\mathbb{R}^n\rightarrow\mathbb{R}
+$$
 
+\end{frame}
+\uncover<+->{}
 \begin{frame}\frametitle{Частные производные}
 $$
-F(x,y,z)=x^3+x^y+\sin(yz)
+F(x,y,z,u)=x^3+y^u+\sin z^2u^3
 $$
 $$
-\dd{F}{x}=\uncover<2>{3x^2+yx^{y-1}}
+\begin{array}{l l}
+\dd{F}{x} = & \uncover<+->{3x^2} \\
+\dd{F}{y}= & \uncover<+->{uy^u-1} \\
+\dd{F}{z}= & \uncover<+->{(-\cos z^2u^3)(u^32z)}
+\end{array}
 $$
 \end{frame}
 
+\begin{frame}\frametitle{Производная сложной функции}
+$$
+F=F(x_1,\ldots,x_n)
+$$
+$$
+G_i=G_i(y_1,\ldots,y_m)
+$$
+$$
+H(y_1,\ldots,y_n)=F(G_1(y_1,\ldots,y_m),\ldots, G_n(y_1,\ldots,y_n))
+$$
+$$
+\dd{H}{y_i}=\sum_{j=1}^{n}\dd{H}{G_j}\dd{G_j}{y_i}
+$$
+\end{frame}
 
-% \begin{frame}\frametitle{Основные определения}
-% \begin{tabular}{l l}
-%  $\mathcal{I}=(I_1,\ldots,I_k)$ & входные вектора размерности $n$\\
-%  $\mathcal{A}=(A_1,\ldots,A_k)$ & правильные выходные вектора размерности $m$\\
-%  $(\mathcal{I},\mathcal{A})$ & обучающая выборка 
-%  $N(I_i):\mathbb{R}^n\rightarrow\mathbb{R}^m$ & функция, соответствующая нейронной сети \\
-%  $O_i=N(I_i) $ & ответ нейронной сети размерности $n$ \\
-% \end{tabular}\\[2cm]
-% 
-% Функция ошибки:
-% $$
-% E(O_i,A_i)=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2
-% $$
-% 
-% 
-% \end{frame}
-% 
-% 
-% 
+\begin{frame}\frametitle{Производная сложной функции}
+
+$$
+F(x_1,\ldots,x_n)=\sum_{k=1}{n} a_ix_i
+$$
+$$
+G_i(y_1,\ldots,y_m)=\sum_{k=1}{m}y_k^i
+$$
+$$
+H(y_1,\ldots,y_n)=F(G_1(y_1,\ldots,y_m),\ldots, G_n(y_1,\ldots,y_n))
+$$
+$$
+\dd{H}{y_i}=?
+$$
+
+\end{frame}
+
+\begin{frame}\frametitle{Градиент}
+\uncover<+->{}
+$$
+\nabla F = \left(\dd{F}{x_1},\dd{F}{x_2},\ldots,\dd{F}{x_n}\right)
+$$
+$$
+\nabla F : \uncover<+->{\mathbb{R}^n\rightarrow\mathbb{R}^n}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Градиентный спуск}
+
+\end{frame}
+
+\begin{frame}\frametitle{Градиентный спуск}
+ 
+
+\end{frame}
 
 
 
