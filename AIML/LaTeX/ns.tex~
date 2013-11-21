@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{xstring}
 \usepackage{multirow}
+\usepackage{tikz}
 \usepackage[all]{xy}
 
 
@@ -177,6 +178,32 @@ $=\sum_{j=1}^{m} (O_i[j]-A_i[j])^2 $ & функция ошибки \\
 В этом случае $E(N(W_i,I)-A)$ является функцией от вектора весов $E=E(W)$. 
 \end{frame}
 
+
+
+\begin{frame}\frametitle{Алгоритм градиентного спуска}
+\begin{enumerate}
+ \item Инициализировать $x_1$ случайным значением из $\mathbb{R}$
+ \item $i:=1$
+ \item $x_{i+1}=x_i+\varepsilon f'(x_i)$
+ \item $i++$
+ \item ${\rm if}\ \ |x_{i+1}-x_i|>c\ \ {\rm goto}\ 3$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}\frametitle{Алгоритм градиентного спуска}
+\begin{enumerate}
+ \item Инициализировать $W_1$ случайным значением из $\mathbb{R}^n$
+ \item $i:=1$
+ \item $W_{i+1}=W_i+\varepsilon \nabla f(W_i)$
+ \item $i++$
+ \item ${\rm if}\ \ ||W_{i+1}-W_i||>c\ \ {\rm goto}\ 3$
+\end{enumerate}
+\end{frame}
+
+
+\section{Обратное распространение ошибки}
+
+
 \begin{frame}\frametitle{Частные производные}
 Функция $n$ переменных:
 $$
@@ -197,8 +224,9 @@ $$
 $$
 
 \end{frame}
-\uncover<+->{}
+
 \begin{frame}\frametitle{Частные производные}
+\uncover<+->{}
 $$
 F(x,y,z,u)=x^3+y^u+\sin z^2u^3
 $$
@@ -258,16 +286,114 @@ $$
 $$
 \end{frame}
 
-\begin{frame}\frametitle{Градиентный спуск}
+\begin{frame}\frametitle{Обратное распространение ошибки}
+\begin{columns}
 
+\column{0.4\textwidth}
+\begin{tikzpicture}
+\node (x-0) at (0,4) {$1$};
+\node (x-1) at (0,2) {$x_1$};
+\node (x-2) at (0,0) {$x_2$};
+
+\node (n-1) at (3,3) {$n_1$};
+\node (n-2) at (3,1) {$n_2$};
+
+\node (y1) at (4,3) {$y_1$};
+\node (y2) at (4,1) {$y_2$};
+
+    \foreach \source in {0,1,2}
+        \foreach \dest in {1,2}
+            \path (x-\source) edge  node[left,near start]  {$w_{\source\dest}$}  (n-\dest) ;
+\end{tikzpicture}
+
+\column{0.6\textwidth}
+\only<2>
+{
+$$
+E(y_1,y_2)=(y_1-a_1)^2+(y_2-a_2)^2
+$$
+$$
+\dd{E}{y_1}=2(y_1-a_1)
+$$
+$$
+y_1=f\underbrace{(w_{01}+x_1w_{11}+x_2w_{21})}_{S_1}
+$$
+$$
+\dd{y_1}{w_{21}}=f'(S_1)x_2
+$$
+$$
+\dd{E}{w_{21}}=\dd{E}{y_1}\dd{y_1}{w_{21}}
+$$
+$$
+=2(y_1-a_1)f'(S_1)x_2
+$$
+}
+\only<3>
+{
+$$
+E(y_1,...,y_n)=(y_i-a_i)^2+...+(y_n-a_n)^2
+$$
+$$
+\dd{E}{y_i}=2(y_i-a_i)
+$$
+$$
+y_i=f\underbrace{(w_{0i}+x_1w_{1i}+...+x_nw_{ni})}_{S_i}
+$$
+$$
+\dd{y_i}{w_{ji}}=f'(S_i)x_j
+$$
+$$
+\dd{E}{w_{ji}}=\dd{E}{y_i}\dd{y_i}{w_{ji}}
+$$
+$$
+=2(y_i-a_i)f'(S_i)x_j
+$$
+}
+\only<4>
+{
+$$
+E(y_1,y_2)=(y_1-a_1)^2+(y_2-a_2)^2
+$$
+$$
+\dd{E}{y_1}=2(y_1-a_1)
+$$
+$$
+y_1=f\underbrace{(w_{01}+x_1w_{11}+x_2w_{21})}_{S_1}
+$$
+$$
+\dd{y_1}{x_2}=f'(S_1)w_{12}
+$$
+$$
+\dd{y_2}{x_2}=f'(S_2)w_{22}
+$$
+$$
+\dd{E}{x_2}=\dd{E}{y_1}\dd{y_1}{x_2}+\dd{E}{y_1}\dd{y_1}{x_2}=
+$$
+$$
+=2(y_1-a_1)f'(S_1)w_{12}+2(y_2-a_2)f'(S_2)w_{22}
+$$
+}
+\only<5>
+{
+$$
+E(y_1,...,y_n)=(y_i-a_i)^2+...+(y_n-a_n)^2
+$$
+$$
+\dd{E}{y_i}=2(y_i-a_i)
+$$
+$$
+y_i=f\underbrace{(w_{0i}+x_1w_{1i}+...+x_nw_{ni})}_{S_i}
+$$
+$$
+\dd{y_i}{x_j}=f'(S_i)w_{ji}
+$$
+$$
+\dd{E}{x_j}=\sum_{i=1}^{n} \dd{E}{y_i}\dd{y_i}{x_j}=\sum_{i=1}^{n}2(y_i-a_i)f'(S_i)w_{ji}
+$$
+}
+
+\end{columns}
 \end{frame}
-
-\begin{frame}\frametitle{Градиентный спуск}
- 
-
-\end{frame}
-
-
 
 
 
