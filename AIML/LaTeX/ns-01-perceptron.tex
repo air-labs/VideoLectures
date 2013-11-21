@@ -1,64 +1,74 @@
 \documentclass[24pt,pdf,hyperref={unicode}]{beamer}
 \usepackage[utf8]{inputenc}
-\usepackage[russian]{babel}
-\usepackage{graphics}
-\usepackage{amssymb}
-\usepackage{xstring}
-\usepackage{multirow}
-\usepackage{tikz}
-\usepackage[all]{xy}
+\usepackage{aiml}
 
-
-\newcommand{\dd}[2]{\frac{\partial #1}{\partial #2}}
 \begin{document}
-\tikzstyle{neu}=[circle,fill=blue!50];
 
 
 \section{Персептрон}
 
 \begin{frame}\frametitle{Персептрон}
 \begin{columns}
-\column{0.5\textwidth}
-$$
-\xymatrix
-{
-x_1 \ar@{->}[rd]^{w_1} \\
-x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
-x_3 \ar@{->}[ru]_{w_3} \\
-}
-$$
-\column{0.5\textwidth}
+\column{0.4\textwidth}
+\begin{tikzpicture}
+\node[neu] (n) at (1,0) {$n$};
+\foreach \x in {1,...,3}
+	{
+	\node (x-\x) at (-1,2-\x) {$x_\x$};
+	\path (x-\x) edge[->] node[above,near start] {$w_\x$} (n);
+	}
+\node (y) at (2,0) {$y$};
+\path (n) edge[->] (y);
+\end{tikzpicture}
 $$
 y=f\left(\sum_{i=1}^{n}w_ix_i\right)
-$$\\[1cm]
 $$
-f(x)={\rm sign}(x)
-$$
+\column{0.6\textwidth}
+
+\begin{tikzpicture}[x=2cm,y=1cm]
+\draw[->] (-1.3,0) -- (1.3,0) node[below] {$x$};
+\draw[->] (0,-1.5) -- (0,1.5) node[left] {$f(x)$};
+
+\uncover<+>{
+\draw[ultra thick,red] plot coordinates {(-1,-1) (0,-1) (0,1) (1,1) } node[above] {${\rm sign}(x)$};
+}
+
+\uncover<2-3>{
+\draw[ultra thick,red,smooth,tension=0.4] plot coordinates {(-1,-1) (-0.3,-0.8) (0.3,0.8) (1,1) } node[below] {${\rm tanh}(-\beta x)$};
+}
+
+\uncover<3>{
+\draw[ultra thick,blue,smooth,tension=0.4] plot coordinates {(-1,-1) (-0.1,-0.9) (0.1,0.9) (1,1) } node[above] {${\rm tanh}(-\gamma x),\gamma>\beta$};
+}
+
+\uncover<4>{
+\draw[ultra thick,red,smooth,tension=0.4] plot coordinates {(-1,0) (-0.1,0.1) (0.1,0.9) (1,1) } node[above] {$\frac{1}{1+e^{\beta x}}$};
+}
+
+
+\end{tikzpicture}
+
 \end{columns}
 \end{frame}
 
 
 \begin{frame}\frametitle{Вес активации}
-\begin{columns}
-\column{0.5\textwidth}
-$$
-\xymatrix
-{
-x_1 \ar@{->}[rd]^{w_1} \\
-x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
-x_3 \ar@{->}[ru]_{w_3} \\
-}
-$$
-\column{0.5\textwidth}
-$$
-\xymatrix
-{
-x_1 \ar@{->}[rd]^{w_1} & x_0\equiv 1 \ar@{->}[d]^{w_0}\\
-x_2 \ar@{->}[r]^{w_2} & *++[Fo]{f} \ar@{->}[r] & y\\
-x_3 \ar@{->}[ru]_{w_3} \\
-}
-$$
-\end{columns}
+\begin{center}
+\begin{tikzpicture}[scale=2]
+\node[neu] (n) at (1,0) {$n$};
+\foreach \x in {1,...,3}
+	{
+	\node (x-\x) at (-1,2-\x) {$x_\x$};
+	\path (x-\x) edge[->] node[above,near start] {$w_\x$} (n);
+	}
+\node (y) at (2,0) {$y$};
+\path (n) edge[->] (y);
+\uncover<2>{
+\node (x-0) at (-1,2) {$x_0\equiv 1$};
+\path (x-0) edge[->] node[above,near start] {$w_0$} (n);
+} 
+\end{tikzpicture}
+\end{center}
 \end{frame}
 
 \begin{frame}\frametitle{Реализация конъюнкции}
