@@ -291,19 +291,25 @@ $$
 
 \column{0.4\textwidth}
 \begin{tikzpicture}
+\tikzstyle{neu}=[circle,fill=blue!50];
+
 \node (x-0) at (0,4) {$1$};
 \node (x-1) at (0,2) {$x_1$};
 \node (x-2) at (0,0) {$x_2$};
 
-\node (n-1) at (3,3) {$n_1$};
-\node (n-2) at (3,1) {$n_2$};
+\node[neu] (n-1) at (3,3) {$n_1$};
+\node[neu] (n-2) at (3,1) {$n_2$};
 
-\node (y1) at (4,3) {$y_1$};
-\node (y2) at (4,1) {$y_2$};
+\node (y-1) at (4,3) {$y_1$};
+\node (y-2) at (4,1) {$y_2$};
 
-    \foreach \source in {0,1,2}
-        \foreach \dest in {1,2}
-            \path (x-\source) edge  node[left,near start]  {$w_{\source\dest}$}  (n-\dest) ;
+\foreach \source in {0,1,2}
+    \path (x-\source) edge[->]  node[above,near start]  {$w_{\source 1}$}  (n-1) ;
+\foreach \source in {0,1,2}
+    \path (x-\source) edge[->]  node[below,near end]  {$w_{\source 2}$}  (n-2) ;
+\foreach \out in {1,2}
+    \path (n-\out) edge[->] (y-\out) ;
+
 \end{tikzpicture}
 
 \column{0.6\textwidth}
@@ -393,6 +399,51 @@ $$
 }
 
 \end{columns}
+\end{frame}
+
+\begin{frame}\frametitle{Обратное распространение ошибки}
+\begin{tikzpicture}
+\tikzstyle{neu}=[circle,fill=blue!50];
+
+\node (x-1-0) at (0,4) {$1$};
+\node (x-1-1) at (0,2) {$x_1$};
+\node (x-1-2) at (0,0) {$x_2$};
+
+\node[neu] (n-1-1) at (3,3) {$n_{21}$};
+\node[neu] (n-1-2) at (3,1) {$n_{22}$};
+
+\node (x-2-1) at (4,3) {$y_1$};
+\node (x-2-2) at (4,1) {$y_2$};
+
+\node[neu] (n-0-1) at (-1,2) {$n_{11}$};
+\node[neu] (n-0-2) at (-1,0) {$n_{12}$};
+
+\node (x-0-0) at (-4,3) {$1$};
+\node (x-0-1) at (-4,1)  {$z_1$};
+\node (x-0-2) at (-4,-1) {$z_2$};
+
+
+\foreach \layA/\layB/\Wei in { 0/1/$v$, 1/2/$w$ }
+{
+\foreach \source in {0,1,2}
+    \path (x-\layA-\source) edge[->]  node[above,near start]  {$\Wei_{\source 1}$}  (n-\layA-1) ;
+\foreach \source in {0,1,2}
+    \path (x-\layA-\source) edge[->]  node[below,near end]  {$\Wei_{\source 2}$}  (n-\layA-2) ;
+\foreach \out in {1,2}
+    \path (n-\layA-\out) edge[->] (x-\layB-\out) ;
+}
+\end{tikzpicture}
+\begin{tabular}{p{5cm} p{5cm}}
+$$
+\dd{E}{v_{ij}}=\dd{E}{x_j}\dd{x_j}{v_{ij}}
+$$ 
+& 
+$$
+\dd{E}{z_i}=\sum_{j=1}^{m}\dd{E}{x_j}\dd{x_j}{z_i}
+$$
+\end{tabular}
+
+
 \end{frame}
 
 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.6.24)  21 NOV 2013 17:38
+This is pdfTeX, Version 3.1415926-1.40.10 (TeX Live 2009/Debian) (format=pdflatex 2013.6.24)  21 NOV 2013 18:05
 entering extended mode
  %&-line parsing enabled.
 **ns.tex
@@ -1493,33 +1493,41 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 ] [23
 
 ]
-Overfull \hbox (7.9487pt too wide) in paragraph at lines 396--396
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (7.9487pt too wide) in paragraph at lines 402--402
 [][]  
  []
 
 [24
 
 ]
-Overfull \hbox (7.9487pt too wide) in paragraph at lines 396--396
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (7.9487pt too wide) in paragraph at lines 402--402
 [][]  
  []
 
 [25
 
 ]
-Overfull \hbox (7.9487pt too wide) in paragraph at lines 396--396
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (7.9487pt too wide) in paragraph at lines 402--402
 [][]  
  []
 
 [26
 
 ]
-Overfull \hbox (7.9487pt too wide) in paragraph at lines 396--396
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (7.9487pt too wide) in paragraph at lines 402--402
 [][]  
  []
 
 
-Overfull \hbox (9.0605pt too wide) detected at line 396
+Overfull \hbox (9.0605pt too wide) detected at line 402
 \OT1/cmss/m/n/10.95 = 2(\OT1/cmss/m/it/10.95 y[] \OMS/cmsy/m/n/10.95 ^^@ \OT1/c
 mss/m/it/10.95 a[]\OT1/cmss/m/n/10.95 )\OT1/cmss/m/it/10.95 f[]\OT1/cmss/m/n/10
 .95 (\OT1/cmss/m/it/10.95 S[]\OT1/cmss/m/n/10.95 )\OT1/cmss/m/it/10.95 w[] \OT1
@@ -1531,12 +1539,14 @@ m/it/10.95 a[]\OT1/cmss/m/n/10.95 )\OT1/cmss/m/it/10.95 f[]\OT1/cmss/m/n/10.95
 [27
 
 ]
-Overfull \hbox (7.9487pt too wide) in paragraph at lines 396--396
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (7.9487pt too wide) in paragraph at lines 402--402
 [][]  
  []
 
 
-Overfull \hbox (11.00186pt too wide) detected at line 396
+Overfull \hbox (11.00186pt too wide) detected at line 402
 [] \OT1/cmss/m/n/10.95 = [] [][] = [] 2(\OT1/cmss/m/it/10.95 y[] \OMS/cmsy/m/n/
 10.95 ^^@ \OT1/cmss/m/it/10.95 a[]\OT1/cmss/m/n/10.95 )\OT1/cmss/m/it/10.95 f[]
 \OT1/cmss/m/n/10.95 (\OT1/cmss/m/it/10.95 S[]\OT1/cmss/m/n/10.95 )\OT1/cmss/m/i
@@ -1544,6 +1554,15 @@ t/10.95 w[]
  []
 
 [28
+
+]
+Missing character: There is no ; in font nullfont!
+
+Overfull \hbox (1.23769pt too wide) in paragraph at lines 447--447
+[]  
+ []
+
+[29
 
 ]
 \tf@nav=\write8
@@ -1562,13 +1581,13 @@ LaTeX Font Warning: Size substitutions with differences
 
  ) 
 Here is how much of TeX's memory you used:
- 21418 strings out of 493848
- 370651 string characters out of 1152823
- 482588 words of memory out of 3000000
- 24105 multiletter control sequences out of 15000+50000
+ 21524 strings out of 493848
+ 372411 string characters out of 1152823
+ 483588 words of memory out of 3000000
+ 24209 multiletter control sequences out of 15000+50000
  15522 words of font info for 50 fonts, out of 3000000 for 9000
  714 hyphenation exceptions out of 8191
- 49i,16n,53p,852b,1045s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 49i,16n,55p,852b,1038s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t2a.enc}</usr/share/texmf
 -texlive/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texmf-texlive/fo
 nts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-texlive/fonts/type1/p
@@ -1585,9 +1604,9 @@ fonts/type1/public/cm-super/sfsx1095.pfb></usr/share/texmf-texlive/fonts/type1/
 public/xypic/xyatip10.pfb></usr/share/texmf-texlive/fonts/type1/public/xypic/xy
 btip10.pfb></usr/share/texmf-texlive/fonts/type1/public/xypic/xycirc10.pfb></us
 r/share/texmf-texlive/fonts/type1/public/xypic/xydash10.pfb>
-Output written on ns.pdf (28 pages, 307629 bytes).
+Output written on ns.pdf (29 pages, 318178 bytes).
 PDF statistics:
- 817 PDF objects out of 1000 (max. 8388607)
- 60 named destinations out of 1000 (max. 500000)
+ 843 PDF objects out of 1000 (max. 8388607)
+ 62 named destinations out of 1000 (max. 500000)
  57 words of extra memory for PDF output out of 10000 (max. 10000000)
 
