@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.20)  21 NOV 2013 22:45
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (MiKTeX 2.9) (preloaded format=pdflatex 2013.11.20)  23 NOV 2013 20:13
 entering extended mode
 **ns-02-multilayer.tex
 (C:\Users\yura\Desktop\VideoLectures-1\AIML\LaTeX\ns-02-multilayer.tex
@@ -1628,7 +1628,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 182.
 Here is how much of TeX's memory you used:
  25136 strings out of 493921
  434373 string characters out of 3144878
- 564043 words of memory out of 3000000
+ 564042 words of memory out of 3000000
  27869 multiletter control sequences out of 15000+200000
  15936 words of font info for 52 fonts, out of 3000000 for 9000
  841 hyphenation exceptions out of 8191
@@ -1647,7 +1647,7 @@ cm/cmssi8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
 /cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
 msy8.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols
 /msbm10.pfb>
-Output written on ns-02-multilayer.pdf (7 pages, 155404 bytes).
+Output written on ns-02-multilayer.pdf (7 pages, 155434 bytes).
 PDF statistics:
  333 PDF objects out of 1000 (max. 8388607)
  16 named destinations out of 1000 (max. 500000)

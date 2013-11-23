@@ -24,29 +24,29 @@ $$
 \begin{array}{c c | c}
 x_1 & x_2 & x_1\oplus x_2 \\
 \hline
-0 & 0 & 0 \\
-0 & 1 & 1 \\
-1 & 0 & 1 \\
-1 & 1 & 0 \\
+-1 & -1 & -1 \\
+-1 & 1 & 1 \\
+1 & -1 & 1 \\
+1 & 1 & -1 \\
 \end{array}
 $$\\[1cm]
 $$
 \left\{
 \begin{array}{l l l l l l}
- w_0       & > & 0 \\
- w_0 + w_1 & < & 0 \\
- w_0 + w_2 & < & 0 \\
+ w_0 - w_1 - w_2  & > & 0 \\
+ w_0 + w_1 - w_2 & < & 0 \\
+ w_0 - w_1 + w_2 & < & 0 \\
  w_0 + w_1 + w_2 & > & 0 \\
 \end{array}
 \right.
 $$
 \column{0.5\textwidth}
-\begin{tikzpicture}[y=3cm, x=3cm]
-\draw[->] (-0.1,0) -- (1.2,0) node[below]{$x_1$};
-\draw[->] (0,-0.1) -- (0,1.2) node[left]{$x_2$};
-\draw[fill=black] (0,0) circle(3pt);
-\draw[fill=white] (0,1) circle(3pt);
-\draw[fill=white] (1,0) circle(3pt);
+\begin{tikzpicture}[y=1.5cm, x=1.5cm]
+\draw[->] (-1.2,0) -- (1.4,0) node[below]{$x_1$};
+\draw[->] (0,-1.2) -- (0,1.4) node[left]{$x_2$};
+\draw[fill=black] (-1,-1) circle(3pt);
+\draw[fill=white] (-1,1) circle(3pt);
+\draw[fill=white] (1,-1) circle(3pt);
 \draw[fill=black] (1,1) circle(3pt);
 \end{tikzpicture}
 \end{columns}
@@ -73,19 +73,19 @@ $$\\[1cm]
 \node[neu] (n-3) at (8,3) {};
 \node(out) at (10,3) {$x_1\oplus x_2$};
 
-\path (x-0) edge[->] node[above,near start] {-1} (n-1);
-\path (x-1) edge[->] node[above,near start] {2} (n-1);
-\path (x-2) edge[->] node[above,near start] {-2} (n-1);
+\path (x-0) edge[->] node[above,near end] {-1} (n-1);
+\path (x-1) edge[->] node[above,near end] {1} (n-1);
+\path (x-2) edge[->] node[above,near end] {-1} (n-1);
 \path (n-1) edge[->] (y-1);
 
-\path (x-0) edge[->] node[above,near start] {-1} (n-2);
-\path (x-1) edge[->] node[above,near start] {-2} (n-2);
-\path (x-2) edge[->] node[above,near start] {2}  (n-2);
+\path (x-0) edge[->] node[below,near end] {-1} (n-2);
+\path (x-1) edge[->] node[below,near end] {-1} (n-2);
+\path (x-2) edge[->] node[below,near end] {1}  (n-2);
 \path (n-2) edge[->] (y-2);
 
-\path (y-0) edge[->] node[above,near start] {-1} (n-3);
-\path (y-1) edge[->] node[above,near start] {2}  (n-3);
-\path (y-2) edge[->] node[above,near start] {2}  (n-3);
+\path (y-0) edge[->] node[above,midway] {1} (n-3);
+\path (y-1) edge[->] node[above,midway] {1}  (n-3);
+\path (y-2) edge[->] node[above,midway] {1}  (n-3);
 \path (n-3) edge[->] (out);
 \end{tikzpicture} 
 \end{frame}
