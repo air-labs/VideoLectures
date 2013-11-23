@@ -1,6 +1,7 @@
 \documentclass[24pt,pdf,hyperref={unicode}]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage{aiml}
+\usepackage{cancel}
 
 \begin{document}
 
@@ -175,17 +176,70 @@ $$
 \end{tikzpicture}
 \end{frame}
 
-\begin{frame}\frametitle{Обучение персептрона}
-\begin{tikzpicture}[scale=2]
-\node[neu] (n) at (2,1.5) {};
 
-\foreach \x/\v/\w in {1/1/1,2/2/2,3/3/3,4/4/4}
-	{
-	\node (x-\x) at (0,4-\x) {$\v$};
-	\path (x-\x) edge[->] node[above,midway] {$\w$} (n);
-	}
-\node (y) at (3,1.5) {};
+
+\begin{frame}\frametitle{Обучение персептрона}
+\begin{columns}
+\column{0.6\textwidth}
+\begin{tikzpicture}[scale=1.8]
+\node[neu] (n) at (2,2) {};
+\foreach \x/\v in {1/1,2/1,3/-1,4/1,5/1}
+	\node (x-\x) at (0,5-\x) {$\v$};
+	
+	
+\node (y) at (3,2) {$\only<2>{1}\uncover<3->{\cancel{1}\ -1}$};
+\path (n) edge[->] (y);
+
+
+\path (x-1) edge[->] node[above=0.3cm,near start]
+ {
+ \only<-9>{$1$}
+ \only<4-9>{$\downarrow\downarrow$}
+ \only<10->{$0.5$}
+ } (n);
+\path (x-2) edge[->] node[above=0.1cm,near start] 
+{
+ \only<-9>{$0.5$}
+ \only<5-9>{$\downarrow$}
+ \only<10->{$0.2$}
+ } (n);
+\path (x-3) edge[->] node[above=0.1cm,near start] {
+ \only<-9>{$0.5$}
+ \only<6-9>{$\uparrow$}
+ \only<10->{$0.7$}
+ } (n);
+\path (x-4) edge[->] node[above=0.1cm,near start] 
+{
+ \only<-9>{$0.1$}
+ \only<7-9>{$\downarrow$}
+ \only<10->{$0$}
+ } (n);
+\path (x-5) edge[->] node[above=0.3cm,near start] {
+ \only<-9>{$-1$}
+ \only<9>{$\downarrow\downarrow$}
+ \only<10->{$-1.5$}
+ } (n);
+
 \end{tikzpicture}
+\column{0.4\textwidth}
+\only<9>{
+\begin{flushleft}
+Правильный ответ: $a$
+
+Ответ сети: $y$
+
+Направление обучения:
+$$
+d=a-y=-2
+$$
+
+Изменение весов:
+$$
+\Delta w_i=\varepsilon d x_i |w_i|
+$$
+\end{flushleft}
+}
+\end{columns}
 \end{frame}
 
 \end{document}
