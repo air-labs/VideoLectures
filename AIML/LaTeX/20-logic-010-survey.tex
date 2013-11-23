@@ -1,0 +1,200 @@
+\documentclass[24pt,pdf,hyperref={unicode}]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{graphics}
+\usepackage{amssymb}
+\usepackage{xstring}
+\usepackage{multirow}
+\begin{document}
+
+
+\section{Дедуктивные и индуктивные рассуждения}
+
+\begin{frame}\frametitle{Индуктивные рассуждения}
+\begin{tabular}{l l}
+ & Бразилия -- страна Южной Америки и республика \\
+ & Чили -- страна Южной Америки и республика \\
+ & Уругвай -- страна Южной Америки и республика \\
+\hline
+$\therefore$ & Все страны Южной Америки -- республики \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}\frametitle{Индуктивные рассуждения}
+\begin{tabular}{l l}
+ & Франция -- страна Европы и республика \\
+ & Германия -- страна Европы и республика \\
+ & Чехия -- страна Европы и республика \\
+\hline
+$\therefore$ & Все страны Европы -- республики \\
+\end{tabular}
+\begin{flushright}
+% \uncover{\includegraphics[width=4cm]{EnglishQueen.jpg}}
+\end{flushright}
+\end{frame}
+
+
+\begin{frame}\frametitle{Индуктивные рассуждения}
+\begin{tabular}{l l}
+ & Бразилия -- республика и страна Южной Америки \\
+ & Чили -- республика и страна Южной Америки \\
+ & Уругвай -- республика и страна Южной Америки \\
+\hline
+$\therefore$ & Все республики -- страны Южной Америки\\
+\end{tabular}
+\begin{flushright}
+% \uncover{\includegraphics[width=4cm]{Merkel.jpg}}
+\end{flushright}
+\end{frame}
+
+
+\begin{frame}\frametitle{Дедуктивные рассуждения}
+\begin{tabular}{l l}
+ & Все страны Южной Америки -- республики \\
+ & Бразилия -- страна Южной Америки\\
+ \hline
+$\therefore$ & Бразилия -- республика \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}\frametitle{Дедуктивные рассуждения}
+\begin{tabular}{l l}
+ & Все моря -- соленые \\
+ & Черное море -- это море \\
+ \hline
+$\therefore$ & Черное море -- соленое \\
+\end{tabular}
+\end{frame}
+
+\begin{frame}\frametitle{Дедуктивные рассуждения}
+\begin{tabular}{l l}
+ & Все $A$ есть $B$\\
+ & Некоторый $x$ является $B$\\
+ \hline
+$\therefore$ & $x$ является $A$ \\
+\end{tabular}
+\end{frame}
+
+\section{Пропозициональная логика}
+
+\begin{frame}\frametitle{Пропозициональные связки }
+Не очень понятно, как здесь сделать нормальную анимацию
+\end{frame}
+
+\section{Логический вывод}
+
+\begin{frame}\frametitle{Modus ponens}
+{\huge
+$$
+\frac{A,\ A\rightarrow B}{B}
+$$
+}
+\end{frame}
+
+\begin{frame}\frametitle{Аксиомы}
+\begin{enumerate}
+ \item[A1] $A\rightarrow(B\rightarrow A)$
+ \item[A2] $\left[A\rightarrow(B\rightarrow C)\right]\rightarrow\left[(A\rightarrow B)\rightarrow(A\rightarrow C)\right]$
+ \item[A3] $(\neg A\rightarrow \neg B)\rightarrow\left[(\neg A\rightarrow B)\rightarrow A\right]$
+\end{enumerate}
+\end{frame}
+
+\begin{frame}\frametitle{$X\rightarrow X$?}
+$$
+\begin{array}{l l}
+\uncover<+->{A2 & \left[A\rightarrow(B\rightarrow C)\right]\rightarrow\left[(A\rightarrow B)\rightarrow(A\rightarrow C)\right]}\\
+\uncover<+->{& A=X,\ B=X\rightarrow X,\ C=X}\\
+\uncover<+->{L1 & \left[X\rightarrow((X\rightarrow X)\rightarrow X)\right]\rightarrow\left[(X\rightarrow (X\rightarrow X))\rightarrow(X\rightarrow X)\right]}\\
+\uncover<+->{A1 & A\rightarrow(B\rightarrow A)} \\
+\uncover<+->{& A=X,\ B=X\rightarrow X}\\
+\uncover<+->{L2 & X\rightarrow((X\rightarrow X) \rightarrow X)} \\
+\uncover<+->{MP & (X\rightarrow (X\rightarrow X))\rightarrow(X\rightarrow X)} \\
+\uncover<+->{A1 & A\rightarrow(B\rightarrow A)} \\
+\uncover<+->{& A=X,\ B=X}\\
+\uncover<+->{L3 & X\rightarrow (X\rightarrow X)} \\
+\uncover<+->{MP & X\rightarrow X}
+\end{array}
+$$
+
+\end{frame}
+
+
+
+
+
+\section{Законы логики высказываний}
+\begin{frame}\frametitle{Законы логики высказываний}
+\begin{tabular}{l l p{1cm} l}
+\multirow{2}{*}{Операции с константами} & $A\vee 0 = A$ && $A\wedge 0=0$ \\
+					& $A\vee 1 = 1$ && $A\wedge 1=A$ \\ 		
+Идемпотентность & $A\vee A = A$ && $A \wedge A = A$ \\
+Ассоциативность & $\begin{array}{l l}
+		    A\vee (B\vee C) & = \\
+		    (A\vee B)\vee C & = \\
+		    A\vee B\vee C
+		    \end{array}$
+				     &&
+					$\begin{array}{l l}
+					  A\wedge (B\wedge C) & = \\
+					  (A\wedge B)\wedge C & = \\
+					  A\wedge B\wedge C
+					  \end{array}$ \\
+							 
+\end{tabular}
+\end{frame}
+
+\begin{frame}\frametitle{Конъюнктивная нормальная форма}
+
+$$
+\begin{array}{l l l}
+& (A \vee B \vee C) & \wedge \\
+& (\neg A \vee B \vee \neg C) & \wedge \\
+& (\neg A)
+\end{array}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Конъюнктивная нормальная форма}
+$$
+\begin{array}{l}
+\uncover<+->{ \neg A } \\
+\uncover<+->{ \neg A \vee B } \\
+\uncover<+->{ (A \vee B) \vee C } \uncover<+->{ = A\vee B\vee C }\\
+\uncover<+->{ (A \wedge B) \vee C } \uncover<+->{ = (A\vee C)\wedge (B\vee C)}\\
+\end{array}
+$$
+\end{frame}
+
+\begin{frame}\frametitle{Приведение к КНФ}
+$$
+\begin{array}{l}
+\neg A\rightarrow \overline{B\rightarrow C} \\
+\uncover<+->{ A \vee \overline{\neg B \vee C }} \\
+\uncover<+->{ A \vee (B \wedge \neg C) } \\
+\uncover<+->{ (A\vee B) \wedge (A \vee \neg C) }
+\end{array}
+$$
+\end{frame}
+
+\section{Метод резолюций}
+
+\begin{frame}\frametitle{Правило резолюций}
+{\huge
+$$
+\frac{A\vee B,\ \neg A \vee C}{B \vee C}
+$$
+}
+\end{frame}
+
+\begin{frame}\frametitle{Правило резолюций}
+Есть список сложных вещей, надо его воссоздать
+\end{frame}
+
+\begin{frame}\frametitle{Метод резолюций}
+ 
+\end{frame}
+
+
+
+
+\end{document}
