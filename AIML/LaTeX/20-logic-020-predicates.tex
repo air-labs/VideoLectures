@@ -107,7 +107,7 @@ $$
 $$
 \end{frame}
 
-\begin{frame}\frametitle{Приведение к ПНФ}
+\begin{frame}\frametitle{Предваренная нормальная форма}
 \begin{enumerate}
 \item<1-> Оставить только $\wedge$, $\vee$, $\neg$
 \item<2-> Протаскивание отрицаний: законы де Моргана и
@@ -150,6 +150,75 @@ $$
 $$
 \end{enumerate}
 
+\end{frame}
+
+
+\begin{frame}\frametitle{Предваренная нормальная форма}
+
+\begin{itemize}
+\item<+-> $(\forall x\ P(x))\oplus (\exists x\ \neg Q(x))$
+\item<+-> $\left[\overline{(\forall x\ P(x))}\wedge(\exists x\ Q(x))\right] \bigvee \left[(\forall x\ P(x))\wedge\overline{(\exists x\ Q(x)})\right]$
+\item<+-> $\left[(\exists x\ \overline{P(x)})\wedge(\exists x\ Q(x))\right] \bigvee \left[(\forall x\ P(x))\wedge\overline{(\exists x\ Q(x)})\right]$
+\item<+-> $\left[(\exists x\ \overline{P(x)})\wedge(\exists x\ Q(x))\right] \bigvee \left[(\forall x\ P(x))\wedge(\forall x\ \overline{Q(x)})\right]$
+\item<+-> $\left[\exists x \exists y\ \overline{P(x)}\wedge Q(y)\right] \bigvee \left[(\forall x\ P(x))\wedge(\forall x\ \overline{Q(x)})\right]$
+\item<+-> $\left[\exists x \exists y\ \overline{P(x)}\wedge Q(y)\right] \bigvee \left[\forall x\ P(x)\wedge\overline{Q(x)}\right]$
+\item<+-> $\left[\exists x \exists y\ \overline{P(x)}\wedge Q(y)\right] \bigvee \left[\forall z\ P(z)\wedge\overline{Q(z)}\right]$
+\item<+-> $\exists x \exists y \forall z \left[ (\overline{P(x)}\wedge Q(y)) \vee (P(z)\wedge\overline{Q(z)})\right]$
+\end{itemize}
+\end{frame}
+\begin{frame}\frametitle{Предваренная нормальная форма}
+\begin{itemize}
+\item<+-> $\exists x \exists y \forall z \left[ (\overline{P(x)}\wedge Q(y)) \vee (P(z)\wedge\overline{Q(z)})\right]$
+
+\item<+-> $\exists x \exists y \forall z \left[ (\overline{P(x)}\vee P(z))\wedge (\overline{P(x)}\vee \overline{Q(z)}) \wedge \right.$
+
+\hspace{3cm} $ \left. \wedge (Q(y) \vee P(z)) \wedge (Q(y) \vee \overline{Q(z)}) \right] $
+
+\item<+-> $\exists x \exists y \forall z \left[ (\overline{P(x)}\vee \overline{Q(z)}) \wedge (Q(y) \vee P(z))  \right]$
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Сколемовская нормальная форма}
+\begin{itemize}
+\item<+-> $\exists t \forall u \exists v\forall x \forall y \exists z\ P(t,u,v)\vee P(x,y,z)$
+\item<+-> $\forall u \exists v\forall x \forall y \exists z\ P(a,u,v)\vee P(x,y,z)$ 
+\item<+-> $\forall u \forall x \forall y \exists z\ P(a,u,f(u))\vee P(x,y,z)$ 
+\item<+-> $\forall u \forall x \forall y \ P(a,u,f(u))\vee P(x,y,g(u,x,y))$ 
+\item<+-> $P(a,u,f(u))\vee P(x,y,g(u,x,y))$ 
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Правило резолюций в логике предикатов}
+$$
+\begin{array}{l l}
+\uncover<+->{
+ & \neg P(x) \vee Q(x) \\
+ & P(a) \\
+ \hline
+}
+\uncover<+->{
+ & x:=a \\
+ & \neg P(x) \vee Q(x) \\
+ & P(a) \\
+ \hline
+}
+\uncover<+->{
+\therefore & Q(a) \\
+}
+\end{array}
+$$
+\end{frame}
+
+\begin{frame}
+Примеры удачных и неудачных унификаций
+\end{frame}
+
+\begin{frame}\frametitle{Метод резолюций в логике предикатов}
+
+\end{frame}
+
+\begin{frame}\frametitle{Зацикливание метода резолюций}
 \end{frame}
 
 \end{document}
