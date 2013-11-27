@@ -1,6 +1,10 @@
 \documentclass[24pt,pdf,hyperref={unicode}]{beamer}
 \usepackage[utf8]{inputenc}
+\usepackage{etex}
 \usepackage{aiml}
+\usepackage{ctable}
+
+\newcommand{\cmd}[X]{\if}
 
 \newcommand{\da}{\includegraphics[width=1cm]{HOMM5/dark.jpg}}
 \newcommand{\de}{\includegraphics[width=1cm]{HOMM5/destructive.jpg}}
@@ -18,16 +22,43 @@
 \newcommand{\gh}{\includegraphics[width=1cm]{HOMM5/ghost.jpg}}
 \newcommand{\lc}{\includegraphics[width=1cm]{HOMM5/lich.jpg}}
 
+
+\newcommand{\aca}{\includegraphics[width=1cm]{HOMM5/academy.jpg}}
+\newcommand{\hel}{\includegraphics[width=1cm]{HOMM5/inferno.jpg}}
+\newcommand{\nec}{\includegraphics[width=1cm]{HOMM5/necropolis.jpg}}
+
+
+\newcommand{\vc}{\centering\arraybackslash}
+
 \begin{document}
 
 \begin{frame}
-\begin{tabular}{c |c c}
+$$
+\begin{array}{ >\vc m{1cm}| >\vc m{1cm} >\vc m{1cm}}
     & \de & \da \\
 \hline
+\vskip 1pt
 \pe & 0.8 & 0.8 \\
 \ga & 0.8 & 0.2 \\
 \wt & 0.2 & 0.8 \\
 \un & 0.2 & 0.2 
-\end{tabular}
+\end{array}
+\uncover<2->{
+\circ
+
+\begin{array}{ >\vc m{1cm}| >\vc m{1cm} >\vc m{1cm}}
+    & \de & \da \\
+\hline
+\vskip 1pt
+\pe & 0.8 & 0.8 \\
+\ga & 0.8 & 0.2 \\
+\wt & 0.2 & 0.8 \\
+\un & 0.2 & 0.2 
+\end{array}
+
+$$
 \end{frame}
+
+
+
 \end{document}
