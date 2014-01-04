@@ -83,7 +83,3 @@ function Time2Frame(clip c, float ms) {
 	fps = c.frameRate  # float
 	return round(f_ms/1000*fps)
 }
-
-function loadFFmpeg(string filename) {
-	return FFmpegSource2(filename, vtrack=-1, atrack=-1)
-}
