@@ -22,7 +22,7 @@ namespace Montager
         public bool IsFaceChunk;
         public ChunkSource VideoSource;
         public ChunkSource AudioSource;
-        public string TemporalAudioFile { get { return string.Format("audio{0:D3}.mp3", Id); } }
+        public string TemporalAudioFile { get { return string.Format("audio{0:D3}.avi", Id); } }
         public string TemporalVideoFile { get { return string.Format("video{0:D3}.avi", Id); } }
         public string OutputVideoFile { get { return string.Format("chunk{0:D3}.avi", Id); } }
 

@@ -10,3 +10,16 @@ bin
 /Video/Lectures
 
 *.suo
+*.gz
+*.aux
+*.dvi
+*.log
+*.nav
+*.out
+*.pdf
+*.ps
+*.snm
+*.backup
+*.tex~
+*.toc
+*.snm
