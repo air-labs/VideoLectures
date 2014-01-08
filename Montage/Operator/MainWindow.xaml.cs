@@ -65,6 +65,7 @@ namespace Operator
                 case Key.Decimal: action = MontageAction.Delete; break;
                 case Key.NumPad1: action = MontageAction.Screen; break;
                 case Key.NumPad2: action = MontageAction.Face; break;
+                case Key.Add: action = MontageAction.CommitAndSplit; break;
                 case Key.NumPad9:
                     this.Scroller.ScrollToVerticalOffset(Scroller.VerticalOffset - 100);
                     return;
