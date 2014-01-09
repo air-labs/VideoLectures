@@ -12,8 +12,8 @@ namespace VideoLib
         Face,
         Screen,
         Commit,
-        Delete
-
+        Delete,
+        CommitAndSplit
     }
 
     public class MontageCommand

@@ -25,44 +25,6 @@
                                 BeginTime="0:0:0"
                                 Duration="0:0:1"/>
         </Storyboard>
-        <Storyboard x:Key="clock">
-            <ColorAnimation 
-                    Storyboard.TargetName="ClockBack"
-                    Storyboard.TargetProperty="Color"
-                    From="Transparent"
-                    To="Transparent"
-                    Duration="0:0:0"/>
-            <ColorAnimation 
-                                Storyboard.TargetName="ClockFore"
-                                Storyboard.TargetProperty="Color"
-                                From="Green"
-                                To="Yellow"
-                                Duration="0:0:30"/>
-                <ColorAnimation 
-                                Storyboard.TargetName="ClockFore"
-                                Storyboard.TargetProperty="Color"
-                                From="Yellow"
-                                To="Red"
-                                BeginTime="0:0:30"
-                                Duration="0:0:30"/>
-                <ColorAnimation
-                                Storyboard.TargetName="ClockFore"
-                                Storyboard.TargetProperty="Color"
-                                From="Red"
-                                To="Black"
-                                BeginTime="0:01:00"
-                                Duration="0"/>
-                <ColorAnimation
-                                Storyboard.TargetName="ClockBack"
-                                Storyboard.TargetProperty="Color"
-                                From="Transparent"
-                                To="Red"
-                                BeginTime="0:01:00"
-                                Duration="0:0:0.5"
-                                AutoReverse="True"
-                                RepeatBehavior="Forever"/>
-           
-        </Storyboard>
         </Window.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
@@ -79,28 +41,64 @@
                 Source="{StaticResource face}"/>
 
             </StackPanel>
-            <Label 
-               HorizontalAlignment="Right"
-               VerticalAlignment="Top"
-                DockPanel.Dock="Right"
-            x:Name="Clock" 
-            FontSize="100" 
-            Content="00:00" 
-            FontFamily="Courier New" 
-            FontWeight="Bold">
-                <Label.Foreground>
-                    <SolidColorBrush x:Name="ClockFore" Color="Black"/>
-                </Label.Foreground>
-                <Label.Background>
-                    <SolidColorBrush x:Name="ClockBack"/>
-                </Label.Background>
-                <Label.Triggers>
-                    <EventTrigger RoutedEvent="Label.Loaded">
-                        <BeginStoryboard Storyboard="{StaticResource clock}"/>
-                    </EventTrigger>
-                </Label.Triggers>
-            </Label>
-            <Label/>
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                DockPanel.Dock="Right">
+                <StackPanel Orientation="Vertical">
+                    <Label 
+                       x:Name="ClockFromLastCommit" 
+                       HorizontalContentAlignment="Center"
+                       FontSize="40" 
+                       Content="00:00" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                    <Label
+                       HorizontalContentAlignment="Center"
+                       FontSize="18" 
+                       Content="Current" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label 
+                       x:Name="ClockGoodInCurrentPart" 
+                       HorizontalContentAlignment="Center"
+                       FontSize="40" 
+                       Content="00:00" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                    <Label
+                       HorizontalContentAlignment="Center"
+                       FontSize="18" 
+                       Content="Part" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                </StackPanel>
+                <StackPanel Orientation="Vertical">
+                    <Label 
+                       x:Name="ClockGoodTotal" 
+                       HorizontalContentAlignment="Center"
+                       FontSize="40" 
+                       Content="00:00" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                    <Label
+                       HorizontalContentAlignment="Center"
+                       FontSize="18" 
+                       Content="Total" 
+                       FontFamily="Courier New" 
+                       FontWeight="Bold">
+                    </Label>
+                </StackPanel>
+            </StackPanel>
+            
         </DockPanel>
         <ScrollViewer x:Name="Scroller">  
         <FlowDocumentScrollViewer x:Name="Viewer" VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Hidden">
