@@ -99,10 +99,7 @@ namespace Operator
             if (action == MontageAction.Screen)
                 VideoSource.SetResourceReference(Image.SourceProperty, "screen");
 
-
-
-            var clockStoryboard = (Storyboard)FindResource("clock");
-            clockStoryboard.Begin();
+            // refresh displayed clock label now
             TimerTick(null, EventArgs.Empty);
             clockTimer.Stop();
             clockTimer.Start();
@@ -114,7 +111,14 @@ namespace Operator
         void TimerTick(object sender, EventArgs e)
         {
             var interval=Log.TimeFromLastCommit;
-            Clock.Content = string.Format("{0:D2}:{1:D2}", interval.Minutes, interval.Seconds);
+            ClockFromLastCommit.Content = string.Format("{0:D2}:{1:D2}", interval.Minutes, interval.Seconds);
+
+            var fromSplit = Log.TimeGoodFromLastSplit;
+            ClockGoodInCurrentPart.Content = string.Format("{0:D2}:{1:D2}", fromSplit.Minutes, fromSplit.Seconds);
+
+            var fromStart = Log.TimeGoodFromStart;
+            ClockGoodTotal.Content = string.Format("{0:D2}:{1:D2}", fromStart.Minutes, fromStart.Seconds);
+
         }
     }
 }
