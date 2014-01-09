@@ -113,10 +113,10 @@ namespace Operator
             var interval=Log.TimeFromLastCommit;
             ClockFromLastCommit.Content = string.Format("{0:D2}:{1:D2}", interval.Minutes, interval.Seconds);
 
-            var fromSplit = Log.TimeGoodFromLastSplit;
+            var fromSplit = Log.TimeFromLastSplit;
             ClockGoodInCurrentPart.Content = string.Format("{0:D2}:{1:D2}", fromSplit.Minutes, fromSplit.Seconds);
 
-            var fromStart = Log.TimeGoodFromStart;
+            var fromStart = Log.TimeFromStart;
             ClockGoodTotal.Content = string.Format("{0:D2}:{1:D2}", fromStart.Minutes, fromStart.Seconds);
 
         }
