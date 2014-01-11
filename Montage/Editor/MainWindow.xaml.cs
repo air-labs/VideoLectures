@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VideoLib;
 
 namespace Editor
 {
@@ -63,10 +64,14 @@ namespace Editor
             PreviewKeyDown += MainWindow_KeyDown;
             Pause.Click += Pause_Click;
 
-            var binding = new CommandBinding(ApplicationCommands.Save);
-            binding.Executed += binding_Executed;
-            binding.CanExecute += (o, a) => a.CanExecute = true;
+            var binding = new CommandBinding(Commands.Save);
+            binding.Executed += Save;
             CommandBindings.Add(binding);
+
+            binding = new CommandBinding(Commands.Export);
+            binding.Executed += Export;
+            CommandBindings.Add(binding);
+            
         }
 
         bool paused = true;
@@ -81,18 +86,41 @@ namespace Editor
             }
             else
             {
-            //    FaceVideo.Pause();
+                FaceVideo.Pause();
                 ScreenVideo.Pause();
                 Pause.Content = "Play";
             }
             paused = !paused;
         }
 
-        void binding_Executed(object sender, ExecutedRoutedEventArgs e)
+        void Save(object sender, ExecutedRoutedEventArgs e)
         {
             using (var stream = new StreamWriter("montage.editor"))
             {
                 stream.WriteLine(new JavaScriptSerializer().Serialize(model));
+            }
+        }
+
+        void Export(object sender, ExecutedRoutedEventArgs ce)
+        {
+            var file="log.txt";
+            MontageCommandIO.Clear(file);
+            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartFace, Id = 1, Time = 0 }, file);
+            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartScreen, Id = 2, Time = model.Shift },file);
+            int id = 3;
+            foreach (var e in model.Chunks)
+            {
+                var cmd = new MontageCommand();
+                cmd.Id = id++;
+                cmd.Time = e.StartTime + e.Length;
+                switch (e.Mode)
+                {
+                    case Mode.Drop: cmd.Action = MontageAction.Delete; break;
+                    case Mode.Face: cmd.Action = MontageAction.Face; break;
+                    case Mode.Screen: cmd.Action = MontageAction.Screen; break;
+                    case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
+                }
+                MontageCommandIO.AppendCommand(cmd, file);
             }
         }
 
@@ -109,29 +137,37 @@ namespace Editor
             {
                 case Key.Left:
                     SetPosition(model.CurrentPosition - 1000 * Math.Pow(5, value));
+                    e.Handled = true;
                     break;
                 case Key.Right:
                     SetPosition(model.CurrentPosition + 1000 * Math.Pow(5, value));
+                    e.Handled = true;
                     break;
                 case Key.Up:
                     ChangeRatio(1.25);
+                    e.Handled = true;
                     break;
                 case Key.Down:
                     ChangeRatio(0.8);
+                    e.Handled = true;
                     break;
                 case Key.NumPad1:
                     model.CurrentMode = Mode.Screen;
                     Commit(model.CurrentMode);
+                    e.Handled = true;
                     break;
                 case Key.NumPad2:
                     model.CurrentMode = Mode.Face;
                     Commit(model.CurrentMode);
+                    e.Handled = true;
                     break;
                 case Key.Enter:
                     Commit(model.CurrentMode);
+                    e.Handled = true;
                     break;
                 case Key.Decimal:
                     Commit(Mode.Drop);
+                    e.Handled = true;
                     break;
                 case Key.NumPad0:
                     var position = model.CurrentPosition;
@@ -140,10 +176,11 @@ namespace Editor
                     var chunk = model.Chunks[index];
                     chunk.Mode = Mode.Undefined;
                     Timeline.InvalidateVisual();
+                    e.Handled = true;
                     break;
             }
 
-            e.Handled = true;
+
         }
 
         void Commit(Mode mode)

@@ -56,7 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="KeyMap.cs" />
+    <Compile Include="Commands.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Timeline.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -91,6 +91,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\VideoLib\VideoLib.csproj">
+      <Project>{f54f3a10-472a-421b-895f-efd5a5086aca}</Project>
+      <Name>VideoLib</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
