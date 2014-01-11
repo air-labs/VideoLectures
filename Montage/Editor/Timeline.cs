@@ -12,7 +12,7 @@ namespace Editor
     public class Timeline : FrameworkElement
     {
         int RowHeight = 10;
-        int SWidth = 1;
+        int SWidth = 5;
 
         Brush[] fills = new Brush[] { Brushes.White, Brushes.DarkRed, Brushes.DarkGreen, Brushes.DarkBlue };
         Pen borderPen = new Pen(Brushes.Black, 1);
@@ -60,7 +60,7 @@ namespace Editor
             var totalLength = model.TotalLength;
             var secs = 1 + totalLength / 1000;
             var rows = (secs * SWidth) / availableSize.Width;
-            return new Size(availableSize.Width, rows * RowHeight);
+            return new Size(availableSize.Width, rows * RowHeight+5);
         }
 
         IEnumerable<Rect> GetRects(ChunkData chunk)
@@ -95,12 +95,18 @@ namespace Editor
             return base.ArrangeOverride(finalSize);
         }
 
-        public int ChunkIndex(Point point)
+        public int ChunkIndexAtPoint(Point point)
         {
             for (int i=0;i<model.Chunks.Count;i++)
                 foreach(var e in GetRects(model.Chunks[i]))
                     if (e.Contains(point)) return i;
             return -1;
+        }
+
+        public int MsAtPoint(Point point)
+        {
+            var secondsInRow = (int)Math.Round(ActualWidth / SWidth);
+            return (int)(1000 * ((point.X / SWidth) + (secondsInRow * (int)(point.Y / RowHeight))));
         }
 
         public Point GetCoordinate(int timeInMilliseconds)

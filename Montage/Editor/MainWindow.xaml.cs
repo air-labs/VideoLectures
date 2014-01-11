@@ -42,24 +42,59 @@ namespace Editor
                     Mode = (Mode)(i % 4)
                 });
             }
+            model.Chunks.Add(new ChunkData { StartTime = 100000, Length = model.TotalLength-100000, Mode = Editor.Mode.Undefined });
+
             this.Timeline.DataContext = model;
 
-            Timeline.MouseDown += Timeline_MouseDown;
+            MouseDown += Timeline_MouseDown;
 
             Timer t = new Timer();
             t.Interval = 10;
             t.Tick += (o, a) =>
                 {
-                    model.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+                    CheckPlayTime();
                 };
             t.Start();
         }
 
+        void CheckPlayTime()
+        {
+            var pos=(int)FaceVideo.Position.TotalMilliseconds;
+            if (OnlyGood.IsChecked.Value)
+            {
+                bool bad=false;
+                var index=model.FindChunkIndex(pos);
+                if (index != -1)
+                {
+                    for (; index < model.Chunks.Count; index++)
+                        if (model.Chunks[index].Mode == Mode.Drop)
+                            bad = true;
+                        else break;
+                    if (bad)
+                        SetPosition(model.Chunks[index].StartTime);
+                }
+            }
+            model.CurrentPosition = pos;
+        }
+
+        void SetPosition(int ms)
+        {
+            FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
+        }
+
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var index = Timeline.ChunkIndex(e.GetPosition(Timeline));
-            if (index == -1) return;
-            FaceVideo.Position = TimeSpan.FromMilliseconds(model.Chunks[index].StartTime);
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                var index = Timeline.ChunkIndexAtPoint(e.GetPosition(Timeline));
+                if (index == -1) return;
+                SetPosition(model.Chunks[index].StartTime);
+                
+            }
+            else
+            {
+                SetPosition(Timeline.MsAtPoint(e.GetPosition(Timeline)));
+            }
         }
     }
 }
