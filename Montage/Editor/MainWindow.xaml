@@ -1,0 +1,10 @@
+﻿<Window x:Class="Editor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:ed="clr-namespace:Editor"
+        Title="MainWindow" Height="350" Width="525">
+    <StackPanel Orientation="Vertical">
+        <MediaElement Name="FaceVideo"></MediaElement>
+        <ed:Timeline x:Name="Timeline"/>
+    </StackPanel>
+</Window>
