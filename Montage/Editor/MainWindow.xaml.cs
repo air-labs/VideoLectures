@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,39 +25,75 @@ namespace Editor
     {
         EditorModel model;
 
-        public MainWindow()
+
+        internal void Initialize(EditorModel model, DirectoryInfo folder)
         {
-            InitializeComponent();
-            FaceVideo.Source = new Uri("test.mp4", UriKind.Relative);
+            this.model = model;
+
+            FaceVideo.Source = new Uri(folder.FullName+"\\face.mp4", UriKind.Absolute);
             FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
-            FaceVideo.Position = TimeSpan.FromMilliseconds(40000);
-            
-            model = new EditorModel();
-            model.TotalLength = 2000000;
-            for (int i = 0; i < 10; i++)
-            {
-                model.Chunks.Add(new ChunkData
-                {
-                    StartTime = i * 10000,
-                    Length = 10000,
-                    Mode = (Mode)(i % 4)
-                });
-            }
-            model.Chunks.Add(new ChunkData { StartTime = 100000, Length = model.TotalLength-100000, Mode = Editor.Mode.Undefined });
 
-            this.Timeline.DataContext = model;
+            ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.mp4", UriKind.Absolute);
+            ScreenVideo.SpeedRatio = 1;
+            ScreenVideo.Volume = 0.0001;
 
-            MouseDown += Timeline_MouseDown;
-            KeyDown += MainWindow_KeyDown;
+            SetPosition(model.CurrentPosition);
+
+            this.DataContext = model;
+            Timeline.DataContext = model;
 
             Timer t = new Timer();
             t.Interval = 10;
             t.Tick += (o, a) =>
-                {
-                    CheckPlayTime();
-                };
+            {
+                CheckPlayTime();
+            };
             t.Start();
+        }
+
+        public MainWindow()
+        {
+            InitializeComponent();
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
+
+
+            MouseDown += Timeline_MouseDown;
+            PreviewKeyDown += MainWindow_KeyDown;
+            Pause.Click += Pause_Click;
+
+            var binding = new CommandBinding(ApplicationCommands.Save);
+            binding.Executed += binding_Executed;
+            binding.CanExecute += (o, a) => a.CanExecute = true;
+            CommandBindings.Add(binding);
+        }
+
+        bool paused = true;
+
+        void Pause_Click(object sender, RoutedEventArgs e)
+        {
+            if (paused)
+            {
+                FaceVideo.Play();
+                ScreenVideo.Play();
+                Pause.Content = "Pause";
+            }
+            else
+            {
+            //    FaceVideo.Pause();
+                ScreenVideo.Pause();
+                Pause.Content = "Play";
+            }
+            paused = !paused;
+        }
+
+        void binding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            using (var stream = new StreamWriter("montage.editor"))
+            {
+                stream.WriteLine(new JavaScriptSerializer().Serialize(model));
+            }
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -81,15 +119,31 @@ namespace Editor
                 case Key.Down:
                     ChangeRatio(0.8);
                     break;
-                case Key.Space:
-                    Commit(Mode.Face);
+                case Key.NumPad1:
+                    model.CurrentMode = Mode.Screen;
+                    Commit(model.CurrentMode);
                     break;
-                case Key.Delete:
+                case Key.NumPad2:
+                    model.CurrentMode = Mode.Face;
+                    Commit(model.CurrentMode);
+                    break;
+                case Key.Enter:
+                    Commit(model.CurrentMode);
+                    break;
+                case Key.Decimal:
                     Commit(Mode.Drop);
                     break;
-           
-
+                case Key.NumPad0:
+                    var position = model.CurrentPosition;
+                    var index = model.FindChunkIndex(position);
+                    if (index == -1) return;
+                    var chunk = model.Chunks[index];
+                    chunk.Mode = Mode.Undefined;
+                    Timeline.InvalidateVisual();
+                    break;
             }
+
+            e.Handled = true;
         }
 
         void Commit(Mode mode)
@@ -136,6 +190,7 @@ namespace Editor
         void SetPosition(double ms)
         {
             FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
+            ScreenVideo.Position = TimeSpan.FromMilliseconds(ms + model.Shift);
         }
 
         void ChangeRatio(double ratio)

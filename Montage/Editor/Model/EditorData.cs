@@ -30,6 +30,17 @@ namespace Editor
     class EditorModel : INotifyPropertyChanged
     {
         public int TotalLength { get; set; }
+        public int Shift { get; set; }
+
+        Mode currentMode;
+        public Mode CurrentMode
+        {
+            get { return currentMode; }
+            set { 
+                currentMode=value;
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode")); 
+            }
+        }
 
         int currentPosition;
         public int CurrentPosition 

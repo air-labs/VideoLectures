@@ -2,10 +2,23 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ed="clr-namespace:Editor"
-        Title="MainWindow" SizeToContent="Height" Width="500">
+        Title="MainWindow" WindowState="Maximized">
     <StackPanel Orientation="Vertical">
-        <MediaElement Name="FaceVideo"></MediaElement>
+        <Menu>
+            <MenuItem Command="Save"/>
+        </Menu>
+        <StackPanel Orientation="Horizontal">
+            <MediaElement Name="FaceVideo"></MediaElement>
+            <MediaElement Name="ScreenVideo"></MediaElement>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal">
+            <Button Width="50"  Name="Pause">Pause</Button>
+            <Rectangle Width="10"/>
+            <CheckBox Name="OnlyGood" VerticalAlignment="Center">Show selected only</CheckBox>
+            <Rectangle Width="10"/>
+            <Label>Mode:</Label>
+            <Label Name="CurrentMode" Content="{Binding CurrentMode}"></Label>
+        </StackPanel>
         <ed:Timeline x:Name="Timeline"/>
-        <CheckBox Name="OnlyGood">Проигрывать только одобренные фрагменты</CheckBox>
     </StackPanel>
 </Window>
