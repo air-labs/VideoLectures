@@ -62,7 +62,7 @@ namespace Editor
             return -1;
         }
 
-        public List<ChunkData> Chunks { get; private set; }
+        public List<ChunkData> Chunks { get; set; }
 
         public EditorModel()
         {
