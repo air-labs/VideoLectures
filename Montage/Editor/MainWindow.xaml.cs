@@ -147,7 +147,7 @@ namespace Editor
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var index = Timeline.ChunkIndexAtPoint(e.GetPosition(Timeline));
+                var index = model.FindChunkIndex(Timeline.MsAtPoint(e.GetPosition(Timeline)));
                 if (index == -1) return;
                 SetPosition(model.Chunks[index].StartTime);
                 

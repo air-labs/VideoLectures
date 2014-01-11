@@ -12,12 +12,25 @@ namespace Editor
     public class Timeline : FrameworkElement
     {
         int RowHeight = 10;
-        int SWidth = 5;
+        int msInRow = 60000;
 
         Brush[] fills = new Brush[] { Brushes.White, Brushes.DarkRed, Brushes.DarkGreen, Brushes.DarkBlue };
         Pen borderPen = new Pen(Brushes.Black, 1);
         Pen currentPen = new Pen(Brushes.Red, 3);
 
+        #region Размер
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            var totalLength = model.TotalLength;
+            var rows = (int)Math.Ceiling(((double)totalLength) / msInRow);
+            return new Size(availableSize.Width, rows * RowHeight + 5);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            return base.ArrangeOverride(finalSize);
+        }
+        #endregion
 
         public Timeline()
         {
@@ -53,70 +66,46 @@ namespace Editor
         {
             InvalidateVisual();
         }
- 
 
-        protected override Size MeasureOverride(Size availableSize)
-        {
-            var totalLength = model.TotalLength;
-            var secs = 1 + totalLength / 1000;
-            var rows = (secs * SWidth) / availableSize.Width;
-            return new Size(availableSize.Width, rows * RowHeight+5);
-        }
+     
 
         IEnumerable<Rect> GetRects(ChunkData chunk)
         {
-            var secondsInRow = (int)Math.Round(ActualWidth / SWidth);
-            if (secondsInRow <= 0) secondsInRow = 10;
+            double SWidth = ActualWidth / msInRow;
 
-            var start = chunk.StartTime/1000;
-            var length = chunk.Length / 1000;
+            var start = chunk.StartTime;
+            var length = chunk.Length;
 
-            int x = start % secondsInRow;
-            int y = start / secondsInRow;
+            int x = start % msInRow;
+            int y = start / msInRow;
 
             while (true)
             {
-                if (x + length <= secondsInRow)
+                if (x + length <= msInRow)
                 {
                     yield return new Rect(x*SWidth, y*RowHeight, length*SWidth, RowHeight);
                     yield break;
                 }
-                yield return new Rect(x * SWidth, y * RowHeight, (secondsInRow-x)* SWidth, RowHeight);
-                length -= (secondsInRow - x);
+                yield return new Rect(x * SWidth, y * RowHeight, (msInRow-x)* SWidth, RowHeight);
+                length -= (msInRow - x);
                 x = 0;
                 y++;
             }
         }
 
-
-
-        protected override Size ArrangeOverride(Size finalSize)
-        {
-            return base.ArrangeOverride(finalSize);
-        }
-
-        public int ChunkIndexAtPoint(Point point)
-        {
-            for (int i=0;i<model.Chunks.Count;i++)
-                foreach(var e in GetRects(model.Chunks[i]))
-                    if (e.Contains(point)) return i;
-            return -1;
-        }
-
         public int MsAtPoint(Point point)
         {
-            var secondsInRow = (int)Math.Round(ActualWidth / SWidth);
-            return (int)(1000 * ((point.X / SWidth) + (secondsInRow * (int)(point.Y / RowHeight))));
+            var row = (int)point.Y / RowHeight;
+            return (int)Math.Round(msInRow * (row + point.X / ActualWidth));
         }
+
 
         public Point GetCoordinate(int timeInMilliseconds)
         {
-            var msInRow = (int)Math.Round(1000*ActualWidth / SWidth);
-
-            double x = ( timeInMilliseconds % msInRow )/1000.0;
             int y = timeInMilliseconds / msInRow;
+            double x = timeInMilliseconds % msInRow;
             return new Point(
-                x * SWidth,
+                x * ActualWidth / msInRow,
                 y * RowHeight);
         }
 
