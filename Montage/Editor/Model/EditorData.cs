@@ -20,6 +20,11 @@ namespace Editor
         public int StartTime { get; set; }
         public int Length { get; set; }
         public Mode Mode { get; set; }
+
+        public override string ToString()
+        {
+            return StartTime.ToString() + " " + Length.ToString();
+        }
     }
 
     class EditorModel : INotifyPropertyChanged

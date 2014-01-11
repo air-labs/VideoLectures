@@ -27,7 +27,7 @@ namespace Editor
         {
             InitializeComponent();
             FaceVideo.Source = new Uri("test.mp4", UriKind.Relative);
-            FaceVideo.SpeedRatio = 1.5;
+            FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
             FaceVideo.Position = TimeSpan.FromMilliseconds(40000);
             
@@ -47,6 +47,7 @@ namespace Editor
             this.Timeline.DataContext = model;
 
             MouseDown += Timeline_MouseDown;
+            KeyDown += MainWindow_KeyDown;
 
             Timer t = new Timer();
             t.Interval = 10;
@@ -55,6 +56,61 @@ namespace Editor
                     CheckPlayTime();
                 };
             t.Start();
+        }
+
+        void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            var value = 0;
+            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                value = -1;
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                value = 1;
+
+
+            switch (e.Key)
+            {
+                case Key.Left:
+                    SetPosition(model.CurrentPosition - 1000 * Math.Pow(5, value));
+                    break;
+                case Key.Right:
+                    SetPosition(model.CurrentPosition + 1000 * Math.Pow(5, value));
+                    break;
+                case Key.Up:
+                    ChangeRatio(1.25);
+                    break;
+                case Key.Down:
+                    ChangeRatio(0.8);
+                    break;
+                case Key.Space:
+                    Commit(Mode.Face);
+                    break;
+                case Key.Delete:
+                    Commit(Mode.Drop);
+                    break;
+           
+
+            }
+        }
+
+        void Commit(Mode mode)
+        {
+            var position=model.CurrentPosition;
+            var index = model.FindChunkIndex(position);
+            if (index == -1) return;
+            var chunk = model.Chunks[index];
+            if (chunk.Mode == Mode.Undefined && chunk.Length > 500)
+            {
+                var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
+                var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
+                model.Chunks.RemoveAt(index);
+                model.Chunks.Insert(index, chunk1);
+                model.Chunks.Insert(index + 1, chunk2);
+            }
+            else
+            {
+                chunk.Mode = mode;
+            }
+            Timeline.InvalidateVisual();
         }
 
         void CheckPlayTime()
@@ -77,9 +133,14 @@ namespace Editor
             model.CurrentPosition = pos;
         }
 
-        void SetPosition(int ms)
+        void SetPosition(double ms)
         {
             FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
+        }
+
+        void ChangeRatio(double ratio)
+        {
+            FaceVideo.SpeedRatio=FaceVideo.SpeedRatio*ratio;
         }
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
