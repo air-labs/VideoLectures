@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+                <playlist xmlns="http://xspf.org/ns/0/" xmlns:vlc="http://www.videolan.org/vlc/playlist/ns/0/" version="1">
+	            <title>Плейлист</title>
+	            <trackList>
+                
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk003.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk005.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk007.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk009.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk011.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk013.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk015.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk017.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk019.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk021.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk023.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk025.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk027.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk029.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk031.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk033.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk035.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk037.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk039.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk041.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk042.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk043.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk045.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk046.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk047.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk049.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk051.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk053.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk054.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk056.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk058.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk060.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk062.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk064.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk066.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk068.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk070.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk072.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk074.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk076.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk077.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk079.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk081.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk082.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk083.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk084.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk086.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk088.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk090.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk092.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk094.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk096.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk097.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk099.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk101.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk103.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk105.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk107.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk108.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk110.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk112.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk114.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk116.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk118.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk120.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk122.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk124.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk126.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk128.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk129.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk131.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk133.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk134.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk136.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk137.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk138.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk140.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk142.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk143.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk144.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk146.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk148.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk150.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk152.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+		                <track>
+			                <location>file:///C:/Users/yura/Desktop/VideoLectures-1/Montage/EditorTest/00/chunks/chunk154.avi</location>
+			                <duration>0</duration>
+			                <extension application="http://www.videolan.org/vlc/playlist/0">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>
+
+	                </tracklist>
+                    </extension>
+                    </playlist>

@@ -112,9 +112,22 @@ namespace Editor
             int id = 3;
 
             var oldMode = Mode.Drop;
-            foreach (var e in model.Chunks)
+
+            var list = model.Chunks.ToList();
+            list.Add(new ChunkData
             {
-                if (e.Mode != oldMode || e.StartsNewEpisode)
+                StartTime = list[list.Count - 1].StartTime + list[list.Count - 1].Length,
+                Length = 0,
+                Mode = Mode.Undefined
+            });
+
+
+
+
+            for (int i=0;i<list.Count;i++)
+            {
+                var e = list[i];
+                if (e.Mode != oldMode || e.StartsNewEpisode || i==list.Count-1)
                 {
                     var cmd = new MontageCommand();
                     cmd.Id = id++;
@@ -128,6 +141,8 @@ namespace Editor
                     }
                     MontageCommandIO.AppendCommand(cmd, file);
                     oldMode = e.Mode;
+
+
                 }
                 if (e.StartsNewEpisode)
                 {
@@ -137,6 +152,7 @@ namespace Editor
                         );
                 }
             }
+            
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

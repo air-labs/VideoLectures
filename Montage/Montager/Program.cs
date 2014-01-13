@@ -45,8 +45,38 @@ namespace Montager
             var chunks = Montager.CreateChunks(log, "..\\face-converted.avi", "..\\desktop-converted.avi");
 
 
-            File.WriteAllLines("ConcatFilesList.txt", chunks.Select(z => "file 'chunks\\" + z.OutputVideoFile + "'").ToList());
+            var lines = chunks.Select(z => z.OutputVideoFile).ToList();
+            var folder = new DirectoryInfo(".");
 
+            File.WriteAllLines("ConcatFilesList.txt", lines.Select(z => "file 'chunks\\" + z + "'").ToList());
+
+            using (var xspf = new StreamWriter("list.xspf"))
+            {
+                xspf.WriteLine(@"<?xml version=""1.0"" encoding=""UTF-8""?>
+                <playlist xmlns=""http://xspf.org/ns/0/"" xmlns:vlc=""http://www.videolan.org/vlc/playlist/ns/0/"" version=""1"">
+	            <title>Плейлист</title>
+	            <trackList>
+                ");
+
+                foreach (var e in lines)
+                {
+                        xspf.WriteLine(@"
+		                <track>
+			                <location>file:///{0}/chunks/{1}</location>
+			                <duration>{2}</duration>
+			                <extension application=""http://www.videolan.org/vlc/playlist/0"">
+			            	<vlc:id>0</vlc:id>
+			                </extension>
+		                </track>"
+                            , folder.FullName.Replace("\\", "/"), e, 0);
+                }
+
+                xspf.WriteLine(@"
+	                </tracklist>
+                    </extension>
+                    </playlist>");
+               
+            }
 
             File.WriteAllLines("Recode.bat",
                 new string[]
