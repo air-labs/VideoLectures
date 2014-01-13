@@ -8,10 +8,17 @@
             <MenuItem Command="ed:Commands.Save"/>
             <MenuItem Command="ed:Commands.Export"/>
         </Menu>
-        <StackPanel Orientation="Horizontal">
-            <MediaElement Name="FaceVideo"></MediaElement>
-            <MediaElement Name="ScreenVideo"></MediaElement>
-        </StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <MediaElement Name="FaceVideo" Grid.Column="0"></MediaElement>
+            <MediaElement Name="ScreenVideo" Grid.Column="1"></MediaElement>
+        </Grid>
         <StackPanel Orientation="Horizontal">
             <Button Width="50"  Name="Pause">Play</Button>
             <Rectangle Width="10"/>

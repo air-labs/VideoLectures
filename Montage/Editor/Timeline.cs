@@ -12,7 +12,7 @@ namespace Editor
     public class Timeline : FrameworkElement
     {
         int RowHeight = 10;
-        int msInRow = 60000;
+        int msInRow = 300000;
 
         Brush[] fills = new Brush[] { Brushes.White, Brushes.DarkRed, Brushes.DarkGreen, Brushes.DarkBlue };
         Pen borderPen = new Pen(Brushes.Black, 1);

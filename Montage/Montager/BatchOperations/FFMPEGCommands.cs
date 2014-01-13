@@ -34,7 +34,10 @@ namespace Montager
 
         public string MS(int milliseconds)
         {
-            return (milliseconds / 1000).ToString() + "." + milliseconds % 1000;
+            var dr=(milliseconds % 1000).ToString();
+            while (dr.Length<3) dr="0"+dr;
+
+            return (milliseconds / 1000).ToString() + "." + dr;
         }
     }
 

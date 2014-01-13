@@ -16,6 +16,19 @@ namespace Editor
         static EditorModel model = null;
         static DirectoryInfo folder = null;
 
+        static int ParseMS(string s)
+        {
+            var parts = s.Split('.');
+            var result = 0;
+            if (parts.Length > 0)
+                result += int.Parse(parts[parts.Length - 1]);
+            if (parts.Length > 1)
+                result += int.Parse(parts[parts.Length - 2]) * 1000;
+            if (parts.Length > 2)
+                result += int.Parse(parts[parts.Length - 2]) * 60000;
+            return result;
+        }
+
         static bool InitFromFolder(string f)
         {
 
@@ -33,8 +46,8 @@ namespace Editor
             }
             using (var reader = new StreamReader("times.txt"))
             {
-                var shift = int.Parse(reader.ReadLine());
-                var length = int.Parse(reader.ReadLine());
+                var shift = ParseMS(reader.ReadLine());
+                var length = ParseMS(reader.ReadLine());
                 model = new EditorModel { Shift = shift, TotalLength = length };
                 model.Chunks.Add(new ChunkData { StartTime = 0, Length = length, Mode = Mode.Undefined });
                 model.CurrentMode = Mode.Face;

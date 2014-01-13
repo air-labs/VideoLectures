@@ -35,10 +35,12 @@ namespace Editor
             FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
 
-            ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.mp4", UriKind.Absolute);
+
+
+            ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.avi", UriKind.Absolute);
             ScreenVideo.SpeedRatio = 1;
             ScreenVideo.Volume = 0.0001;
-
+            
             SetPosition(model.CurrentPosition);
 
             this.DataContext = model;
@@ -62,7 +64,7 @@ namespace Editor
 
             MouseDown += Timeline_MouseDown;
             PreviewKeyDown += MainWindow_KeyDown;
-            Pause.Click += Pause_Click;
+            Pause.Click += (a, b) => CmPause();
 
             var binding = new CommandBinding(Commands.Save);
             binding.Executed += Save;
@@ -76,7 +78,7 @@ namespace Editor
 
         bool paused = true;
 
-        void Pause_Click(object sender, RoutedEventArgs e)
+        void CmPause()
         {
             if (paused)
             {
@@ -108,19 +110,25 @@ namespace Editor
             MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartFace, Id = 1, Time = 0 }, file);
             MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartScreen, Id = 2, Time = model.Shift },file);
             int id = 3;
+
+            var oldMode = Mode.Drop;
             foreach (var e in model.Chunks)
             {
-                var cmd = new MontageCommand();
-                cmd.Id = id++;
-                cmd.Time = e.StartTime + e.Length;
-                switch (e.Mode)
+                if (e.Mode != oldMode)
                 {
-                    case Mode.Drop: cmd.Action = MontageAction.Delete; break;
-                    case Mode.Face: cmd.Action = MontageAction.Face; break;
-                    case Mode.Screen: cmd.Action = MontageAction.Screen; break;
-                    case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
+                    var cmd = new MontageCommand();
+                    cmd.Id = id++;
+                    cmd.Time = e.StartTime;
+                    switch (oldMode)
+                    {
+                        case Mode.Drop: cmd.Action = MontageAction.Delete; break;
+                        case Mode.Face: cmd.Action = MontageAction.Face; break;
+                        case Mode.Screen: cmd.Action = MontageAction.Screen; break;
+                        case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
+                    }
+                    MontageCommandIO.AppendCommand(cmd, file);
+                    oldMode = e.Mode;
                 }
-                MontageCommandIO.AppendCommand(cmd, file);
             }
         }
 
@@ -131,15 +139,17 @@ namespace Editor
                 value = -1;
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                 value = 1;
-
+            var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
             switch (e.Key)
             {
+                case Key.NumPad7:
                 case Key.Left:
                     SetPosition(model.CurrentPosition - 1000 * Math.Pow(5, value));
                     e.Handled = true;
                     break;
-                case Key.Right:
+                case Key.Subtract:
+                 case Key.Right:
                     SetPosition(model.CurrentPosition + 1000 * Math.Pow(5, value));
                     e.Handled = true;
                     break;
@@ -153,43 +163,110 @@ namespace Editor
                     break;
                 case Key.NumPad1:
                     model.CurrentMode = Mode.Screen;
-                    Commit(model.CurrentMode);
+                    Commit(model.CurrentMode, ctrl);
                     e.Handled = true;
                     break;
                 case Key.NumPad2:
                     model.CurrentMode = Mode.Face;
-                    Commit(model.CurrentMode);
+                    Commit(model.CurrentMode, ctrl);
                     e.Handled = true;
                     break;
                 case Key.Enter:
-                    Commit(model.CurrentMode);
+                    Commit(model.CurrentMode, ctrl);
                     e.Handled = true;
                     break;
                 case Key.Decimal:
-                    Commit(Mode.Drop);
+                    Commit(Mode.Drop, ctrl);
                     e.Handled = true;
                     break;
                 case Key.NumPad0:
-                    var position = model.CurrentPosition;
-                    var index = model.FindChunkIndex(position);
-                    if (index == -1) return;
-                    var chunk = model.Chunks[index];
-                    chunk.Mode = Mode.Undefined;
-                    Timeline.InvalidateVisual();
+                    RemoveChunk();
                     e.Handled = true;
                     break;
+                case Key.NumPad8:
+                    ShiftLeft(-200);
+                    e.Handled = true;
+                    break;
+                case Key.NumPad5:
+                    ShiftLeft(200);
+                    e.Handled = true;
+                    break;
+                case Key.NumPad9:
+                    ShiftRight(200);
+                    e.Handled = true;
+                    break;
+                case Key.NumPad6:
+                    ShiftRight(-200);
+                    e.Handled = true;
+                    break;
+                
+                case Key.Space:
+                    CmPause();
+                    e.Handled = true;
+                    break;
+
             }
 
 
         }
 
-        void Commit(Mode mode)
+        void RemoveChunk()
+        {
+            var position = model.CurrentPosition;
+            var index = model.FindChunkIndex(position);
+            if (index == -1) return;
+            var chunk = model.Chunks[index];
+            chunk.Mode = Mode.Undefined;
+            if (index != model.Chunks.Count - 1 && model.Chunks[index + 1].Mode == Mode.Undefined)
+            {
+                chunk.Length += model.Chunks[index + 1].Length;
+                model.Chunks.RemoveAt(index + 1);
+            }
+            if (index != 0 && model.Chunks[index - 1].Mode == Mode.Undefined)
+            {
+                chunk.StartTime = model.Chunks[index - 1].StartTime;
+                chunk.Length += model.Chunks[index - 1].Length;
+                model.Chunks.RemoveAt(index - 1);
+            }
+            Timeline.InvalidateVisual();
+        }
+
+        void ShiftLeft(int delta)
+        {
+            var position = model.CurrentPosition;
+            var index = model.FindChunkIndex(position);
+            if (index == -1 || index == 0) return;
+            if (delta < 0 && model.Chunks[index - 1].Length < -delta) return;
+            if (delta > 0 && model.Chunks[index].Length < delta) return;
+            model.Chunks[index].StartTime += delta;
+            model.Chunks[index].Length -= delta;
+            model.Chunks[index - 1].Length += delta;
+            Timeline.InvalidateVisual();
+            SetPosition(model.Chunks[index].StartTime);
+        }
+
+        void ShiftRight(int delta)
+        {
+            var position = model.CurrentPosition;
+            var index = model.FindChunkIndex(position);
+            if (index == -1 || index == model.Chunks.Count-1) return;
+            if (delta < 0 && model.Chunks[index].Length < -delta) return;
+            if (delta > 0 && model.Chunks[index+1].Length < delta) return;
+            model.Chunks[index].Length += delta;
+            model.Chunks[index + 1].Length -= delta;
+            model.Chunks[index + 1].StartTime += delta;
+            Timeline.InvalidateVisual();
+            SetPosition(model.Chunks[index+1].StartTime-2000);
+        }
+
+
+        void Commit(Mode mode, bool ctrl)
         {
             var position=model.CurrentPosition;
             var index = model.FindChunkIndex(position);
             if (index == -1) return;
             var chunk = model.Chunks[index];
-            if (chunk.Mode == Mode.Undefined && chunk.Length > 500)
+            if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
             {
                 var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
                 var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
@@ -227,12 +304,13 @@ namespace Editor
         void SetPosition(double ms)
         {
             FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
-            ScreenVideo.Position = TimeSpan.FromMilliseconds(ms + model.Shift);
+            ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
         }
 
         void ChangeRatio(double ratio)
         {
             FaceVideo.SpeedRatio=FaceVideo.SpeedRatio*ratio;
+            ScreenVideo.SpeedRatio = FaceVideo.SpeedRatio;
         }
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
