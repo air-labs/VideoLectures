@@ -17,6 +17,7 @@ namespace Editor
         Brush[] fills = new Brush[] { Brushes.White, Brushes.DarkRed, Brushes.DarkGreen, Brushes.DarkBlue };
         Pen borderPen = new Pen(Brushes.Black, 1);
         Pen currentPen = new Pen(Brushes.Red, 3);
+        Pen episode = new Pen(Brushes.Yellow,3);
 
         #region Размер
         protected override Size MeasureOverride(Size availableSize)
@@ -112,8 +113,15 @@ namespace Editor
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
            foreach (var c in model.Chunks)
-                foreach (var r in GetRects(c))
-                    drawingContext.DrawRectangle(fills[(int)c.Mode], borderPen, r);
+               foreach (var r in GetRects(c))
+               {
+                   drawingContext.DrawRectangle(fills[(int)c.Mode], borderPen, r);
+                   if (c.StartsNewEpisode)
+                   {
+                       var p = GetCoordinate(c.StartTime);
+                       drawingContext.DrawLine(episode, p, new Point(p.X, p.Y + RowHeight));
+                   }
+               }
 
             var point=GetCoordinate(model.CurrentPosition);
             drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));

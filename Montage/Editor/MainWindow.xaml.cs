@@ -114,7 +114,7 @@ namespace Editor
             var oldMode = Mode.Drop;
             foreach (var e in model.Chunks)
             {
-                if (e.Mode != oldMode)
+                if (e.Mode != oldMode || e.StartsNewEpisode)
                 {
                     var cmd = new MontageCommand();
                     cmd.Id = id++;
@@ -128,6 +128,13 @@ namespace Editor
                     }
                     MontageCommandIO.AppendCommand(cmd, file);
                     oldMode = e.Mode;
+                }
+                if (e.StartsNewEpisode)
+                {
+                    MontageCommandIO.AppendCommand(
+                        new MontageCommand { Id = id++, Action = MontageAction.CommitAndSplit, Time = e.StartTime },
+                        file
+                        );
                 }
             }
         }
@@ -199,7 +206,15 @@ namespace Editor
                     ShiftRight(-200);
                     e.Handled = true;
                     break;
-                
+                case Key.Multiply:
+                    var index = model.FindChunkIndex(model.CurrentPosition);
+                    if (index != -1)
+                    {
+                        model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
+                        Timeline.InvalidateVisual();
+                    }
+                    e.Handled = true;
+                    break;
                 case Key.Space:
                     CmPause();
                     e.Handled = true;
