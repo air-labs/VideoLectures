@@ -58,6 +58,7 @@ namespace Montager
 	            <trackList>
                 ");
 
+                int id = 0;
                 foreach (var e in lines)
                 {
                         xspf.WriteLine(@"
@@ -65,15 +66,15 @@ namespace Montager
 			                <location>file:///{0}/chunks/{1}</location>
 			                <duration>{2}</duration>
 			                <extension application=""http://www.videolan.org/vlc/playlist/0"">
-			            	<vlc:id>0</vlc:id>
+			            	<vlc:id>{3}</vlc:id>
 			                </extension>
 		                </track>"
-                            , folder.FullName.Replace("\\", "/"), e, 0);
+                            , folder.FullName.Replace("\\", "/"), e, 0, id++);
                 }
 
                 xspf.WriteLine(@"
 	                </tracklist>
-                    </extension>
+                   
                     </playlist>");
                
             }
