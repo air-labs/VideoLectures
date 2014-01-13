@@ -111,8 +111,7 @@ namespace Editor
             MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartScreen, Id = 2, Time = model.Shift },file);
             int id = 3;
 
-            var oldMode = Mode.Drop;
-
+        
             var list = model.Chunks.ToList();
             list.Add(new ChunkData
             {
@@ -123,6 +122,7 @@ namespace Editor
 
 
 
+            var oldMode = Mode.Drop;
 
             for (int i=0;i<list.Count;i++)
             {

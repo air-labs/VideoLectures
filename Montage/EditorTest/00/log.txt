@@ -13,615 +13,615 @@ StartScreen
 
 3
 38089
-Delete
+Face
 
 4
 47567
-Face
+Delete
 
 5
 55678
-Delete
+Face
 
 6
-99388
-Face
+98988
+Delete
 
 7
 104395
-Delete
+Face
 
 8
-120398
-Face
+117882
+Delete
 
 9
 131068
-Delete
+Face
 
 10
 137614
-Face
+Delete
 
 11
 139509
-Delete
+Face
 
 12
 143381
-Face
+Delete
 
 13
 151524
-Delete
+Face
 
 14
 164993
-Face
+Delete
 
 15
 171487
-Delete
+Face
 
 16
 175301
-Face
+Delete
 
 17
 179573
-Delete
+Face
 
 18
 190456
-Face
+Delete
 
 19
 216547
-Delete
+Face
 
 20
-227169
-Face
+227369
+Delete
 
 21
 245157
-Delete
+Face
 
 22
 284061
-Face
+Delete
 
 23
 297388
-Delete
+Face
 
 24
 303685
-Face
+Delete
 
 25
 335662
-Delete
+Screen
 
 26
 350094
-Screen
+Delete
 
 27
 352721
-Delete
+Face
 
 28
-372676
-Face
+372476
+Delete
 
 29
 375257
-Delete
+Face
 
 30
 412588
-Face
+Delete
 
 31
 414573
-Delete
+Screen
 
 32
 485399
-Screen
+Delete
 
 33
 488186
-Delete
+Screen
 
 34
 497365
-Screen
+Delete
 
 35
 500873
-Delete
+Face
 
 36
-505362
-Face
+505162
+Delete
 
 37
 509913
-Delete
+Face
 
 38
 518319
-Face
+Delete
 
 39
 523864
-Delete
+Face
 
 40
-534373
-Face
+533973
+Delete
 
 41
 536074
-Delete
+Face
 
 42
 544333
-Face
+Screen
 
 43
 547717
-Screen
+Face
 
 44
 558776
-Face
+Delete
 
 45
 566033
-Delete
+Screen
 
 46
 600102
-Screen
+Face
 
 47
 611703
-Face
+Screen
 
 48
 622327
-Screen
+Delete
 
 49
 632680
-Delete
+Face
 
 50
 652885
-Face
+Delete
 
 51
 664930
-Delete
+Face
 
 52
 680692
-Face
+Delete
 
 53
 688729
-Delete
+Face
 
 54
 698855
-Face
+Screen
 
 55
-712458
-Screen
+712258
+Delete
 
 56
 716805
-Delete
+Screen
 
 57
-721355
-Screen
+721155
+Delete
 
 58
 733437
-Delete
+Screen
 
 59
 746757
-Screen
+Delete
 
 60
 752271
-Delete
+Screen
 
 61
 760995
-Screen
+Delete
 
 62
 782951
-Delete
+Screen
 
 63
-790687
-Screen
+790487
+Delete
 
 64
 796061
-Delete
+Screen
 
 65
 856582
-Screen
+Delete
 
 66
 866954
-Delete
+Screen
 
 67
 896334
-Screen
+Delete
 
 68
 903519
-Delete
+Screen
 
 69
 908800
-Screen
+Delete
 
 70
 913904
-Delete
+Face
 
 71
-966501
-Face
+966301
+Delete
 
 72
 981164
-Delete
+Face
 
 73
-987642
-Face
+987442
+Delete
 
 74
 991731
-Delete
+Face
 
 75
 997879
-Face
+Delete
 
 76
 1037885
-Delete
+Face
 
 77
 1037885
 CommitAndSplit
 
 78
-1054558
-Face
+1054358
+Delete
 
 79
 1076742
-Delete
+Face
 
 80
 1096132
-Face
+Delete
 
 81
 1113627
-Delete
+Face
 
 82
 1132585
-Face
+Screen
 
 83
 1165161
-Screen
+Face
 
 84
 1173141
-Face
+Screen
 
 85
 1180858
-Screen
+Delete
 
 86
 1196725
-Delete
+Face
 
 87
-1204508
-Face
+1204108
+Delete
 
 88
 1215560
-Delete
+Face
 
 89
 1222231
-Face
+Delete
 
 90
 1225802
-Delete
+Face
 
 91
-1263612
-Face
+1263812
+Delete
 
 92
-1278718
-Delete
-
-93
-1297740
+1279118
 Face
 
-94
-1301188
+93
+1297340
 Delete
+
+94
+1301588
+Face
 
 95
 1357388
-Face
+Delete
 
 96
 1405515
-Delete
+Screen
 
 97
 1413547
-Screen
-
-98
-1441992
 Face
 
-99
-1444525
+98
+1441592
 Delete
+
+99
+1444925
+Face
 
 100
 1449619
-Face
+Delete
 
 101
 1465662
-Delete
+Screen
 
 102
 1483413
-Screen
+Delete
 
 103
 1501589
-Delete
+Screen
 
 104
 1518073
-Screen
+Delete
 
 105
 1521866
-Delete
+Screen
 
 106
 1570690
-Screen
+Delete
 
 107
 1585900
-Delete
+Face
 
 108
 1657015
-Face
+Screen
 
 109
 1661643
-Screen
+Delete
 
 110
 1684087
-Delete
+Screen
 
 111
-1733611
-Screen
-
-112
-1736588
+1733411
 Delete
 
-113
-1795213
+112
+1736388
 Screen
+
+113
+1794813
+Delete
 
 114
 1797934
-Delete
+Screen
 
 115
 1810117
-Screen
+Delete
 
 116
 1811445
-Delete
+Screen
 
 117
 1824760
-Screen
+Delete
 
 118
 1833832
-Delete
+Screen
 
 119
 1853455
-Screen
+Delete
 
 120
 1861922
-Delete
+Screen
 
 121
-1869213
-Screen
+1869013
+Delete
 
 122
 1872524
-Delete
+Screen
 
 123
 1894772
-Screen
+Delete
 
 124
 1898442
-Delete
+Face
 
 125
 1957519
-Face
+Delete
 
 126
 1991922
-Delete
+Face
 
 127
 2019134
-Face
+Delete
 
 128
 2073362
-Delete
+Face
 
 129
 2073362
 CommitAndSplit
 
 130
-2087624
-Face
+2087424
+Delete
 
 131
 2135705
-Delete
+Face
 
 132
 2208744
-Face
+Delete
 
 133
 2221923
-Delete
+Face
 
 134
 2272821
-Face
+Screen
 
 135
 2275517
-Screen
+Delete
 
 136
 2283173
-Delete
+Screen
 
 137
 2365098
-Screen
+Face
 
 138
 2376750
-Face
+Screen
 
 139
 2440296
-Screen
+Delete
 
 140
 2463093
-Delete
+Screen
 
 141
-2473019
-Screen
+2472819
+Delete
 
 142
 2487952
-Delete
+Screen
 
 143
 2507566
-Screen
+Face
 
 144
 2524516
-Face
+Screen
 
 145
 2535032
-Screen
+Delete
 
 146
 2558219
-Delete
+Screen
 
 147
 2581394
-Screen
+Delete
 
 148
 2583450
-Delete
+Screen
 
 149
 2606480
-Screen
+Delete
 
 150
 2610219
-Delete
+Face
 
 151
 2613302
-Face
+Delete
 
 152
 2619004
-Delete
+Face
 
 153
 2636019
-Face
+Delete
 
 154
-2649418
-Delete
+2649818
+Face
 
 155
 2669431
-Face
+Delete
 
 156
 2673000
