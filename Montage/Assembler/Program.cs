@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+using VideoLib;
 
 namespace Assembler
 {
@@ -37,23 +38,63 @@ namespace Assembler
                         .Select(z=> new FileInfo(z).Name)
                         .ToArray();
 
-            var list = new StreamWriter(args[0]+"\\FileList.txt");
-            var bat=new StreamWriter(args[0]+"\\AssemblyLow.bat");
-            bat.WriteLine("del chunks\\new*.*");
-            var concat = "";
+
+
+            var breaks = MontageCommandIO.ReadCommands(args[0]+"\\log.txt")
+                .Commands
+                .Where(z => z.Action == MontageAction.CommitAndSplit)
+                .Select(z => z.Id)
+                .ToArray();
+
+            var resList = new List<List<string>>();
+            resList.Add(new List<string>());
+            int current=0;
             foreach (var e in tracks)
             {
-                var z=new FileInfo(e);
-                bat.WriteLine("ffmpeg -i chunks\\" + z.Name+" -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k chunks\\"+"new-" + z.Name);
-                list.WriteLine("file 'chunks\\" + z.Name + "'");
-                if (concat != "") concat += "|";
-                concat += "chunks\\new-" + z.Name;
+                int number = int.Parse(e.Substring(5, 3));
+                if (current < breaks.Length && number > breaks[current])
+                {
+                    current++;
+                    resList.Add(new List<string>());
+                }
+                resList[resList.Count - 1].Add(e);
             }
-            bat.WriteLine("ffmpeg -i \"concat:" + concat + "\" -c copy result.avi");
-            bat.Close();
-            list.Close();
-            File.WriteAllText(args[0] + "\\AssemblyHigh.bat",
-                "ffmpeg -f concat -i FileList.txt -qscale 0 result.avi");
+
+
+            var high = new StreamWriter(args[0] + "\\AssemblyHigh.bat");
+           for (int i = 0; i < resList.Count; i++)
+            {
+                var list = resList[i];
+                var listFile = new StreamWriter(args[0] + "\\FileList"+i.ToString()+".txt");
+                var concat = "";
+                foreach (var file in list)
+                {
+                    if (concat != "") concat += "|";
+                    concat += "chunks\\new-" + file;
+                    listFile.WriteLine("file 'chunks\\" + file + "'");
+                }
+                listFile.Close();
+                high.WriteLine("ffmpeg -f concat -i FileList" + i.ToString() + ".txt -qscale 0 result-" + i.ToString() + ".avi");
+
+            }
+            high.Close();
+            
+            //var bat=new StreamWriter(args[0]+"\\AssemblyLow.bat");
+            //bat.WriteLine("del chunks\\new*.*");
+            //var concat = "";
+            //foreach (var e in tracks)
+            //{
+            //    var z=new FileInfo(e);
+            //    bat.WriteLine("ffmpeg -i chunks\\" + z.Name+" -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k chunks\\"+"new-" + z.Name);
+            //    list.WriteLine("file 'chunks\\" + z.Name + "'");
+            //    if (concat != "") concat += "|";
+            //    concat += "chunks\\new-" + z.Name;
+            //}
+            //bat.WriteLine("ffmpeg -i \"concat:" + concat + "\" -c copy result.avi");
+            //bat.Close();
+            //list.Close();
+            //File.WriteAllText(args[0] + "\\AssemblyHigh.bat",
+            //    "ffmpeg -f concat -i FileList.txt -qscale 0 result.avi");
 
 
 
