@@ -187,6 +187,10 @@ namespace Montager
                 if (commands[i].Action == MontageAction.Screen)
                     isFace = false;
 
+
+                if (result[result.Count - 1].VideoSource.Duration == 0)
+                    result.RemoveAt(result.Count - 1);
+
             }
             return result;
 

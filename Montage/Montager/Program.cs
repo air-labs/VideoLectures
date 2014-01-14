@@ -59,7 +59,7 @@ namespace Montager
                 ");
 
                 int id = 0;
-                foreach (var e in lines)
+                foreach (var e in chunks)
                 {
                         xspf.WriteLine(@"
 		                <track>
@@ -69,11 +69,11 @@ namespace Montager
 			            	<vlc:id>{3}</vlc:id>
 			                </extension>
 		                </track>"
-                            , folder.FullName.Replace("\\", "/"), e, 0, id++);
+                            , folder.FullName.Replace("\\", "/"), e.OutputVideoFile, 0, id++);
                 }
 
                 xspf.WriteLine(@"
-	                </tracklist>
+	                </trackList>
                    
                     </playlist>");
                

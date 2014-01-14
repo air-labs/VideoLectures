@@ -38,7 +38,7 @@ namespace Assembler
                         .ToArray();
 
             var list = new StreamWriter(args[0]+"\\FileList.txt");
-            var bat=new StreamWriter(args[0]+"\\AssembleLow.bat");
+            var bat=new StreamWriter(args[0]+"\\AssemblyLow.bat");
             bat.WriteLine("del chunks\\new*.*");
             var concat = "";
             foreach (var e in tracks)

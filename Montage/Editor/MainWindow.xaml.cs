@@ -127,6 +127,7 @@ namespace Editor
             for (int i=0;i<list.Count;i++)
             {
                 var e = list[i];
+                bool newEp = false; 
                 if (e.Mode != oldMode || e.StartsNewEpisode || i==list.Count-1)
                 {
                     var cmd = new MontageCommand();
@@ -135,14 +136,13 @@ namespace Editor
                     switch (oldMode)
                     {
                         case Mode.Drop: cmd.Action = MontageAction.Delete; break;
-                        case Mode.Face: cmd.Action = MontageAction.Face; break;
-                        case Mode.Screen: cmd.Action = MontageAction.Screen; break;
+                        case Mode.Face: cmd.Action = MontageAction.Commit; break;
+                        case Mode.Screen: cmd.Action = MontageAction.Commit; break;
                         case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
                     }
                     MontageCommandIO.AppendCommand(cmd, file);
                     oldMode = e.Mode;
-
-
+                    newEp = true;
                 }
                 if (e.StartsNewEpisode)
                 {
@@ -150,7 +150,25 @@ namespace Editor
                         new MontageCommand { Id = id++, Action = MontageAction.CommitAndSplit, Time = e.StartTime },
                         file
                         );
+                    newEp = true;
                 }
+                if (newEp)
+                {
+                    if (e.Mode == Mode.Face || e.Mode == Mode.Screen)
+                    {
+                        var cmd = new MontageCommand();
+                        cmd.Id = id++;
+                        cmd.Time = e.StartTime;
+                        switch (e.Mode)
+                        {
+                            case Mode.Face: cmd.Action = MontageAction.Face; break;
+                            case Mode.Screen: cmd.Action = MontageAction.Screen; break;
+                        }
+                        MontageCommandIO.AppendCommand(cmd, file);
+                    }
+
+                }
+                
             }
             
         }
