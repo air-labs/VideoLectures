@@ -240,6 +240,14 @@ namespace Editor
                     ShiftRight(-200);
                     e.Handled = true;
                     break;
+                case Key.NumPad4:
+                    PrevChunk();
+                    e.Handled = true;
+                    break;
+                case Key.Add:
+                    NextChunk();
+                    e.Handled = true;
+                    break;
                 case Key.Multiply:
                     var index = model.FindChunkIndex(model.CurrentPosition);
                     if (index != -1)
@@ -308,6 +316,36 @@ namespace Editor
             SetPosition(model.Chunks[index+1].StartTime-2000);
         }
 
+        void NextChunk()
+        {
+            var index = model.FindChunkIndex(model.CurrentPosition);
+            if (index == -1) return;
+            index++;
+            for (; index < model.Chunks.Count-1; index++)
+            {
+                if (!OnlyGood.IsChecked.HasValue || !OnlyGood.IsChecked.Value) break;
+                if (model.Chunks[index].Mode != Mode.Drop) break;
+            }
+            if (index < 0 || index >= model.Chunks.Count) return;
+            SetPosition(model.Chunks[index].StartTime);
+        }
+
+        void PrevChunk()
+        {
+            var index = model.FindChunkIndex(model.CurrentPosition);
+            if (index == -1) return;
+            if (model.CurrentPosition - model.Chunks[index].StartTime < 1000)
+                SetPosition(model.Chunks[index].StartTime);
+            index--;
+            for (; index > 0; index--)
+            {
+                if (!OnlyGood.IsChecked.HasValue || !OnlyGood.IsChecked.Value) break;
+                if (model.Chunks[index].Mode != Mode.Drop) break;
+            }
+            if (index < 0 || index >= model.Chunks.Count) return;
+            SetPosition(model.Chunks[index].StartTime);
+  
+        }
 
         void Commit(Mode mode, bool ctrl)
         {

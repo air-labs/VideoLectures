@@ -25,15 +25,15 @@ namespace Editor
             if (parts.Length > 1)
                 result += int.Parse(parts[parts.Length - 2]) * 1000;
             if (parts.Length > 2)
-                result += int.Parse(parts[parts.Length - 2]) * 60000;
+                result += int.Parse(parts[parts.Length - 3]) * 60000;
             return result;
         }
 
         static bool InitFromFolder(string f)
         {
-
-            if (!Directory.Exists(f)) return false;
             folder = new DirectoryInfo(f);
+            if (!folder.Exists) return false;
+            
             Environment.CurrentDirectory = folder.FullName;
 
             if (File.Exists(MontageFile))
