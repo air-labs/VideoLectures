@@ -56,8 +56,8 @@ function CrossFadeTime(clip a, clip b, float ms) {
 	mixedFragment = Dissolve(aLastLoop, killAudio(b), frameCount)
 	assert(mixedFragment.frameCount == b.frameCount, "Invalid mixed fragment length")
 	
-	mixedVideo = a ++ AudioDub(mixedFragment, b)
-	assert(mixedVideo.frameCount == a.frameCount + b.frameCount, "Invalid mixed video length")
+	mixedVideo = AudioDub(mixedFragment, b)
+	assert(mixedVideo.frameCount == b.frameCount, "Invalid mixed video length")
 	
 	return mixedVideo
 }

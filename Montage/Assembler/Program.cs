@@ -38,13 +38,47 @@ namespace Assembler
                         .Select(z=> new FileInfo(z).Name)
                         .ToArray();
 
+            var commands = MontageCommandIO.ReadCommands(args[0]+"\\log.txt").Commands;
 
-
-            var breaks = MontageCommandIO.ReadCommands(args[0]+"\\log.txt")
-                .Commands
+            var breaks = commands
                 .Where(z => z.Action == MontageAction.CommitAndSplit)
                 .Select(z => z.Id)
                 .ToArray();
+
+
+            List<List<int>> adjacent = new List<List<int>>();
+            adjacent.Add(new List<int>());
+
+            bool isFaceNow = true;  // we start with "face"
+            foreach(var command in commands) {
+                switch (command.Action)
+                {
+                    case MontageAction.Commit:  // append if "face"
+                        if (isFaceNow)
+                            adjacent[adjacent.Count - 1].Add(command.Id);
+                        continue;
+                    case MontageAction.Face:  // append and set the flag
+                        isFaceNow = true;
+                        adjacent[adjacent.Count - 1].Add(command.Id);
+                        continue;
+                    case MontageAction.Screen:  // stop current chain and reset the flag
+                        adjacent.Add(new List<int>());
+                        isFaceNow = false;
+                        continue;
+                    case MontageAction.CommitAndSplit:  // just stop current chain
+                        adjacent.Add(new List<int>());
+                        continue;
+                    default:  // ??? ok?
+                        continue;
+                }
+            }
+            var crossFadeBetween = adjacent.Where(a => a.Count() > 0).ToList();
+            
+            /*
+             * CrossFade between (a,b) affects only (b)
+             * it keeps b's length
+             * and requires (a) just for the last frame
+             */
 
             var resList = new List<List<string>>();
             resList.Add(new List<string>());
