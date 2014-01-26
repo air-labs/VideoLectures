@@ -53,15 +53,7 @@ namespace Assembler
 
             foreach (var part in parts.Parts)
             {
-                part.FinalizePart();
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(String.Format("========  {0}  ========", part.PartNumber));
-                Console.ForegroundColor = ConsoleColor.Gray;
-                foreach (var item in part.Items)
-                {
-                    Console.WriteLine(item.Caption);
-                    item.WriteToBatch(context);
-                }
+                part.WritePartToBatch(context);
             }
 
             batFile.Close();
@@ -73,13 +65,8 @@ namespace Assembler
             {
                 var list = resList[i];
                 var listFile = new StreamWriter(args[0] + "\\FileList"+i.ToString()+".txt");
-                var concat = "";
                 foreach (var file in list)
-                {
-                    if (concat != "") concat += "|";
-                    concat += "chunks\\new-" + file;
                     listFile.WriteLine("file 'chunks\\" + file + "'");
-                }
                 listFile.Close();
                 high.WriteLine("ffmpeg -f concat -i FileList" + i.ToString() + ".txt -qscale 0 result-" + i.ToString() + ".avi");
 
@@ -103,7 +90,6 @@ namespace Assembler
             //list.Close();
             //File.WriteAllText(args[0] + "\\AssemblyHigh.bat",
             //    "ffmpeg -f concat -i FileList.txt -qscale 0 result.avi");
-
 
 
         }

@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Montager;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,11 +86,55 @@ namespace Assembler
             items.Add(item);
         }
         
-        public IList<ProcessingItem> Items { get { return items.AsReadOnly(); } }
+        // public IList<ProcessingItem> Items { get { return items.AsReadOnly(); } }
 
-        public void FinalizePart()
+        public void WritePartToBatch(BatchCommandContext context) {
+            FinalizePart();
+
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine(String.Format("========  {0}  ========", PartNumber));
+            Console.ForegroundColor = ConsoleColor.Gray;
+            
+            // pre-processing
+            foreach (var item in items)
+            {
+                Console.WriteLine(item.Caption);
+                item.WriteToBatch(context);  // writes effects to .avs AND encoding command to .bat
+            }
+
+            if (!context.lowQuality)
+            {
+                // processing (concatenation)
+                var listFile = new StreamWriter(String.Format("concat_{0}.txt", PartNumber));
+                foreach (var item in items)
+                    listFile.WriteLine(String.Format("file '{0}'", item.ResultFilename));
+                listFile.Close();
+
+            }
+            else
+            {
+                // recode to "low quality" and concatenate
+                var listFile = new StreamWriter(String.Format("concat_{0}.txt", PartNumber));
+                Directory.CreateDirectory(recodeDir);
+                foreach (var item in items) {
+                    var name = Path.GetFileName(item.ResultFilename);
+                    var newName = Path.Combine(recodeDir, name);
+                    context.batFile.WriteLine(String.Format("ffmpeg -i {0} -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k {1}", item.ResultFilename, newName));
+                    listFile.WriteLine(String.Format("file '{0}'", item.ResultFilename));
+                }
+                listFile.Close();
+            }
+            context.batFile.WriteLine(String.Format("ffmpeg -f concat -i concat_{0}.txt -qscale 0 result-{0}{1}.avi", PartNumber, context.lowQuality ? "_low" : ""));
+                
+
+            // post-processing
+        }
+
+        private void FinalizePart()
         {
             items.Last().Transformations.Add(new FadeOut());
         }
+
+        private const string recodeDir = "new";
     }
 }
