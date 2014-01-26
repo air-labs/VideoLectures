@@ -93,14 +93,14 @@ namespace Montager
             var context = new BatchCommandContext
             {
                 batFile = batFile,
-                LD = true
+                lowQuality = true
             };
             foreach (var e in Montager.Processing1(chunks, "result.avi"))
             {
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine(e.Caption);
                 Console.ForegroundColor = ConsoleColor.Gray;
-                e.Execute(context);
+                e.WriteToBatch(context);
             }
 
             CloseMontageBat(batFile);
@@ -111,14 +111,14 @@ namespace Montager
             context = new BatchCommandContext
             {
                 batFile = batFile,
-                LD = false
+                lowQuality = false
             };
             foreach (var e in Montager.Processing1(chunks, "result.avi"))
             {
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine(e.Caption);
                 Console.ForegroundColor = ConsoleColor.Gray;
-                e.Execute(context);
+                e.WriteToBatch(context);
             }
 
             CloseMontageBat(batFile);

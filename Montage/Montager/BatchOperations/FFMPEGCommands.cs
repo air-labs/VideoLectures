@@ -10,7 +10,7 @@ namespace Montager
 
     public abstract class FFMPEGCommand : BatchCommand
     {
-        public void ExecuteFFMPEG(BatchCommandContext context, string artuments)
+        public void WriteFFMPEGCommand(BatchCommandContext context, string artuments)
         {
             context.batFile.WriteLine("ffmpeg " + artuments);
             
@@ -54,11 +54,11 @@ namespace Montager
             get { return string.Format("Извлечение аудио из {0} в {1} ({2}-{3})", VideoInput, AudioOutput, StartTime, StartTime + Duration); }
         }
 
-        public override void Execute(BatchCommandContext context)
+        public override void WriteToBatch(BatchCommandContext context)
         {
-            if (context.LD)
+            if (context.lowQuality)
             {
-                ExecuteFFMPEG(context,
+                WriteFFMPEGCommand(context,
                     string.Format("-i {0} -ss {1} -t {2} -acodec copy -vn {3}",
                         VideoInput,
                         MS(StartTime),
@@ -67,7 +67,7 @@ namespace Montager
             }
             else
             {
-                ExecuteFFMPEG(context,
+                WriteFFMPEGCommand(context,
                     string.Format("-i {0} -ss {1} -t {2} -vn -qscale 0 {3}",
                         VideoInput,
                         MS(StartTime),
@@ -84,11 +84,11 @@ namespace Montager
         public int StartTime;
         public int Duration;
 
-        public override void Execute(BatchCommandContext context)
+        public override void WriteToBatch(BatchCommandContext context)
         {
-            if (context.LD)
+            if (context.lowQuality)
             {
-                ExecuteFFMPEG(context,
+                WriteFFMPEGCommand(context,
                     string.Format("-i {0} -ss {1} -t {2} -acodec copy -vcodec copy {3}",
                         VideoInput,
                         MS(StartTime),
@@ -98,7 +98,7 @@ namespace Montager
             else
             {
 
-                ExecuteFFMPEG(context,
+                WriteFFMPEGCommand(context,
                 string.Format("-i {0} -ss {1} -t {2} -qscale 0 {3}",
                     VideoInput,
                     MS(StartTime),
@@ -136,9 +136,9 @@ namespace Montager
             get { return string.Format("Микширование видео из {0} и аудио из {1} в {2}", VideoInput, AudioInput, VideoOutput); }
         }
 
-        public override void Execute(BatchCommandContext context)
+        public override void WriteToBatch(BatchCommandContext context)
         {
-            ExecuteFFMPEG(context,
+            WriteFFMPEGCommand(context,
                 string.Format("-i {1} -i {0} -acodec copy -vcodec copy {2}",
                     VideoInput,
                     AudioInput,
@@ -159,7 +159,7 @@ namespace Montager
             get { return "Объединение файлов"; }
         }
 
-        public override void Execute(BatchCommandContext context)
+        public override void WriteToBatch(BatchCommandContext context)
         {
             var temp="ConcatFilesList.txt";
             File.WriteAllText(temp, Files.Select(z => "file '" + z + "'").Aggregate((a, b) => a + "\r\n" + b));
@@ -169,7 +169,7 @@ namespace Montager
             else
                 args += " -c copy ";
             args+=Result;
-            ExecuteFFMPEG(context, args);
+            WriteFFMPEGCommand(context, args);
             //File.Delete(temp);
         }
     }

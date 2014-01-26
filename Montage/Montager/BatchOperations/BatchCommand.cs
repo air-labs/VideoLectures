@@ -12,13 +12,13 @@ namespace Montager
     {
         public string FFMPEGPath;
         public StreamWriter batFile;
-        public bool LD;
+        public bool lowQuality;
     }
 
     public abstract class BatchCommand
     {
         public abstract string Caption { get; }
-        public abstract void Execute(BatchCommandContext context);
+        public abstract void WriteToBatch(BatchCommandContext context);
     }
 
 

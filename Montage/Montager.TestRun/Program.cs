@@ -54,7 +54,7 @@ namespace Montager.TestRun
                 Console.ForegroundColor = ConsoleColor.DarkCyan;
                 Console.WriteLine(e.Caption);
                 Console.ForegroundColor = ConsoleColor.Gray;
-                e.Execute(context);
+                e.WriteToBatch(context);
             }
 
         }

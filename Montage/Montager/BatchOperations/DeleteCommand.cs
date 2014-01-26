@@ -13,7 +13,7 @@ namespace Montager
         {
             get { return "Удаление файла " + FileName; }
         }
-        public override void Execute(BatchCommandContext context)
+        public override void WriteToBatch(BatchCommandContext context)
         {
             File.Delete(FileName);
         }

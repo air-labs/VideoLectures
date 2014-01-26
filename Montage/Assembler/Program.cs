@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using VideoLib;
+using Montager;
 
 namespace Assembler
 {
@@ -20,10 +21,9 @@ namespace Assembler
                 return;
             }
 
+            Directory.SetCurrentDirectory(args[0]);  // to avoid ugly arg[0]+"\\blahblah"
          
-            XDocument doc = XDocument.Load(args[0]+"\\list.xspf");
-
-            var relative = new FileInfo(args[0]).DirectoryName + "\\";
+            XDocument doc = XDocument.Load("list.xspf");
 
             var tracks = doc
                         .Elements()
@@ -36,67 +36,40 @@ namespace Assembler
                         .Select(z => z.Substring(8, z.Length - 8))
                         .Select(z => z.Replace("/", "\\"))
                         .Select(z=> new FileInfo(z).Name)
-                        .ToArray();
+                        .ToList();
 
-            var commands = MontageCommandIO.ReadCommands(args[0]+"\\log.txt").Commands;
+            var log = MontageCommandIO.ReadCommands("log.txt");
 
-            var breaks = commands
-                .Where(z => z.Action == MontageAction.CommitAndSplit)
-                .Select(z => z.Id)
-                .ToArray();
+            var parts = CreateParts(tracks, log);
 
+            // TODO: serialize parts into AVS and BAT. take care of HIGH/LOW profiles.
 
-            List<List<int>> adjacent = new List<List<int>>();
-            adjacent.Add(new List<int>());
-
-            bool isFaceNow = true;  // we start with "face"
-            foreach(var command in commands) {
-                switch (command.Action)
-                {
-                    case MontageAction.Commit:  // append if "face"
-                        if (isFaceNow)
-                            adjacent[adjacent.Count - 1].Add(command.Id);
-                        continue;
-                    case MontageAction.Face:  // append and set the flag
-                        isFaceNow = true;
-                        adjacent[adjacent.Count - 1].Add(command.Id);
-                        continue;
-                    case MontageAction.Screen:  // stop current chain and reset the flag
-                        adjacent.Add(new List<int>());
-                        isFaceNow = false;
-                        continue;
-                    case MontageAction.CommitAndSplit:  // just stop current chain
-                        adjacent.Add(new List<int>());
-                        continue;
-                    default:  // ??? ok?
-                        continue;
-                }
-            }
-            var crossFadeBetween = adjacent.Where(a => a.Count() > 0).ToList();
-            
-            /*
-             * CrossFade between (a,b) affects only (b)
-             * it keeps b's length
-             * and requires (a) just for the last frame
-             */
-
-            var resList = new List<List<string>>();
-            resList.Add(new List<string>());
-            int current=0;
-            foreach (var e in tracks)
+            var batFile = new StreamWriter("AssemblyHigh.bat");
+            var context = new BatchCommandContext
             {
-                int number = int.Parse(e.Substring(5, 3));
-                if (current < breaks.Length && number > breaks[current])
+                batFile = batFile,
+                lowQuality = false
+            };
+
+            foreach (var part in parts.Parts)
+            {
+                part.FinalizePart();
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine(String.Format("========  {0}  ========", part.PartNumber));
+                Console.ForegroundColor = ConsoleColor.Gray;
+                foreach (var item in part.Items)
                 {
-                    current++;
-                    resList.Add(new List<string>());
+                    Console.WriteLine(item.Caption);
+                    item.WriteToBatch(context);
                 }
-                resList[resList.Count - 1].Add(e);
             }
 
+            batFile.Close();
+
+            /*
 
             var high = new StreamWriter(args[0] + "\\AssemblyHigh.bat");
-           for (int i = 0; i < resList.Count; i++)
+            for (int i = 0; i < resList.Count; i++)
             {
                 var list = resList[i];
                 var listFile = new StreamWriter(args[0] + "\\FileList"+i.ToString()+".txt");
@@ -112,6 +85,7 @@ namespace Assembler
 
             }
             high.Close();
+            */
             
             //var bat=new StreamWriter(args[0]+"\\AssemblyLow.bat");
             //bat.WriteLine("del chunks\\new*.*");
@@ -133,5 +107,29 @@ namespace Assembler
 
 
         }
+        public static PartsList CreateParts(List<string> tracks, MontageLog log)
+        {
+            // chunk numbers to split after
+            var breakChunkNumbers = log.Commands
+                .Where(z => z.Action == MontageAction.CommitAndSplit)
+                .Select(z => z.Id)
+                .ToList();
+
+            var chunks = Montager.Montager.CreateChunks(log, "", "");
+            var isFace = new Dictionary<int, bool>()
+            {
+                {0, true}  // starts with 'face'
+            };
+            foreach (var chunk in chunks)
+                if (!isFace.Keys.Contains(chunk.Id))
+                    isFace.Add(chunk.Id, chunk.IsFaceChunk);
+
+            var parts = new PartsList(breakChunkNumbers);
+            parts.MakeParts(tracks, isFace);
+
+            return parts;
+        }
+
+
     }
 }

@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AviSynthCommands.cs" />
+    <Compile Include="Parts.cs" />
+    <Compile Include="ProcessingItem.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -48,6 +51,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Montager\Montager.csproj">
+      <Project>{880f2ac7-cab0-4fc8-8234-8bd033972100}</Project>
+      <Name>Montager</Name>
+    </ProjectReference>
     <ProjectReference Include="..\VideoLib\VideoLib.csproj">
       <Project>{f54f3a10-472a-421b-895f-efd5a5086aca}</Project>
       <Name>VideoLib</Name>
