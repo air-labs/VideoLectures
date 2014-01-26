@@ -5,9 +5,10 @@ function AddWatermarkPNG(clip c, string filename, int x, int y) {
 	return overlay(c, logo, x, y, mask=mask)
 }
 
-function Intro(clip reference, string filename, float ms, string "title", string "description") {
+function Intro(clip reference, float ms, string "image", string "title", string "description") {
 	length = Time2Frame(reference, ms)
-	logo = ImageSource(filename, end=length, pixel_type="rgb24")  # no alpha!
+	fps = reference.frameRate
+	logo = ImageSource(image, end=length-1, fps=fps, pixel_type="rgb24")  # no alpha!
 	
 	# set default values
 	title = Default(title, "")
@@ -20,10 +21,10 @@ function Intro(clip reference, string filename, float ms, string "title", string
 	halo_color = $000000  # whats up with alpha channel?
 	lsp = 1  # allow multiline; set multiline interval
 	
-	subtitle(logo, title, align=align,\
+	tmp1 = subtitle(logo, title, align=align,\
 				font=font, size=size, lsp=lsp,\
 				text_color=text_color, halo_color=halo_color)
-	
+	assert(tmp1.frameCount == length, "Invalid length #1 : "+string(tmp1.frameCount)+" != "+string(length))
 	# redefine values for description
 	align = 2
 	font = "Tahoma"
@@ -32,10 +33,16 @@ function Intro(clip reference, string filename, float ms, string "title", string
 	halo_color = $00000088
 	lsp = 1  # allow multiline; set multiline interval
 	
-	subtitle(description, align=align,\
+	tmp2 = subtitle(tmp1, description, align=align,\
 				font=font, size=size, lsp=lsp,\
 				text_color=text_color, halo_color=halo_color)
-	
+	assert(tmp2.frameCount == length, "Invalid length #2 : "+string(tmp2.frameCount)+" != "+string(length))
+	# add silent audio stream
+	silence = KillVideo(BlankClip(audio_rate=44100, channels=2))
+	tmp3 = AudioDub(tmp2, silence)
+	tmp4 = Trim(tmp3, 0, length)
+	assert(tmp4.frameCount == length, "Invalid length #3 : "+string(tmp4.frameCount)+" != "+string(length))
+	return tmp4
 }
 
 function FadeInTime(clip c, float ms) {
@@ -46,18 +53,18 @@ function FadeOutTime(clip c, float ms) {
 	fadeOut(c, Time2Frame(c, ms))
 }
 
-function CrossFadeTime(clip a, clip b, float ms) {
-	assert(round(a.frameRate) == round(b.frameRate), "Clips must have same framerates"+string(a.frameRate)+" / "+string(b.frameRate))
+function CrossFadeTime(clip video, clip prev, float ms) {
+	assert(round(prev.frameRate) == round(video.frameRate), "Clips must have same framerates: "+string(prev.frameRate)+" != "+string(video.frameRate))
 	
-	frameCount = Time2Frame(a, ms)
-	aLast = GetLastFrame(a)
-	aLastLoop = loop(aLast, frameCount)
+	frameCount = Time2Frame(prev, ms)
+	prevLastFrame = GetLastFrame(prev)
+	prevLastLoop = loop(prevLastFrame, frameCount)
 	
-	mixedFragment = Dissolve(aLastLoop, killAudio(b), frameCount)
-	assert(mixedFragment.frameCount == b.frameCount, "Invalid mixed fragment length")
+	mixedFragment = Dissolve(prevLastLoop, killAudio(video), frameCount)
+	assert(mixedFragment.frameCount == video.frameCount, "Invalid mixed fragment length")
 	
-	mixedVideo = AudioDub(mixedFragment, b)
-	assert(mixedVideo.frameCount == b.frameCount, "Invalid mixed video length")
+	mixedVideo = AudioDub(mixedFragment, KillVideo(video))
+	assert(mixedVideo.frameCount == video.frameCount, "Invalid mixed video length")
 	
 	return mixedVideo
 }

@@ -70,17 +70,25 @@ namespace Assembler
                 var intro = new ProcessingItem { SourceFilename = String.Format("intro_for_{0}.avi", PartNumber) };
                 // doesn't exist, actually. used to build resulting Filename
 
-                intro.Transformations.Add(new Intro());  // will generate image with text
+                intro.Transformations.Add(new Intro { VideoReference=item.ResultFilename });  // will generate image with text
                 intro.Transformations.Add(new FadeIn());  // apply FadeIn on it
                 items.Add(intro);
 
-                item.Transformations.Add(new CrossFade { VideoPrev = intro.ResultFilename });  // crossFade with intro clip
+                item.Transformations.Add(new CrossFade
+                {
+                    VideoInput = item.SourceFilename,
+                    VideoPrev = intro.ResultFilename
+                });  // crossFade with intro clip
             }
             else
             {
                 // part is not empty, maybe add crossFade?
                 if (needCrossFade)
-                    item.Transformations.Add(new CrossFade { VideoPrev = items.Last().ResultFilename });
+                    item.Transformations.Add(new CrossFade
+                    {
+                        VideoInput = item.SourceFilename,
+                        VideoPrev = items.Last().ResultFilename
+                    });
             }
 
             items.Add(item);
