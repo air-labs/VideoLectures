@@ -103,10 +103,10 @@ namespace Assembler
     {
         // public string VideoInput = "";  // no input! should be the first element in a chain
         public string VideoReference;
-        public int EffectDuration = 1;
+        public int EffectDuration = 10*1000;
         public Dictionary<string, string> Settings = new Dictionary<string, string>
         {
-            {"image", "image.png"},
+            {"image", "..\\image.png"},
             {"title", "Заголовок"},
             {"description", @"длинный подзаголовок\nв несколько строк"}
             // ...
@@ -140,7 +140,7 @@ namespace Assembler
         public string VideoInput = "";  // leave empty for chaining
         public Dictionary<string, string> Settings = new Dictionary<string, string>
         {
-            {"image", "image.png"},
+            {"image", "..\\image.png"},
             {"x", "0"},
             {"y", "0"}
             // ...
