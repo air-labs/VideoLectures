@@ -73,7 +73,8 @@ namespace Editor
             binding = new CommandBinding(Commands.Export);
             binding.Executed += Export;
             CommandBindings.Add(binding);
-            
+
+            Statistics.Click += ShowStatistics;
         }
 
         bool paused = true;
@@ -171,6 +172,28 @@ namespace Editor
                 
             }
             
+        }
+
+        void ShowStatistics(object sender, EventArgs e)
+        {
+            var times = new List<int>();
+            var current = 0;
+            foreach (var c in model.Chunks)
+            {
+                if (c.StartsNewEpisode)
+                {
+                    times.Add(current);
+                    current = 0;
+                }
+                if (c.Mode == Mode.Face || c.Mode == Mode.Screen)
+                    current += c.Length;
+            }
+            times.Add(current);
+            var text = times
+                .Select(z => TimeSpan.FromMilliseconds(z))
+                .Select(z => z.Minutes.ToString() + ":" + z.Seconds.ToString()+"\n")
+                .Aggregate((a, b) => a + b);
+            System.Windows.MessageBox.Show(text);
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
