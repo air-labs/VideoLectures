@@ -189,6 +189,7 @@ namespace Editor
                     current += c.Length;
             }
             times.Add(current);
+            times.Add(times.Sum());
             var text = times
                 .Select(z => TimeSpan.FromMilliseconds(z))
                 .Select(z => z.Minutes.ToString() + ":" + z.Seconds.ToString()+"\n")
