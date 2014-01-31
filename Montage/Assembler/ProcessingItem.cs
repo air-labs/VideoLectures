@@ -70,7 +70,7 @@ namespace Assembler
             // return video
             // NOTE: do not rely on SourceFilename, use data supplied in AviSynthCommands!
 
-            context.batFile.WriteLine(String.Format("import(\"{0}\")", AviSynthCommand.libraryPath));
+            context.batFile.WriteLine("import(\"{0}\")", AviSynthCommand.LibraryPath);
             foreach (var t in Transformations)
                 t.WriteToAvs(context);
             

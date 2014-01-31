@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Montager;
 using System.IO;
 
@@ -9,7 +8,7 @@ namespace Assembler
 {
     public abstract class AviSynthCommand
     {
-        public const string libraryPath = "..\\..\\library.avs";
+        public const string LibraryPath = "..\\..\\library.avs";
 
         public abstract string Caption { get; }
 
@@ -51,7 +50,7 @@ namespace Assembler
             var script = String.Format(@"
                             {0}
                             prev = DirectShowSource(""{1}"")
-                            return CrossFadeTime(video, prev, {2})
+                            CrossFadeTime(video, prev, {2})
                           ", input, prev, EffectDuration);
             WriteAvsScript(context, script);
         }
@@ -72,7 +71,7 @@ namespace Assembler
             var input = GetInput(context, VideoInput);
             var script = String.Format(@"
                             {0}
-                            return FadeInTime(video, {1})
+                            FadeInTime(video, {1})
                           ", input, EffectDuration);
             WriteAvsScript(context, script);
         }
@@ -93,7 +92,7 @@ namespace Assembler
             var input = GetInput(context, VideoInput);
             var script = String.Format(@"
                             {0}
-                            return FadeOutTime(video, {1})
+                            FadeOutTime(video, {1})
                           ", input, EffectDuration);
             WriteAvsScript(context, script);
         }
@@ -150,7 +149,7 @@ namespace Assembler
         // TODO: params?
         public override string Caption
         {
-            get { return string.Format("Watermark из {1}", Settings["image"]); }
+            get { return string.Format("Watermark из {0}", Settings["image"]); }
         }
 
         public override void WriteToAvs(BatchCommandContext context)
@@ -163,7 +162,7 @@ namespace Assembler
                 );
             var script = String.Format(@"
                             {0}
-                            return AddWatermarkPNG(video, {1})
+                            AddWatermarkPNG(video, {1})
                           ", input, paramString);
             WriteAvsScript(context, script);
         }

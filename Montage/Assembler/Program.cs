@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Linq;
 using VideoLib;
 using Montager;
@@ -102,8 +100,8 @@ namespace Assembler
                 .ToList();
 
             var chunks = Montager.Montager.CreateChunks(log, "", "");
-            var isFace = new Dictionary<int, bool>()
-            {
+            var isFace = new Dictionary<int, bool>
+	            {
                 {0, true}  // starts with 'face'
             };
             foreach (var chunk in chunks)

@@ -3,9 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VideoLib;
 
 namespace Assembler
 {
@@ -27,7 +24,7 @@ namespace Assembler
             {
                 int chunkNumber = int.Parse(chunkFilename.Substring(5, 3));
                 var part = GetActivePart(chunkNumber);
-                part.AddItem(chunkFilename, needCrossFade(isFace[chunkNumber], isFace[prevChunkNumber]));
+                part.AddItem(chunkFilename, NeedCrossFade(isFace[chunkNumber], isFace[prevChunkNumber]));
                 prevChunkNumber = chunkNumber;
             }
         }
@@ -44,7 +41,7 @@ namespace Assembler
             return parts.Last();
         }
 
-        private static bool needCrossFade(bool isFaceCurrent, bool isFacePrev)
+        private static bool NeedCrossFade(bool isFaceCurrent, bool isFacePrev)
         {
             return isFaceCurrent && isFacePrev;
         }
@@ -58,7 +55,7 @@ namespace Assembler
 
         public Part(int partNumber)
         {
-            this.PartNumber = partNumber;
+            PartNumber = partNumber;
         }
 
         public void AddItem(string chunkFilename, bool needCrossFade)
@@ -100,7 +97,7 @@ namespace Assembler
             FinalizePart();
 
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(String.Format("========  {0}  ========", PartNumber));
+            Console.WriteLine("========  {0}  ========", PartNumber);
             Console.ForegroundColor = ConsoleColor.Gray;
             
             // pre-processing
@@ -115,7 +112,7 @@ namespace Assembler
                 // processing (concatenation)
                 var listFile = new StreamWriter(String.Format("concat_{0}.txt", PartNumber));
                 foreach (var item in items)
-                    listFile.WriteLine(String.Format("file '{0}'", item.ResultFilename));
+                    listFile.WriteLine("file '{0}'", item.ResultFilename);
                 listFile.Close();
 
             }
@@ -123,16 +120,16 @@ namespace Assembler
             {
                 // recode to "low quality" and concatenate
                 var listFile = new StreamWriter(String.Format("concat_{0}.txt", PartNumber));
-                Directory.CreateDirectory(recodeDir);
+                Directory.CreateDirectory(RecodeDir);
                 foreach (var item in items) {
                     var name = Path.GetFileName(item.ResultFilename);
-                    var newName = Path.Combine(recodeDir, name);
-                    context.batFile.WriteLine(String.Format("ffmpeg -i {0} -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k {1}", item.ResultFilename, newName));
-                    listFile.WriteLine(String.Format("file '{0}'", item.ResultFilename));
+                    var newName = Path.Combine(RecodeDir, name);
+                    context.batFile.WriteLine("ffmpeg -i {0} -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k {1}", item.ResultFilename, newName);
+                    listFile.WriteLine("file '{0}'", item.ResultFilename);
                 }
                 listFile.Close();
             }
-            context.batFile.WriteLine(String.Format("ffmpeg -f concat -i concat_{0}.txt -qscale 0 result-{0}{1}.avi", PartNumber, context.lowQuality ? "_low" : ""));
+            context.batFile.WriteLine("ffmpeg -f concat -i concat_{0}.txt -qscale 0 result-{0}{1}.avi", PartNumber, context.lowQuality ? "_low" : "");
                 
 
             // post-processing
@@ -140,9 +137,12 @@ namespace Assembler
 
         private void FinalizePart()
         {
-            items.Last().Transformations.Add(new FadeOut());
+	        var lastItem = items.Last();
+			// костыль на случай, если FadeOut нужно прицепить к цепочке трансформаций
+	        var input = lastItem.Transformations.Count == 0 ? lastItem.SourceFilename : "";
+            lastItem.Transformations.Add(new FadeOut{VideoInput = input});
         }
 
-        private const string recodeDir = "new";
+        private const string RecodeDir = "new";
     }
 }
