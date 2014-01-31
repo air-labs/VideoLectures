@@ -24,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembler", "Assembler\Asse
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Editor", "Editor\Editor.csproj", "{68C87361-E095-4312-BC36-089CD63B79C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGenerator", "ImageGenerator\ImageGenerator.csproj", "{5F41A963-2A44-4CBB-AAD0-63EEFE941728}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Video.vsmdi
@@ -119,6 +121,16 @@ Global
 		{68C87361-E095-4312-BC36-089CD63B79C3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{68C87361-E095-4312-BC36-089CD63B79C3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{68C87361-E095-4312-BC36-089CD63B79C3}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F41A963-2A44-4CBB-AAD0-63EEFE941728}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
