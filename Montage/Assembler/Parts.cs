@@ -103,15 +103,15 @@ namespace Assembler
             Console.WriteLine("========  {0}  ========", PartNumber);
             Console.ForegroundColor = ConsoleColor.Gray;
 
-            // pre-processing
-	        context.batFile.WriteLine(@"..\ImageGenerator.exe ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" 1280 720 ""{5}""",
-				"..\\picture.jpg",
-				"..\\titles.txt",
-				Title,
-				"titles.txt",
-				PartNumber,
-				String.Format("intro_for_{0}.png", PartNumber)
-				);
+            //// pre-processing
+            //context.batFile.WriteLine(@"..\ImageGenerator.exe ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" 1280 720 ""{5}""",
+            //    "..\\picture.jpg",
+            //    "..\\titles.txt",
+            //    Title,
+            //    "titles.txt",
+            //    PartNumber,
+            //    String.Format("intro_for_{0}.png", PartNumber)
+            //    );
 			
             
 			foreach (var item in items)
