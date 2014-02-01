@@ -46,7 +46,7 @@ namespace Montager.TestRun
 
             var context = new BatchCommandContext
             {
-                FFMPEGPath = "C:\\ffmpeg\\bin\\ffmpeg.exe"
+                path = "C:\\ffmpeg\\bin\\ffmpeg.exe"
             };
 
             foreach (var e in Montager.Processing2(chunks,"output.mp4"))

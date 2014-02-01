@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using VideoLib;
 using Montager;
@@ -15,12 +16,17 @@ namespace Assembler
             if (args.Length < 1)
             {
                 Console.WriteLine("Assembler <dir>");
-                Console.ReadKey();
                 return;
             }
 
+	        var titles = File.ReadAllLines(TitlesFileName);
+
             Directory.SetCurrentDirectory(args[0]);  // to avoid ugly arg[0]+"\\blahblah"
-         
+
+	        var subtitles = File.ReadAllLines(SubtitlesFileName).ToList();
+
+			int title = int.Parse(args[0]);  // assume <dir> has arbitrary name, not integer 
+
             XDocument doc = XDocument.Load("list.xspf");
 
             var tracks = doc
@@ -38,11 +44,10 @@ namespace Assembler
 
             var log = MontageCommandIO.ReadCommands("log.txt");
 
-            var parts = CreateParts(tracks, log);
+            var parts = CreateParts(tracks, log, title);
 
-            // TODO: serialize parts into AVS and BAT. take care of HIGH/LOW profiles.
 
-            var batFile = new StreamWriter("AssemblyHigh.bat");
+			var batFile = new StreamWriter("Assembly.bat", false, Encoding.GetEncoding(866));
             var context = new BatchCommandContext
             {
                 batFile = batFile,
@@ -56,42 +61,8 @@ namespace Assembler
 
             batFile.Close();
 
-            /*
-
-            var high = new StreamWriter(args[0] + "\\AssemblyHigh.bat");
-            for (int i = 0; i < resList.Count; i++)
-            {
-                var list = resList[i];
-                var listFile = new StreamWriter(args[0] + "\\FileList"+i.ToString()+".txt");
-                foreach (var file in list)
-                    listFile.WriteLine("file 'chunks\\" + file + "'");
-                listFile.Close();
-                high.WriteLine("ffmpeg -f concat -i FileList" + i.ToString() + ".txt -qscale 0 result-" + i.ToString() + ".avi");
-
-            }
-            high.Close();
-            */
-            
-            //var bat=new StreamWriter(args[0]+"\\AssemblyLow.bat");
-            //bat.WriteLine("del chunks\\new*.*");
-            //var concat = "";
-            //foreach (var e in tracks)
-            //{
-            //    var z=new FileInfo(e);
-            //    bat.WriteLine("ffmpeg -i chunks\\" + z.Name+" -vcodec copy -acodec libmp3lame -ar 44100 -ab 32k chunks\\"+"new-" + z.Name);
-            //    list.WriteLine("file 'chunks\\" + z.Name + "'");
-            //    if (concat != "") concat += "|";
-            //    concat += "chunks\\new-" + z.Name;
-            //}
-            //bat.WriteLine("ffmpeg -i \"concat:" + concat + "\" -c copy result.avi");
-            //bat.Close();
-            //list.Close();
-            //File.WriteAllText(args[0] + "\\AssemblyHigh.bat",
-            //    "ffmpeg -f concat -i FileList.txt -qscale 0 result.avi");
-
-
         }
-        public static PartsList CreateParts(List<string> tracks, MontageLog log)
+        public static PartsList CreateParts(List<string> tracks, MontageLog log, int title)
         {
             // chunk numbers to split after
             var breakChunkNumbers = log.Commands
@@ -104,16 +75,16 @@ namespace Assembler
 	            {
                 {0, true}  // starts with 'face'
             };
-            foreach (var chunk in chunks)
-                if (!isFace.Keys.Contains(chunk.Id))
-                    isFace.Add(chunk.Id, chunk.IsFaceChunk);
+            foreach (var chunk in chunks.Where(chunk => !isFace.Keys.Contains(chunk.Id)))
+	            isFace.Add(chunk.Id, chunk.IsFaceChunk);
 
             var parts = new PartsList(breakChunkNumbers);
-            parts.MakeParts(tracks, isFace);
+            parts.MakeParts(tracks, isFace, title);
 
             return parts;
         }
 
-
+		public const string TitlesFileName = "titles.txt";
+	    public const string SubtitlesFileName = "titles.txt";  // inside working dir
     }
 }

@@ -16,28 +16,28 @@ namespace Assembler
         {
             this.breakChunkNumbers = breakChunkNumbers;
         }
-        
-        public void MakeParts(List<string> tracks, Dictionary<int, bool> isFace)
+
+		public void MakeParts(List<string> tracks, Dictionary<int, bool> isFace, int title)
         {
-            int prevChunkNumber = 0;
+            var prevChunkNumber = 0;
             foreach (var chunkFilename in tracks)
             {
-                int chunkNumber = int.Parse(chunkFilename.Substring(5, 3));
-                var part = GetActivePart(chunkNumber);
+                var chunkNumber = int.Parse(chunkFilename.Substring(5, 3));
+                var part = GetActivePart(chunkNumber, title);
                 part.AddItem(chunkFilename, NeedCrossFade(isFace[chunkNumber], isFace[prevChunkNumber]));
                 prevChunkNumber = chunkNumber;
             }
         }
 
         public IList<Part> Parts { get { return parts.AsReadOnly(); } }
-        
-        private Part GetActivePart(int currentChunkNumber)
+
+		private Part GetActivePart(int currentChunkNumber, int title)
         {
             if(parts.Count == 0)
-                parts.Add(new Part(parts.Count));
+                parts.Add(new Part(parts.Count, title));
             var currentPartIndex = parts.Count-1;
             if (currentPartIndex < breakChunkNumbers.Count && currentChunkNumber > breakChunkNumbers[currentPartIndex])
-                parts.Add(new Part(parts.Count));
+				parts.Add(new Part(parts.Count, title));
             return parts.Last();
         }
 
@@ -52,10 +52,13 @@ namespace Assembler
         public int PartNumber {get; private set;}
 
         private readonly List<ProcessingItem> items = new List<ProcessingItem>();
+	    private readonly int Title;
+	    private readonly int Subtitle;
 
-        public Part(int partNumber)
+	    public Part(int partNumber, int title)
         {
             PartNumber = partNumber;
+	        Title = title;
         }
 
         public void AddItem(string chunkFilename, bool needCrossFade)
@@ -67,7 +70,7 @@ namespace Assembler
                 var intro = new ProcessingItem { SourceFilename = String.Format("intro_for_{0}.avi", PartNumber) };
                 // doesn't exist, actually. used to build resulting Filename
 
-                intro.Transformations.Add(new Intro { VideoReference=item.ResultFilename });  // will generate image with text
+				intro.Transformations.Add(new Intro { VideoReference = item.SourceFilename, ImageFile = String.Format("intro_for_{0}.png", PartNumber) });  // will generate image with text
                 intro.Transformations.Add(new FadeIn());  // apply FadeIn on it
                 items.Add(intro);
 
@@ -99,9 +102,19 @@ namespace Assembler
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine("========  {0}  ========", PartNumber);
             Console.ForegroundColor = ConsoleColor.Gray;
-            
+
             // pre-processing
-            foreach (var item in items)
+	        context.batFile.WriteLine(@"..\ImageGenerator.exe ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" 1280 720 ""{5}""",
+				"..\\picture.jpg",
+				"..\\titles.txt",
+				Title,
+				"titles.txt",
+				PartNumber,
+				String.Format("intro_for_{0}.png", PartNumber)
+				);
+			
+            
+			foreach (var item in items)
             {
                 Console.WriteLine(item.Caption);
                 item.WriteToBatch(context);  // writes effects to .avs AND encoding command to .bat
@@ -133,6 +146,7 @@ namespace Assembler
                 
 
             // post-processing
+			// TODO
         }
 
         private void FinalizePart()

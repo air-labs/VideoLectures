@@ -26,7 +26,7 @@ namespace Assembler
                 input = "video = last";
             else
                 input = String.Format(@"video = DirectShowSource(""{0}"")", 
-                    Path.Combine(context.FFMPEGPath, videoInput));
+                    Path.Combine(context.path, videoInput));
             return input;
         }
     }
@@ -46,7 +46,7 @@ namespace Assembler
         public override void WriteToAvs(BatchCommandContext context)
         {
             var input = GetInput(context, VideoInput);
-            var prev = Path.Combine(context.FFMPEGPath, VideoPrev);
+            var prev = Path.Combine(context.path, VideoPrev);
             var script = String.Format(@"
                             {0}
                             prev = DirectShowSource(""{1}"")
@@ -102,34 +102,21 @@ namespace Assembler
     {
         // public string VideoInput = "";  // no input! should be the first element in a chain
         public string VideoReference;
-        public int EffectDuration = 10*1000;
-        public Dictionary<string, string> Settings = new Dictionary<string, string>
-        {
-            {"image", "..\\image.png"},
-            {"title", "Заголовок"},
-            {"description", @"длинный подзаголовок\nв несколько строк"}
-            // ...
-            // TODO
-        };
-        
-        // TODO: params: text, position, fonts, etc.
+	    public string ImageFile;
+        public int EffectDuration = 10*500;
         public override string Caption
         {
-            get { return string.Format("Intro из {0} ({1})", Settings["image"], EffectDuration); }
+            get { return string.Format("Intro из {0}", ImageFile); }
         }
 
         public override void WriteToAvs(BatchCommandContext context)
         {
-            var pathToReference = Path.Combine(context.FFMPEGPath, VideoReference);
-            Settings["image"] = Path.Combine(context.FFMPEGPath, Settings["image"]);
-            var paramString = String.Join(
-                ", ",
-                Settings.Select(pair => String.Format(@"{0}=""{1}""", pair.Key, pair.Value))
-                );
+            var pathToReference = Path.Combine(context.path, VideoReference);
+            var pathToImage = Path.Combine(context.path, ImageFile);
             var script = String.Format(@"
                             video = DirectShowSource(""{0}"")
-                            Intro(video, {1}, {2})
-                          ", pathToReference, EffectDuration, paramString);
+                            Intro(video, ""{1}"", {2})
+                          ", pathToReference, pathToImage, EffectDuration);
             WriteAvsScript(context, script);
         }
     }
@@ -155,7 +142,7 @@ namespace Assembler
         public override void WriteToAvs(BatchCommandContext context)
         {
             var input = GetInput(context, VideoInput);
-            Settings["image"] = Path.Combine(context.FFMPEGPath, Settings["image"]);
+            Settings["image"] = Path.Combine(context.path, Settings["image"]);
             var paramString = String.Join(
                 ", ",
                 Settings.Select(pair => String.Format(@"{0}=""{1}""", pair.Key, pair.Value))

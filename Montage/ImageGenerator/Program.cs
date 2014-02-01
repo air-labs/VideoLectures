@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageGenerator
 {
@@ -12,22 +8,36 @@ namespace ImageGenerator
 	{
 		static void Main(string[] args)
 		{
-			if (args.Length != 6)
+			if (args.Length != 8)
 			{
-				Console.WriteLine("ImageGenerator <img> <title> <subtitle> <x> <y> <output dir>");
-				Console.WriteLine("Example: ImageGenerator C:\\image.png \"Text\" \"More text\" 1280 720 ??? .");
+				Console.WriteLine("ImageGenerator <img> <title file> <title index> <subtitle file> <subtitle index> <x> <y> <output filename>");
+				Console.WriteLine("Example: ImageGenerator C:\\image.png 1 3 1280 720 d:\\picture.png");
 				return;
 			}
-			int x, y = 0;
-			if (!int.TryParse(args[3], out x) || !int.TryParse(args[4], out y))
+			int x, y, titleIndex, subtitleIndex;
+			if (!int.TryParse(args[2], out titleIndex) || !int.TryParse(args[4], out subtitleIndex) 
+				|| !int.TryParse(args[5], out x) || !int.TryParse(args[6], out y))
 			{
-				Console.WriteLine("Invalid arguments: <x> and <y> must be integers");
+				Console.WriteLine("Invalid arguments: <title index>, <subtitle index>, <x> and <y> must be integers");
+				return;
+			}
+
+			var titles = File.ReadAllLines(args[1]);
+			var subtitles = File.ReadAllLines(args[3]);
+			string title, subtitle;
+			try
+			{
+				title = titles[titleIndex - 1];
+				subtitle = subtitles[subtitleIndex];
+			}
+			catch
+			{
+				Console.WriteLine("Can't get title or subtitle ({0} / {1}) from files.", titleIndex, subtitleIndex);
 				return;
 			}
 
 			var bmp = new Bitmap(x, y);
 			var img = new Bitmap(args[0]);
-
 			using (var g = Graphics.FromImage(bmp))
 			{
 				g.Clear(Color.White);
@@ -35,27 +45,27 @@ namespace ImageGenerator
 				var xOffset = img.Width;
 				
 				// draw upper title
-				using (var font = new Font("Arial", 66, FontStyle.Bold, GraphicsUnit.Point))
+				using (var font = new Font("Arial", 36, FontStyle.Bold, GraphicsUnit.Point))
 				{
 					var rect = new Rectangle(xOffset, 0, x-xOffset, y/2);
 
 					var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
 
-					g.DrawString(args[1], font, Brushes.Black, rect, stringFormat);
+					g.DrawString(title, font, Brushes.Black, rect, stringFormat);
 				}
 				// draw lower subtitle
-				using (var font = new Font("Arial", 36, FontStyle.Regular, GraphicsUnit.Point))
+				using (var font = new Font("Arial", 26, FontStyle.Regular, GraphicsUnit.Point))
 				{
 					var rect = new Rectangle(xOffset, y / 2, x - xOffset, y / 2);
 
 					var stringFormat = new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center};
 
-					g.DrawString(args[2], font, Brushes.Black, rect, stringFormat);
+					g.DrawString(subtitle, font, Brushes.Black, rect, stringFormat);
 				}
 
 			}
 	
-			bmp.Save(args[5]);
+			bmp.Save(args[7]);
 		}
 	}
 }
