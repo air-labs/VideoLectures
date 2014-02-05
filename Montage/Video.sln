@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageGenerator", "ImageGene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renamer", "Renamer\Renamer.csproj", "{B402B5DC-C0F3-4534-A22F-5D1C8FE672AC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblerOld", "AssemblerOld\AssemblerOld.csproj", "{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Video.vsmdi
@@ -143,6 +145,16 @@ Global
 		{B402B5DC-C0F3-4534-A22F-5D1C8FE672AC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B402B5DC-C0F3-4534-A22F-5D1C8FE672AC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B402B5DC-C0F3-4534-A22F-5D1C8FE672AC}.Release|x86.ActiveCfg = Release|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
