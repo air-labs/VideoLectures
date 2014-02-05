@@ -67,7 +67,7 @@ namespace ImageGenerator
                     args[0]+"\\..\\picture.png",
                     width,
                     height,
-                    args[0]+"\\intro_for_"+(i+1).ToString()+".png");
+                    args[0]+"\\intro_for_"+(i).ToString()+".png");
             }
 		}
 	}
