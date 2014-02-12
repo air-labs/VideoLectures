@@ -27,6 +27,7 @@
             <Rectangle Width="10"/>
             <Label>Mode:</Label>
             <Label Name="CurrentMode" Content="{Binding CurrentMode}"></Label>
+            <Label Name="CurrentTime"/>
         </StackPanel>
         <ed:Timeline x:Name="Timeline"/>
     </StackPanel>

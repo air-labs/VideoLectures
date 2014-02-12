@@ -410,6 +410,7 @@ namespace Editor
                 }
             }
             model.CurrentPosition = pos;
+            CurrentTime.Content = pos.ToString();
         }
 
         void SetPosition(double ms)
