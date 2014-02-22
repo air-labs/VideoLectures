@@ -273,7 +273,7 @@ namespace Editor
                     e.Handled = true;
                     break;
                 case Key.Multiply:
-                    var index = model.FindChunkIndex(model.CurrentPosition);
+                    var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
                     if (index != -1)
                     {
                         model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
@@ -294,7 +294,7 @@ namespace Editor
         void RemoveChunk()
         {
             var position = model.CurrentPosition;
-            var index = model.FindChunkIndex(position);
+            var index = model.Chunks.FindChunkIndex(position);
             if (index == -1) return;
             var chunk = model.Chunks[index];
             chunk.Mode = Mode.Undefined;
@@ -315,7 +315,7 @@ namespace Editor
         void ShiftLeft(int delta)
         {
             var position = model.CurrentPosition;
-            var index = model.FindChunkIndex(position);
+            var index = model.Chunks.FindChunkIndex(position);
             if (index == -1 || index == 0) return;
             if (delta < 0 && model.Chunks[index - 1].Length < -delta) return;
             if (delta > 0 && model.Chunks[index].Length < delta) return;
@@ -329,7 +329,7 @@ namespace Editor
         void ShiftRight(int delta)
         {
             var position = model.CurrentPosition;
-            var index = model.FindChunkIndex(position);
+            var index = model.Chunks.FindChunkIndex(position);
             if (index == -1 || index == model.Chunks.Count-1) return;
             if (delta < 0 && model.Chunks[index].Length < -delta) return;
             if (delta > 0 && model.Chunks[index+1].Length < delta) return;
@@ -342,7 +342,7 @@ namespace Editor
 
         void NextChunk()
         {
-            var index = model.FindChunkIndex(model.CurrentPosition);
+            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
             if (index == -1) return;
             index++;
             for (; index < model.Chunks.Count-1; index++)
@@ -356,7 +356,7 @@ namespace Editor
 
         void PrevChunk()
         {
-            var index = model.FindChunkIndex(model.CurrentPosition);
+            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
             if (index == -1) return;
             if (model.CurrentPosition - model.Chunks[index].StartTime < 1000)
                 SetPosition(model.Chunks[index].StartTime);
@@ -374,7 +374,7 @@ namespace Editor
         void Commit(Mode mode, bool ctrl)
         {
             var position=model.CurrentPosition;
-            var index = model.FindChunkIndex(position);
+            var index = model.Chunks.FindChunkIndex(position);
             if (index == -1) return;
             var chunk = model.Chunks[index];
             if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
@@ -398,7 +398,7 @@ namespace Editor
             if (OnlyGood.IsChecked.Value)
             {
                 bool bad=false;
-                var index=model.FindChunkIndex(pos);
+                var index=model.Chunks.FindChunkIndex(pos);
                 if (index != -1)
                 {
                     for (; index < model.Chunks.Count; index++)
@@ -428,7 +428,7 @@ namespace Editor
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var index = model.FindChunkIndex(Timeline.MsAtPoint(e.GetPosition(Timeline)));
+                var index = model.Chunks.FindChunkIndex(Timeline.MsAtPoint(e.GetPosition(Timeline)));
                 if (index == -1) return;
                 SetPosition(model.Chunks[index].StartTime);
                 

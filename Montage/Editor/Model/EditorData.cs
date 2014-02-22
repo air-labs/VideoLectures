@@ -7,26 +7,8 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    enum Mode
-    {
-        Undefined,
-        Drop,
-        Screen,
-        Face
-    }
 
-    class ChunkData
-    {
-        public bool StartsNewEpisode { get; set; }
-        public int StartTime { get; set; }
-        public int Length { get; set; } //Надо убрать или это поле, или StartTime. Сейчас здесь дублирование!
-        public Mode Mode { get; set; }
-
-        public override string ToString()
-        {
-            return StartTime.ToString() + " " + Length.ToString();
-        }
-    }
+    
 
     class EditorModel : INotifyPropertyChanged
     {
@@ -53,15 +35,7 @@ namespace Editor
             }
         }
 
-        public int FindChunkIndex(int ms)
-        {
-            for (int i = 0; i < Chunks.Count; i++)
-            {
-                var e = Chunks[i];
-                if (e.StartTime <= ms && (e.StartTime + e.Length) >= ms) return i;
-            }
-            return -1;
-        }
+
 
         public List<ChunkData> Chunks { get; set; }
 
