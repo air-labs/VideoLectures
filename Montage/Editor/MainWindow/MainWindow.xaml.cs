@@ -25,13 +25,34 @@ namespace Editor
     public partial class MainWindow : Window
     {
         EditorModel model;
+       
 
+        void SetMode(EditorModes mode)
+        {
+            model.EditorMode = mode;
+            switch (mode)
+            {
+                case EditorModes.Border: currentMode = new BorderMode(model); break;
+                case EditorModes.General: currentMode = new GeneralMode(model); break;
+            }
+            Timeline.InvalidateVisual();
+        }
 
         internal void Initialize(EditorModel model, DirectoryInfo folder)
         {
             this.model = model;
-            currentMode = new JointMode(model);
-            currentMode = new GeneralMode(model);
+            SetMode(model.EditorMode);
+
+            switch (model.EditorMode)
+            {
+                case EditorModes.Border: BordersMode.IsChecked = true; break;
+                case EditorModes.General: GeneralMode.IsChecked = true; break;
+            }
+
+            BordersMode.Checked += (s, a) => { SetMode(EditorModes.Border); };
+            GeneralMode.Checked += (s, a) => { SetMode(EditorModes.General); };
+
+            
 
             var facePath = folder.FullName+"\\face.mp4";
             videoAvailable = File.Exists(facePath);
@@ -72,7 +93,7 @@ namespace Editor
             binding.Executed += Save;
             CommandBindings.Add(binding);
 
-
+            
             Statistics.Click += ShowStatistics;
         }
 
@@ -235,7 +256,7 @@ namespace Editor
         }
 
 
-        IEditorMode currentMode;// = new JointMode();
+        IEditorMode currentMode;// = new BorderMode();
 
         void CheckPlayTime()
         {

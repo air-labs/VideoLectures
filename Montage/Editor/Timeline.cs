@@ -11,13 +11,14 @@ namespace Editor
 {
     public class Timeline : FrameworkElement
     {
-        int RowHeight = 10;
-        int msInRow = 300000;
+        int RowHeight = 30;
+        int msInRow = 100000;
 
-        Brush[] fills = new Brush[] { Brushes.White, Brushes.DarkRed, Brushes.DarkGreen, Brushes.DarkBlue };
+        Brush[] fills = new Brush[] { Brushes.White, Brushes.MistyRose, Brushes.LightGreen, Brushes.LightBlue};
         Pen borderPen = new Pen(Brushes.Black, 1);
         Pen currentPen = new Pen(Brushes.Red, 3);
         Pen episode = new Pen(Brushes.Yellow,3);
+        Pen border = new Pen(Brushes.Gray, 3) { EndLineCap = PenLineCap.Triangle };
 
         #region Размер
         protected override Size MeasureOverride(Size availableSize)
@@ -122,6 +123,19 @@ namespace Editor
                        drawingContext.DrawLine(episode, p, new Point(p.X, p.Y + RowHeight));
                    }
                }
+
+            if (model.EditorMode == EditorModes.Border)
+                foreach (var e in model.Borders)
+                {
+                    var From = GetCoordinate(e.StartTime);
+                    From.Y += 3;
+                    var To = GetCoordinate(e.EndTime);
+                    To.Y += 3;
+                    if (e.IsLeftBorder)
+                        drawingContext.DrawLine(border,From,To);
+                    else
+                        drawingContext.DrawLine(border,To,From);
+                }
 
             var point=GetCoordinate(model.CurrentPosition);
             drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));

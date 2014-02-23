@@ -60,10 +60,12 @@
     <Compile Include="MainWindow\EditorModes\GeneralMode.cs" />
     <Compile Include="MainWindow\EditorModes\IEditorMode.cs" />
     <Compile Include="MainWindow\EditorModes\Response.cs" />
-    <Compile Include="MainWindow\EditorModes\JointMode.cs" />
-    <Compile Include="Model\ChunkData.cs" />
-    <Compile Include="Model\ChunkList.cs" />
-    <Compile Include="Model\ChunkMode.cs" />
+    <Compile Include="MainWindow\EditorModes\BorderMode.cs" />
+    <Compile Include="Model\Borders\Border.cs" />
+    <Compile Include="Model\Chunks\ChunkData.cs" />
+    <Compile Include="Model\Chunks\ChunkList.cs" />
+    <Compile Include="Model\Chunks\ChunkMode.cs" />
+    <Compile Include="Model\EditorModes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Timeline.cs" />
     <Compile Include="MainWindow\MainWindow.xaml.cs">

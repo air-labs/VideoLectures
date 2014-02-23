@@ -21,11 +21,12 @@
         </Grid>
         <StackPanel Orientation="Horizontal">
             <Button Width="50"  Name="Pause">Play</Button>
-            <Rectangle Width="10"/>
-            <CheckBox Name="OnlyGood" VerticalAlignment="Center">Show selected only</CheckBox>
-            <Rectangle Width="10"/>
-            <Label>Mode:</Label>
-            <Label Name="CurrentMode" Content="{Binding CurrentMode}"></Label>
+            <GroupBox Header="Mode:">
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton x:Name="GeneralMode">General</RadioButton>
+                    <RadioButton x:Name="BordersMode">Borders</RadioButton>
+                </StackPanel>
+            </GroupBox>
         </StackPanel>
         <ed:Timeline x:Name="Timeline"/>
     </StackPanel>

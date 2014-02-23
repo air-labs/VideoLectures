@@ -8,24 +8,60 @@ using System.Windows.Input;
 namespace Editor
 {
 
-    public class JointMode : IEditorMode
+    public class BorderMode : IEditorMode
     {
         const int Margin = 3000;
+        
+        EditorModel model;
+
 
         /*
          * Левая граница - это когда предыдущий чанк другого типа. Играется с левой границы до +Margin
          * Правая граница - это когда последующий чанк неактивен. Играется с -Margin до правой границы
          * Если области левой и правой границ перекрываются, делается пополам
          */
+        IEnumerable<Border> GenerateBordersPreview()
+        {
+            for (int i = 1; i < model.Chunks.Count; i++)
+            {
+                if (model.Chunks[i].IsNotActive)
+                {
+                    if (model.Chunks[i - 1].IsActive)
+                        yield return Border.Right(model.Chunks[i].StartTime, Margin);
+                }
+                else
+                {
+                    if (model.Chunks[i - 1].Mode != model.Chunks[i].Mode)
+                        yield return Border.Left(model.Chunks[i].StartTime, Margin);
+                }
+            }
+        }
 
-        EditorModel model;
-        public JointMode(EditorModel model)
+        void GenerateBorders()
+        {
+            var borders = GenerateBordersPreview().ToList();
+            for (int i = 1; i < borders.Count; i++)
+            {
+                if (borders[i - 1].EndTime > borders[i].StartTime)
+                {
+                    var time = (borders[i - 1].EndTime + borders[i].StartTime) / 2;
+                    borders[i - 1].EndTime = time;
+                    borders[i].StartTime = time;
+                }
+            }
+            model.Borders.Clear();
+            model.Borders.AddRange(borders);
+        }
+
+        public BorderMode(EditorModel model)
         {
             this.model = model;
+            GenerateBorders();
         }
+
         enum State { Left, Right, Nowhere }
 
-        Tuple<int, int> FindNearJoints(int ms)
+        Tuple<int, int> FindNearBorders(int ms)
         {
 
             var index = model.Chunks.FindChunkIndex(ms);
@@ -48,15 +84,15 @@ namespace Editor
             return Tuple.Create(leftMargin, rightMargin);
         }
 
-        int GetStartOfRightJoint(int jointEnd)
+        int GetStartOfRightBorder(int BorderEnd)
         {
-            var index = model.Chunks.FindChunkIndex(jointEnd-Margin);
+            var index = model.Chunks.FindChunkIndex(BorderEnd-Margin);
             if (index == -1) throw new ArgumentException();
             if (model.Chunks[index].IsNotActive) throw new ArgumentException();
-            var margins = FindNearJoints(jointEnd-Margin);
+            var margins = FindNearBorders(BorderEnd-Margin);
             if (margins.Item2 == -1) throw new ArgumentException();
-            if (margins.Item1 == -1) return jointEnd - Margin;
-            return jointEnd - (margins.Item1 + margins.Item2) / 2;
+            if (margins.Item1 == -1) return BorderEnd - Margin;
+            return BorderEnd - (margins.Item1 + margins.Item2) / 2;
         }
 
         State DetermineState(int ms)
@@ -65,7 +101,7 @@ namespace Editor
             if (index == -1) return State.Nowhere;
             if (model.Chunks[index].IsNotActive) return State.Nowhere;
 
-            var margins = FindNearJoints(ms);
+            var margins = FindNearBorders(ms);
             var leftMargin = margins.Item1;
             var rightMargin = margins.Item2;
 
@@ -89,7 +125,7 @@ namespace Editor
             {
                 for (int i = index + 1; i < model.Chunks.Count; i++)
                     if (model.Chunks[i].IsNotActive) //это будет праваяграница
-                        return GetStartOfRightJoint(model.Chunks[i].StartTime);
+                        return GetStartOfRightBorder(model.Chunks[i].StartTime);
                     else if (model.Chunks[i].Mode != model.Chunks[index].Mode) //это будет левая граница
                         return model.Chunks[i].StartTime;
             }

@@ -15,6 +15,8 @@ namespace Editor
         public int TotalLength { get; set; }
         public int Shift { get; set; }
 
+        public EditorModes EditorMode { get; set; }
+
         Mode currentMode;
         public Mode CurrentMode
         {
@@ -39,9 +41,13 @@ namespace Editor
 
         public List<ChunkData> Chunks { get; set; }
 
+     
+        public List<Border> Borders { get; set; }
+
         public EditorModel()
         {
             Chunks = new List<ChunkData>();
+            Borders = new List<Border>();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
