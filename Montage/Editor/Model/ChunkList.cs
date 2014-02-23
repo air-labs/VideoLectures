@@ -17,5 +17,20 @@ namespace Editor
             }
             return -1;
         }
+
+        public static void ShiftLeftBorderToRight(this List<ChunkData> data, int chunkIndex, int delta)
+        {
+            if (chunkIndex == 0) throw new Exception("This is leftmost chunk, cannot shift");
+            data[chunkIndex - 1].Length -= delta;
+            data[chunkIndex].StartTime -= delta;
+            data[chunkIndex].Length += delta;
+        }
+
+        public static void ShiftRightBorderToRight(this List<ChunkData> data, int chunkIndex, int delta)
+        {
+            if (chunkIndex == data.Count - 1) throw new Exception("This is rightmost chunk, cannot shift");
+            data.ShiftLeftBorderToRight(chunkIndex + 1, delta);
+        }
+
     }
 }
