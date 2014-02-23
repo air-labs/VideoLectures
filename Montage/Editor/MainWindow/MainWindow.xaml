@@ -6,7 +6,6 @@
     <StackPanel Orientation="Vertical">
         <Menu>
             <MenuItem Command="ed:Commands.Save"/>
-            <MenuItem Command="ed:Commands.Export"/>
             <MenuItem x:Name="Statistics" Header="Stat"/>
         </Menu>
         <Grid>

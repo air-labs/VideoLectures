@@ -72,9 +72,6 @@ namespace Editor
             binding.Executed += Save;
             CommandBindings.Add(binding);
 
-            binding = new CommandBinding(Commands.Export);
-            binding.Executed += Export;
-            CommandBindings.Add(binding);
 
             Statistics.Click += ShowStatistics;
         }
@@ -86,6 +83,7 @@ namespace Editor
             {
                 stream.WriteLine(new JavaScriptSerializer().Serialize(model));
             }
+            Export(sender, e);
         }
 
         void Export(object sender, ExecutedRoutedEventArgs ce)
