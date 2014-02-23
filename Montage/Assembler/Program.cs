@@ -19,10 +19,10 @@ namespace Assembler
                 return;
             }
 
-	        var titles = File.ReadAllLines(TitlesFileName);
+	 
 
             Directory.SetCurrentDirectory(args[0]);  // to avoid ugly arg[0]+"\\blahblah"
-
+            var titles = File.ReadAllLines(TitlesFileName);
 	        var subtitles = File.ReadAllLines(SubtitlesFileName).ToList();
 
 			int title = int.Parse(args[0]);  // assume <dir> has arbitrary name, not integer 
@@ -48,6 +48,9 @@ namespace Assembler
 
 
 			var batFile = new StreamWriter("Assembly.bat", false, Encoding.GetEncoding(866));
+            batFile.WriteLine("del processing\\processed*");
+            batFile.WriteLine("del result*");
+
             var context = new BatchCommandContext
             {
                 batFile = batFile,
