@@ -114,5 +114,11 @@ namespace Editor
             if (r.Action == ResponseAction.None) return Response.Jump.To(ms);
             return r;
         }
+
+
+        public Response ProcessKey(KeyEventArgs key)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

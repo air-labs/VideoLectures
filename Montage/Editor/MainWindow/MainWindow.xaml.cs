@@ -31,7 +31,7 @@ namespace Editor
         {
             this.model = model;
             currentMode = new JointMode(model);
-            //currentMode = new GeneralMode();
+            currentMode = new GeneralMode(model);
 
             var facePath = folder.FullName+"\\face.mp4";
             videoAvailable = File.Exists(facePath);
@@ -183,25 +183,16 @@ namespace Editor
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            var value = 0;
-            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                value = -1;
-            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                value = 1;
-            var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
-
+            var response = currentMode.ProcessKey(e);
+            if (response.Action != ResponseAction.None)
+            {
+                ProcessResponse(response);
+                e.Handled = true;
+                return;
+            }
+ 
             switch (e.Key)
             {
-                case Key.NumPad7:
-                case Key.Left:
-                    SetPosition(model.CurrentPosition - 1000 * Math.Pow(5, value));
-                    e.Handled = true;
-                    break;
-                case Key.Subtract:
-                 case Key.Right:
-                    SetPosition(model.CurrentPosition + 1000 * Math.Pow(5, value));
-                    e.Handled = true;
-                    break;
                 case Key.Up:
                     ChangeRatio(1.25);
                     e.Handled = true;
@@ -210,171 +201,13 @@ namespace Editor
                     ChangeRatio(0.8);
                     e.Handled = true;
                     break;
-                case Key.NumPad1:
-                    model.CurrentMode = Mode.Screen;
-                    Commit(model.CurrentMode, ctrl);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad2:
-                    model.CurrentMode = Mode.Face;
-                    Commit(model.CurrentMode, ctrl);
-                    e.Handled = true;
-                    break;
-                case Key.Enter:
-                    Commit(model.CurrentMode, ctrl);
-                    e.Handled = true;
-                    break;
-                case Key.Decimal:
-                    Commit(Mode.Drop, ctrl);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad0:
-                    RemoveChunk();
-                    e.Handled = true;
-                    break;
-                case Key.NumPad8:
-                    ShiftLeft(-200);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad5:
-                    ShiftLeft(200);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad9:
-                    ShiftRight(200);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad6:
-                    ShiftRight(-200);
-                    e.Handled = true;
-                    break;
-                case Key.NumPad4:
-                    PrevChunk();
-                    e.Handled = true;
-                    break;
-                case Key.Add:
-                    NextChunk();
-                    e.Handled = true;
-                    break;
-                case Key.Multiply:
-                    var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
-                    if (index != -1)
-                    {
-                        model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
-                        Timeline.InvalidateVisual();
-                    }
-                    e.Handled = true;
-                    break;
                 case Key.Space:
                     CmPause();
                     e.Handled = true;
                     break;
-
             }
-
-
         }
 
-        void RemoveChunk()
-        {
-            var position = model.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1) return;
-            var chunk = model.Chunks[index];
-            chunk.Mode = Mode.Undefined;
-            if (index != model.Chunks.Count - 1 && model.Chunks[index + 1].Mode == Mode.Undefined)
-            {
-                chunk.Length += model.Chunks[index + 1].Length;
-                model.Chunks.RemoveAt(index + 1);
-            }
-            if (index != 0 && model.Chunks[index - 1].Mode == Mode.Undefined)
-            {
-                chunk.StartTime = model.Chunks[index - 1].StartTime;
-                chunk.Length += model.Chunks[index - 1].Length;
-                model.Chunks.RemoveAt(index - 1);
-            }
-            Timeline.InvalidateVisual();
-        }
-
-        void ShiftLeft(int delta)
-        {
-            var position = model.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1 || index == 0) return;
-            if (delta < 0 && model.Chunks[index - 1].Length < -delta) return;
-            if (delta > 0 && model.Chunks[index].Length < delta) return;
-            model.Chunks[index].StartTime += delta;
-            model.Chunks[index].Length -= delta;
-            model.Chunks[index - 1].Length += delta;
-            Timeline.InvalidateVisual();
-            SetPosition(model.Chunks[index].StartTime);
-        }
-
-        void ShiftRight(int delta)
-        {
-            var position = model.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1 || index == model.Chunks.Count-1) return;
-            if (delta < 0 && model.Chunks[index].Length < -delta) return;
-            if (delta > 0 && model.Chunks[index+1].Length < delta) return;
-            model.Chunks[index].Length += delta;
-            model.Chunks[index + 1].Length -= delta;
-            model.Chunks[index + 1].StartTime += delta;
-            Timeline.InvalidateVisual();
-            SetPosition(model.Chunks[index+1].StartTime-2000);
-        }
-
-        void NextChunk()
-        {
-            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
-            if (index == -1) return;
-            index++;
-            for (; index < model.Chunks.Count-1; index++)
-            {
-                if (!OnlyGood.IsChecked.HasValue || !OnlyGood.IsChecked.Value) break;
-                if (model.Chunks[index].Mode != Mode.Drop) break;
-            }
-            if (index < 0 || index >= model.Chunks.Count) return;
-            SetPosition(model.Chunks[index].StartTime);
-        }
-
-        void PrevChunk()
-        {
-            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
-            if (index == -1) return;
-            if (model.CurrentPosition - model.Chunks[index].StartTime < 1000)
-                SetPosition(model.Chunks[index].StartTime);
-            index--;
-            for (; index > 0; index--)
-            {
-                if (!OnlyGood.IsChecked.HasValue || !OnlyGood.IsChecked.Value) break;
-                if (model.Chunks[index].Mode != Mode.Drop) break;
-            }
-            if (index < 0 || index >= model.Chunks.Count) return;
-            SetPosition(model.Chunks[index].StartTime);
-  
-        }
-
-        void Commit(Mode mode, bool ctrl)
-        {
-            var position=model.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1) return;
-            var chunk = model.Chunks[index];
-            if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
-            {
-                var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
-                var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
-                model.Chunks.RemoveAt(index);
-                model.Chunks.Insert(index, chunk1);
-                model.Chunks.Insert(index + 1, chunk2);
-            }
-            else
-            {
-                chunk.Mode = mode;
-            }
-            Timeline.InvalidateVisual();
-        }
         #endregion 
 
         #region Навигация

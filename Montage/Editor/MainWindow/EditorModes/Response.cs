@@ -10,7 +10,8 @@ namespace Editor
     {
         None,
         Stop,
-        Jump
+        Jump,
+        Processed
     }
 
     public class Response
@@ -34,6 +35,8 @@ namespace Editor
         public static Response None { get { return new Response { Action = ResponseAction.None }; } }
         public static Response Jump { get { return new Response { Action = ResponseAction.Jump }; } }
         public static Response Stop { get { return new Response { Action = ResponseAction.Stop }; } }
+        public static Response Processed { get { return new Response { Action = ResponseAction.Processed }; } }
+
 
     }
 }

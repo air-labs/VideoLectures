@@ -11,5 +11,6 @@ namespace Editor
     {
         Response CheckTime(int ms);
         Response MouseClick(int ms, MouseButtonEventArgs button);
+        Response ProcessKey(KeyEventArgs key);
     }
 }
