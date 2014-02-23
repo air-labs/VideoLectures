@@ -57,6 +57,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Compile Include="Commands.cs" />
+    <Compile Include="MainWindow\EditorModes\GeneralMode.cs" />
+    <Compile Include="MainWindow\EditorModes\IEditorMode.cs" />
+    <Compile Include="MainWindow\EditorModes\Response.cs" />
+    <Compile Include="MainWindow\EditorModes\JointMode.cs" />
     <Compile Include="Model\ChunkData.cs" />
     <Compile Include="Model\ChunkList.cs" />
     <Compile Include="Model\ChunkMode.cs" />

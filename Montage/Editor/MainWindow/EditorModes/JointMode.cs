@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 
 namespace Editor
 {
 
-    public class JointMode
+    public class JointMode : IEditorMode
     {
         const int Margin = 3000;
 
@@ -18,25 +19,28 @@ namespace Editor
          */
 
         EditorModel model;
-
+        public JointMode(EditorModel model)
+        {
+            this.model = model;
+        }
         enum State { Left, Right, Nowhere }
 
-        Tuple<int, int> FindNearJoints(int index)
+        Tuple<int, int> FindNearJoints(int ms)
         {
-            
 
+            var index = model.Chunks.FindChunkIndex(ms);
             int leftMargin = -1;
             int rightMargin = -1;
             for (int i = index - 1; i >= 0; i--)
                 if (model.Chunks[i].Mode != model.Chunks[index].Mode)
                 {
-                    leftMargin = model.Chunks[index].StartTime - model.Chunks[i].EndTime;
+                    leftMargin =ms - model.Chunks[i].EndTime;
                     break;
                 }
             for (int i = index + 1; i < model.Chunks.Count; i++)
                 if (model.Chunks[i].IsNotActive)
                 {
-                    rightMargin = model.Chunks[i].StartTime - model.Chunks[index].EndTime;
+                    rightMargin = model.Chunks[i].StartTime - ms;
                     break;
                 }
             if (leftMargin > Margin) leftMargin = -1;
@@ -49,7 +53,7 @@ namespace Editor
             var index = model.Chunks.FindChunkIndex(jointEnd-Margin);
             if (index == -1) throw new ArgumentException();
             if (model.Chunks[index].IsNotActive) throw new ArgumentException();
-            var margins = FindNearJoints(index);
+            var margins = FindNearJoints(jointEnd-Margin);
             if (margins.Item2 == -1) throw new ArgumentException();
             if (margins.Item1 == -1) return jointEnd - Margin;
             return jointEnd - (margins.Item1 + margins.Item2) / 2;
@@ -61,7 +65,7 @@ namespace Editor
             if (index == -1) return State.Nowhere;
             if (model.Chunks[index].IsNotActive) return State.Nowhere;
 
-            var margins = FindNearJoints(index);
+            var margins = FindNearJoints(ms);
             var leftMargin = margins.Item1;
             var rightMargin = margins.Item2;
 
@@ -78,12 +82,12 @@ namespace Editor
             var index = model.Chunks.FindChunkIndex(ms);
             if (model.Chunks[index].IsNotActive) //значит, следующая граница левая
             {
-                for (int i = 0; i < model.Chunks.Count; i++)
+                for (int i = index+1; i < model.Chunks.Count; i++)
                     if (model.Chunks[i].IsActive) return model.Chunks[i].StartTime;
             }
             if (model.Chunks[index].IsActive)
             {
-                for (int i = 0; i < model.Chunks.Count; i++)
+                for (int i = index + 1; i < model.Chunks.Count; i++)
                     if (model.Chunks[i].IsNotActive) //это будет праваяграница
                         return GetStartOfRightJoint(model.Chunks[i].StartTime);
                     else if (model.Chunks[i].Mode != model.Chunks[index].Mode) //это будет левая граница
@@ -94,7 +98,7 @@ namespace Editor
 
         int lastMSNearRightBorder;
 
-        public Response GotTo(int ms)
+        public Response CheckTime(int ms)
         {
             var currentState = DetermineState(ms);
             if (currentState != State.Nowhere) return Response.None;
@@ -102,5 +106,13 @@ namespace Editor
             return Response.Jump.To(nextTime);
         }
 
+
+
+        public Response MouseClick(int ms, MouseButtonEventArgs button)
+        {
+            var r=CheckTime(ms);
+            if (r.Action == ResponseAction.None) return Response.Jump.To(ms);
+            return r;
+        }
     }
 }

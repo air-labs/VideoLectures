@@ -10,7 +10,7 @@ namespace Editor
 
     
 
-    class EditorModel : INotifyPropertyChanged
+   public class EditorModel : INotifyPropertyChanged
     {
         public int TotalLength { get; set; }
         public int Shift { get; set; }

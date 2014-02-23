@@ -30,12 +30,15 @@ namespace Editor
         internal void Initialize(EditorModel model, DirectoryInfo folder)
         {
             this.model = model;
+            currentMode = new JointMode(model);
+            //currentMode = new GeneralMode();
 
-            FaceVideo.Source = new Uri(folder.FullName+"\\face.mp4", UriKind.Absolute);
+            var facePath = folder.FullName+"\\face.mp4";
+            videoAvailable = File.Exists(facePath);
+
+            FaceVideo.Source = new Uri(facePath, UriKind.Absolute);
             FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
-
-
 
             ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.avi", UriKind.Absolute);
             ScreenVideo.SpeedRatio = 1;
@@ -47,12 +50,11 @@ namespace Editor
             Timeline.DataContext = model;
 
             Timer t = new Timer();
-            t.Interval = 10;
-            t.Tick += (o, a) =>
-            {
-                CheckPlayTime();
-            };
+            t.Interval = timerInterval;
+            t.Tick += (s, a) => { CheckPlayTime(); };
             t.Start();
+
+            
         }
 
         public MainWindow()
@@ -77,25 +79,7 @@ namespace Editor
             Statistics.Click += ShowStatistics;
         }
 
-        bool paused = true;
-
-        void CmPause()
-        {
-            if (paused)
-            {
-                FaceVideo.Play();
-                ScreenVideo.Play();
-                Pause.Content = "Pause";
-            }
-            else
-            {
-                FaceVideo.Pause();
-                ScreenVideo.Pause();
-                Pause.Content = "Play";
-            }
-            paused = !paused;
-        }
-
+     
         void Save(object sender, ExecutedRoutedEventArgs e)
         {
             using (var stream = new StreamWriter("montage.editor"))
@@ -196,6 +180,8 @@ namespace Editor
                 .Aggregate((a, b) => a + b);
             System.Windows.MessageBox.Show(text);
         }
+
+        #region Keydown и все, что с ним связано
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
@@ -391,52 +377,94 @@ namespace Editor
             }
             Timeline.InvalidateVisual();
         }
+        #endregion 
+
+        #region Навигация
+
+        double SpeedRatio = 1;
+        bool videoAvailable;
+        int timerInterval = 10;
+        bool paused = true;
+
+        void CmPause()
+        {
+            if (paused)
+            {
+                FaceVideo.Play();
+                ScreenVideo.Play();
+                Pause.Content = "Pause";
+            }
+            else
+            {
+                FaceVideo.Pause();
+                ScreenVideo.Pause();
+                Pause.Content = "Play";
+            }
+            paused = !paused;
+        }
+
+
+        IEditorMode currentMode;// = new JointMode();
 
         void CheckPlayTime()
         {
-            var pos=(int)FaceVideo.Position.TotalMilliseconds;
-            if (OnlyGood.IsChecked.Value)
-            {
-                bool bad=false;
-                var index=model.Chunks.FindChunkIndex(pos);
-                if (index != -1)
-                {
-                    for (; index < model.Chunks.Count; index++)
-                        if (model.Chunks[index].Mode == Mode.Drop)
-                            bad = true;
-                        else break;
-                    if (bad)
-                        SetPosition(model.Chunks[index].StartTime);
-                }
-            }
-            model.CurrentPosition = pos;
+            if (videoAvailable)
+                model.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+            else if (!paused)
+                model.CurrentPosition += (int)(timerInterval * SpeedRatio);
+
+            //if (OnlyGood.IsChecked.Value)
+            //{
+            //    bool bad=false;
+            //    var index=model.Chunks.FindChunkIndex(pos);
+            //    if (index != -1)
+            //    {
+            //        for (; index < model.Chunks.Count; index++)
+            //            if (model.Chunks[index].Mode == Mode.Drop)
+            //                bad = true;
+            //            else break;
+            //        if (bad)
+            //            SetPosition(model.Chunks[index].StartTime);
+            //    }
+            //}
+
+            ProcessResponse(currentMode.CheckTime(model.CurrentPosition));
         }
 
+
+        void ProcessResponse(Response r)
+        {
+            if (r.Action == ResponseAction.Jump)
+            {
+                SetPosition(r.JumpWhere);
+                Timeline.InvalidateVisual();
+            }
+            if (r.Invalidate)            
+                Timeline.InvalidateVisual();
+            if (r.Action == ResponseAction.Stop)
+                CmPause();
+
+        }
         void SetPosition(double ms)
         {
+            model.CurrentPosition = (int)ms;
             FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
             ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
         }
 
         void ChangeRatio(double ratio)
         {
-            FaceVideo.SpeedRatio=FaceVideo.SpeedRatio*ratio;
+            SpeedRatio *= ratio;
+            FaceVideo.SpeedRatio=SpeedRatio;
             ScreenVideo.SpeedRatio = FaceVideo.SpeedRatio;
+
         }
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                var index = model.Chunks.FindChunkIndex(Timeline.MsAtPoint(e.GetPosition(Timeline)));
-                if (index == -1) return;
-                SetPosition(model.Chunks[index].StartTime);
-                
-            }
-            else
-            {
-                SetPosition(Timeline.MsAtPoint(e.GetPosition(Timeline)));
-            }
+            var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
+            ProcessResponse(currentMode.MouseClick(time, e));
         }
+        #endregion 
     }
 }

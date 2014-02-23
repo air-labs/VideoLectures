@@ -13,7 +13,7 @@ namespace Editor
             for (int i = 0; i < data.Count; i++)
             {
                 var e = data[i];
-                if (e.StartTime <= ms && (e.StartTime + e.Length) >= ms) return i;
+                if (e.StartTime <= ms && (e.StartTime + e.Length) > ms) return i;
             }
             return -1;
         }

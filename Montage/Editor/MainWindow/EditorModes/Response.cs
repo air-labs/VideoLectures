@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    enum ResponseAction
+    public enum ResponseAction
     {
         None,
         Stop,
         Jump
     }
 
-    class Response
+    public class Response
     {
         public ResponseAction Action;
         public int JumpWhere;
