@@ -262,9 +262,11 @@ namespace Editor
         {
             if (videoAvailable)
                 model.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
-            else if (!paused)
+            else
+            {
+                if (paused) return;
                 model.CurrentPosition += (int)(timerInterval * SpeedRatio);
-
+            }
             //if (OnlyGood.IsChecked.Value)
             //{
             //    bool bad=false;

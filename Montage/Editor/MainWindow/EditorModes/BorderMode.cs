@@ -10,8 +10,8 @@ namespace Editor
 
     public class BorderMode : IEditorMode
     {
-        const int Margin = 3000;
-        
+        const int Margin = 2000;
+
         EditorModel model;
 
 
@@ -27,12 +27,12 @@ namespace Editor
                 if (model.Chunks[i].IsNotActive)
                 {
                     if (model.Chunks[i - 1].IsActive)
-                        yield return Border.Right(model.Chunks[i].StartTime, Margin);
+                        yield return Border.Right(model.Chunks[i].StartTime, Margin, i - 1, i);
                 }
                 else
                 {
                     if (model.Chunks[i - 1].Mode != model.Chunks[i].Mode)
-                        yield return Border.Left(model.Chunks[i].StartTime, Margin);
+                        yield return Border.Left(model.Chunks[i].StartTime, Margin, i - 1, i);
                 }
             }
         }
@@ -59,102 +59,66 @@ namespace Editor
             GenerateBorders();
         }
 
-        enum State { Left, Right, Nowhere }
-
-        Tuple<int, int> FindNearBorders(int ms)
-        {
-
-            var index = model.Chunks.FindChunkIndex(ms);
-            int leftMargin = -1;
-            int rightMargin = -1;
-            for (int i = index - 1; i >= 0; i--)
-                if (model.Chunks[i].Mode != model.Chunks[index].Mode)
-                {
-                    leftMargin =ms - model.Chunks[i].EndTime;
-                    break;
-                }
-            for (int i = index + 1; i < model.Chunks.Count; i++)
-                if (model.Chunks[i].IsNotActive)
-                {
-                    rightMargin = model.Chunks[i].StartTime - ms;
-                    break;
-                }
-            if (leftMargin > Margin) leftMargin = -1;
-            if (rightMargin > Margin) rightMargin = -1;
-            return Tuple.Create(leftMargin, rightMargin);
-        }
-
-        int GetStartOfRightBorder(int BorderEnd)
-        {
-            var index = model.Chunks.FindChunkIndex(BorderEnd-Margin);
-            if (index == -1) throw new ArgumentException();
-            if (model.Chunks[index].IsNotActive) throw new ArgumentException();
-            var margins = FindNearBorders(BorderEnd-Margin);
-            if (margins.Item2 == -1) throw new ArgumentException();
-            if (margins.Item1 == -1) return BorderEnd - Margin;
-            return BorderEnd - (margins.Item1 + margins.Item2) / 2;
-        }
-
-        State DetermineState(int ms)
-        {
-            var index = model.Chunks.FindChunkIndex(ms);
-            if (index == -1) return State.Nowhere;
-            if (model.Chunks[index].IsNotActive) return State.Nowhere;
-
-            var margins = FindNearBorders(ms);
-            var leftMargin = margins.Item1;
-            var rightMargin = margins.Item2;
-
-            if (leftMargin == -1 && rightMargin == -1) return State.Nowhere;
-            if (leftMargin > rightMargin) return State.Left;
-            return State.Right;
-        }
-
-        
-
-        int FindNextTime(int ms)
-        {
-            //предполагаем, что ms - Nowhere
-            var index = model.Chunks.FindChunkIndex(ms);
-            if (model.Chunks[index].IsNotActive) //значит, следующая граница левая
-            {
-                for (int i = index+1; i < model.Chunks.Count; i++)
-                    if (model.Chunks[i].IsActive) return model.Chunks[i].StartTime;
-            }
-            if (model.Chunks[index].IsActive)
-            {
-                for (int i = index + 1; i < model.Chunks.Count; i++)
-                    if (model.Chunks[i].IsNotActive) //это будет праваяграница
-                        return GetStartOfRightBorder(model.Chunks[i].StartTime);
-                    else if (model.Chunks[i].Mode != model.Chunks[index].Mode) //это будет левая граница
-                        return model.Chunks[i].StartTime;
-            }
-            return 0;
-        }
-
-        int lastMSNearRightBorder;
-
         public Response CheckTime(int ms)
         {
-            var currentState = DetermineState(ms);
-            if (currentState != State.Nowhere) return Response.None;
-            var nextTime = FindNextTime(ms);
-            return Response.Jump.To(nextTime);
+            if (model.Borders.FindBorder(ms) != -1) return Response.None;
+            foreach (var e in model.Borders)
+                if (e.StartTime >= ms) return Response.Jump.To(e.StartTime);
+            return Response.Stop;
         }
-
 
 
         public Response MouseClick(int ms, MouseButtonEventArgs button)
         {
-            var r=CheckTime(ms);
+            var r = CheckTime(ms);
             if (r.Action == ResponseAction.None) return Response.Jump.To(ms);
             return r;
         }
 
 
-        public Response ProcessKey(KeyEventArgs key)
+        public Response ProcessKey(KeyEventArgs e)
         {
-            throw new NotImplementedException();
+            var borderIndex = model.Borders.FindBorder(model.CurrentPosition);
+            int leftBorderIndex = -1;
+            int rightBorderIndex = -1;
+            if (model.Borders[borderIndex].IsLeftBorder)
+            {
+                leftBorderIndex = borderIndex;
+                if (borderIndex != 0 && !model.Borders[borderIndex - 1].IsLeftBorder)
+                    rightBorderIndex = borderIndex - 1;
+            }
+            else
+            {
+                rightBorderIndex = borderIndex;
+                if (borderIndex != model.Borders.Count - 1 && model.Borders[borderIndex + 1].IsLeftBorder)
+                    leftBorderIndex = borderIndex + 1;
+            }
+
+            switch (e.Key)
+            {
+                case Key.NumPad4:
+                    return Shift(rightBorderIndex, 200);
+
+                case Key.NumPad5:
+                    return Shift(rightBorderIndex, -200);
+
+                case Key.NumPad6:
+                    return Shift(leftBorderIndex, 200);
+
+                case Key.Add:
+                    return Shift(leftBorderIndex, -200);
+
+            }
+            return Response.None;
+        }
+
+        Response Shift(int borderIndex, int shiftSize)
+        {
+            if (borderIndex == -1) return Response.None;
+            var border = model.Borders[borderIndex];
+            model.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
+            GenerateBorders();
+            return Response.Jump.To(model.Borders[borderIndex].StartTime).AndInvalidate();
         }
     }
 }
