@@ -10,7 +10,7 @@ namespace Editor
 
     public class BorderMode : IEditorMode
     {
-        const int Margin = 2000;
+        const int Margin = 3000;
 
         EditorModel model;
 
@@ -94,19 +94,24 @@ namespace Editor
                     leftBorderIndex = borderIndex + 1;
             }
 
+            var value = 200;
+            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                value = 50;
+            
+
             switch (e.Key)
             {
                 case Key.NumPad4:
-                    return Shift(rightBorderIndex, 200);
+                    return Shift(rightBorderIndex, value);
 
                 case Key.NumPad5:
-                    return Shift(rightBorderIndex, -200);
+                    return Shift(rightBorderIndex, -value);
 
                 case Key.NumPad6:
-                    return Shift(leftBorderIndex, 200);
+                    return Shift(leftBorderIndex, value);
 
                 case Key.Add:
-                    return Shift(leftBorderIndex, -200);
+                    return Shift(leftBorderIndex, -value);
 
             }
             return Response.None;
