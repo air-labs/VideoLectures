@@ -61,7 +61,6 @@
     <Compile Include="MainWindow\EditorModes\IEditorMode.cs" />
     <Compile Include="MainWindow\EditorModes\Response.cs" />
     <Compile Include="MainWindow\EditorModes\BorderMode.cs" />
-    <Compile Include="MainWindow\KeyMap.cs" />
     <Compile Include="Model\Borders\Border.cs" />
     <Compile Include="Model\Borders\BorderList.cs" />
     <Compile Include="Model\Chunks\ChunkData.cs" />

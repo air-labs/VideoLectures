@@ -101,16 +101,16 @@ namespace Editor
 
             switch (e.Key)
             {
-                case Key.NumPad4:
+                case Key.Q:
                     return Shift(rightBorderIndex, value);
 
-                case Key.NumPad5:
+                case Key.W:
                     return Shift(rightBorderIndex, -value);
 
-                case Key.NumPad6:
+                case Key.O:
                     return Shift(leftBorderIndex, value);
 
-                case Key.Add:
+                case Key.P:
                     return Shift(leftBorderIndex, -value);
 
             }
