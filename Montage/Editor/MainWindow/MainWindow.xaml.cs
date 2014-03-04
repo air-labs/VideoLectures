@@ -205,7 +205,7 @@ namespace Editor
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             var response = currentMode.ProcessKey(CreateState(), e);
-            if (response.Action != ResponseAction.None)
+            if (response.RequestProcessed)
             {
                 ProcessResponse(response);
                 e.Handled = true;
@@ -237,23 +237,23 @@ namespace Editor
         bool videoAvailable;
         int timerInterval = 10;
         bool paused = true;
+        bool requestPause = false;
+
 
         void CmPause()
         {
-            if (paused)
-            {
-                FaceVideo.Play();
-                ScreenVideo.Play();
-                Pause.Content = "Pause";
-            }
-            else
-            {
-                FaceVideo.Pause();
-                ScreenVideo.Pause();
-                Pause.Content = "Play";
-            }
-            paused = !paused;
+            ProcessResponse(new WindowCommand { Pause = !paused });
         }
+
+        void MakePause()
+        {
+            ProcessResponse(new WindowCommand { Pause = true });
+        }
+        void MakePlay()
+        {
+            ProcessResponse(new WindowCommand { Pause = false });
+        }
+
 
 
         IEditorMode currentMode;// = new BorderMode();
@@ -267,21 +267,14 @@ namespace Editor
                 if (paused) return;
                 model.CurrentPosition += (int)(timerInterval * SpeedRatio);
             }
-            //if (OnlyGood.IsChecked.Value)
-            //{
-            //    bool bad=false;
-            //    var index=model.Chunks.FindChunkIndex(pos);
-            //    if (index != -1)
-            //    {
-            //        for (; index < model.Chunks.Count; index++)
-            //            if (model.Chunks[index].Mode == Mode.Drop)
-            //                bad = true;
-            //            else break;
-            //        if (bad)
-            //            SetPosition(model.Chunks[index].StartTime);
-            //    }
-            //}
-            
+
+            if (requestPause)
+            {
+                MakePause();
+                requestPause = false;
+                return;
+            }
+
             ProcessResponse(currentMode.CheckTime(CreateState()));
         }
 
@@ -293,22 +286,47 @@ namespace Editor
 
         void ProcessResponse(WindowCommand r)
         {
-            if (r.Action == ResponseAction.Jump)
+            if (r.JumpToLocation.HasValue)
             {
-                SetPosition(r.JumpWhere);
+                SetPosition(r.JumpToLocation.Value);
                 Timeline.InvalidateVisual();
             }
             if (r.Invalidate)            
                 Timeline.InvalidateVisual();
-            if (r.Action == ResponseAction.Stop)
-                CmPause();
+            if (r.Pause.HasValue)
+            {
+                paused = r.Pause.Value;
+                if (!paused)
+                {
+                    FaceVideo.Play();
+                    ScreenVideo.Play();
+                    Pause.Content = "Pause";
+                }
+                else
+                {
+                    FaceVideo.Pause();
+                    ScreenVideo.Pause();
+                    Pause.Content = "Play";
+                }
+            }
 
         }
         void SetPosition(double ms)
         {
             model.CurrentPosition = (int)ms;
-            FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
-            ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
+
+            if (!paused)
+            {
+                FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
+                ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
+            }
+            else
+            {
+                MakePlay();
+                FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
+                ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
+                requestPause = true;
+            }
         }
 
         void ChangeRatio(double ratio)

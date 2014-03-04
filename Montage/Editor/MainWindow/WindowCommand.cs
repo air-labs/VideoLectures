@@ -6,19 +6,14 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public enum ResponseAction
-    {
-        None,
-        Stop,
-        Jump,
-        Processed
-    }
+    
 
     public class WindowCommand
     {
-        public ResponseAction Action;
-        public int JumpWhere;
+        public int? JumpToLocation;
         public bool Invalidate;
+        public bool? Pause;
+        public bool RequestProcessed = true;
 
         public WindowCommand AndInvalidate()
         {
@@ -26,16 +21,9 @@ namespace Editor
             return this;
         }
 
-        public WindowCommand To(int ms)
-        {
-            JumpWhere = ms;
-            return this;
-        }
-
-        public static WindowCommand None { get { return new WindowCommand { Action = ResponseAction.None }; } }
-        public static WindowCommand Jump { get { return new WindowCommand { Action = ResponseAction.Jump }; } }
-        public static WindowCommand Stop { get { return new WindowCommand { Action = ResponseAction.Stop }; } }
-        public static WindowCommand Processed { get { return new WindowCommand { Action = ResponseAction.Processed }; } }
+        public static WindowCommand JumpTo(int ms)  { return new WindowCommand { JumpToLocation=ms }; }
+        public static WindowCommand Processed { get { return new WindowCommand(); } }
+        public static WindowCommand None { get { return new WindowCommand { RequestProcessed = false }; } }
 
 
     }

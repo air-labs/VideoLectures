@@ -28,33 +28,35 @@ namespace Editor
             {
                 var index = model.Chunks.FindChunkIndex(selectedLocation);
                 if (index == -1) return WindowCommand.None;
-                return WindowCommand.Jump.To(model.Chunks[index].StartTime);
+                return WindowCommand.JumpTo(model.Chunks[index].StartTime);
             }
             else
             {
-                return WindowCommand.Jump.To(state.Location);
+                return WindowCommand.JumpTo(selectedLocation);
             }
         }
 
 
         public WindowCommand ProcessKey(WindowState state, System.Windows.Input.KeyEventArgs e)
         {
-            var value = 0;
+            var value = 0.0;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 value = -1;
             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                value = 1;
+                value = -1.5;
+           
+            
             var ctrl = Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl);
 
             switch (e.Key)
             {
                 case Key.D2:
                 case Key.Left:
-                    return WindowCommand.Jump.To((int)(model.CurrentPosition - 1000 * Math.Pow(5, value)));
+                    return WindowCommand.JumpTo((int)(model.CurrentPosition - 1000 * Math.Pow(5, value)));
 
                 case Key.D3:
                 case Key.Right:
-                    return WindowCommand.Jump.To((int)(model.CurrentPosition + 1000 * Math.Pow(5, value)));
+                    return WindowCommand.JumpTo((int)(model.CurrentPosition + 1000 * Math.Pow(5, value)));
 
                 case Key.D1:
                     return PrevChunk();
@@ -133,7 +135,7 @@ namespace Editor
             model.Chunks[index].StartTime += delta;
             model.Chunks[index].Length -= delta;
             model.Chunks[index - 1].Length += delta;
-            return WindowCommand.Jump.To(model.Chunks[index].StartTime).AndInvalidate();
+            return WindowCommand.JumpTo(model.Chunks[index].StartTime).AndInvalidate();
         }
 
         WindowCommand ShiftRight(int delta)
@@ -146,7 +148,7 @@ namespace Editor
             model.Chunks[index].Length += delta;
             model.Chunks[index + 1].Length -= delta;
             model.Chunks[index + 1].StartTime += delta;
-            return WindowCommand.Jump.To(model.Chunks[index + 1].StartTime - 2000).AndInvalidate();
+            return WindowCommand.JumpTo(model.Chunks[index + 1].StartTime - 2000).AndInvalidate();
         }
 
         WindowCommand NextChunk()
@@ -154,7 +156,7 @@ namespace Editor
             var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
             index++;
             if (index < 0 || index >= model.Chunks.Count) return WindowCommand.None;
-            return WindowCommand.Jump.To(model.Chunks[index].StartTime);
+            return WindowCommand.JumpTo(model.Chunks[index].StartTime);
         }
 
         WindowCommand PrevChunk()
@@ -162,7 +164,7 @@ namespace Editor
             var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
             index--;
             if (index < 0 || index >= model.Chunks.Count) return  WindowCommand.None;
-            return WindowCommand.Jump.To(model.Chunks[index].StartTime);
+            return WindowCommand.JumpTo(model.Chunks[index].StartTime);
 
         }
 

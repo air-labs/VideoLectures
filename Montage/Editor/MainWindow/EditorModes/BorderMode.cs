@@ -63,15 +63,15 @@ namespace Editor
         {
             if (model.Borders.FindBorder(state.Location) != -1) return WindowCommand.None;
             foreach (var e in model.Borders)
-                if (e.StartTime >= state.Location) return WindowCommand.Jump.To(e.StartTime);
-            return WindowCommand.Stop;
+                if (e.StartTime >= state.Location) return WindowCommand.JumpTo(e.StartTime);
+            return new WindowCommand { Pause = true };
         }
 
 
         public WindowCommand MouseClick(WindowState state, int selectedLocation, MouseButtonEventArgs button)
         {
             var r = CheckTime(state);
-            if (r.Action == ResponseAction.None) return WindowCommand.Jump.To(selectedLocation);
+            if (!r.RequestProcessed) return WindowCommand.JumpTo(selectedLocation);
             return r;
         }
 
@@ -123,7 +123,7 @@ namespace Editor
             var border = model.Borders[borderIndex];
             model.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
             GenerateBorders();
-            return WindowCommand.Jump.To(model.Borders[borderIndex].StartTime).AndInvalidate();
+            return WindowCommand.JumpTo(model.Borders[borderIndex].StartTime).AndInvalidate();
         }
     }
 }
