@@ -204,7 +204,7 @@ namespace Editor
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            var response = currentMode.ProcessKey(e);
+            var response = currentMode.ProcessKey(CreateState(), e);
             if (response.Action != ResponseAction.None)
             {
                 ProcessResponse(response);
@@ -281,12 +281,17 @@ namespace Editor
             //            SetPosition(model.Chunks[index].StartTime);
             //    }
             //}
+            
+            ProcessResponse(currentMode.CheckTime(CreateState()));
+        }
 
-            ProcessResponse(currentMode.CheckTime(model.CurrentPosition));
+        WindowState CreateState()
+        {
+            return new WindowState { Location = model.CurrentPosition, Paused = paused };
         }
 
 
-        void ProcessResponse(Response r)
+        void ProcessResponse(WindowCommand r)
         {
             if (r.Action == ResponseAction.Jump)
             {
@@ -317,7 +322,7 @@ namespace Editor
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
-            ProcessResponse(currentMode.MouseClick(time, e));
+            ProcessResponse(currentMode.MouseClick(CreateState(), time, e));
         }
         #endregion 
     }
