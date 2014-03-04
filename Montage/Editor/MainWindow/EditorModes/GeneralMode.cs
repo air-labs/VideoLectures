@@ -48,50 +48,51 @@ namespace Editor
 
             switch (e.Key)
             {
-                case Key.NumPad7:
+                case Key.D2:
                 case Key.Left:
                     return Response.Jump.To((int)(model.CurrentPosition - 1000 * Math.Pow(5, value)));
 
-                case Key.Subtract:
+                case Key.D3:
                 case Key.Right:
                     return Response.Jump.To((int)(model.CurrentPosition + 1000 * Math.Pow(5, value)));
-                
-                case Key.NumPad1:
-                    model.CurrentMode = Mode.Screen;
-                    return Commit(model.CurrentMode, ctrl);
-                   
-                case Key.NumPad2:
+
+                case Key.D1:
+                    return PrevChunk();
+
+                case Key.D4:
+                    return NextChunk();
+
+                case Key.D0:
                     model.CurrentMode = Mode.Face;
                     return Commit(model.CurrentMode, ctrl);
                 
-                case Key.Enter:
+                
+                case Key.OemMinus:
+                    model.CurrentMode = Mode.Screen;
                     return Commit(model.CurrentMode, ctrl);
                 
-                case Key.Decimal:
+                case Key.OemPlus:
                     return Commit(Mode.Drop, ctrl);
                 
-                case Key.NumPad0:
+                case Key.Back:
                     return RemoveChunk();
                 
-                case Key.NumPad8:
+                case Key.Q:
                     return ShiftLeft(-200);
                 
-                case Key.NumPad5:
+                case Key.W:
                     return ShiftLeft(200);
-                
-                case Key.NumPad9:
-                    return ShiftRight(200);
-                
-                case Key.NumPad6:
+
+                case Key.E:
                     return ShiftRight(-200);
                 
-                case Key.NumPad4:
-                    return PrevChunk();
+                case Key.R:
+                    return ShiftRight(200);
+                
+                
 
-                case Key.Add:
-                    return NextChunk();
 
-                case Key.Multiply:
+                case Key.D9:
                     var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
                     if (index != -1)
                         model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
