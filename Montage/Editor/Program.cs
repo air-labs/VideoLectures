@@ -29,31 +29,31 @@ namespace Editor
             return result;
         }
 
-        static bool InitFromFolder(string f)
-        {
-            folder = new DirectoryInfo(f);
-            if (!folder.Exists) return false;
+        //static bool InitFromFolder(string f)
+        //{
+        //    folder = new DirectoryInfo(f);
+        //    if (!folder.Exists) return false;
             
-            Environment.CurrentDirectory = folder.FullName;
+        //    Environment.CurrentDirectory = folder.FullName;
 
-            if (File.Exists(MontageFile))
-                return InitFromFile(MontageFile);
+        //    if (File.Exists(MontageFile))
+        //        return InitFromFile(MontageFile);
 
-            if (!File.Exists("times.txt"))
-            {
-                MessageBox.Show("В каталоге " + folder.FullName + " должен быть файл times.txt с двумя строками: смещение второго видео относительно первого, и длина первого видео");
-                return false;
-            }
-            using (var reader = new StreamReader("times.txt"))
-            {
-                var shift = ParseMS(reader.ReadLine());
-                var length = ParseMS(reader.ReadLine());
-                model = new EditorModel { Shift = shift, TotalLength = length };
-                model.Chunks.Add(new ChunkData { StartTime = 0, Length = length, Mode = Mode.Undefined });
-                model.CurrentMode = Mode.Face;
-            }
-            return true;
-        }
+        //    if (!File.Exists("times.txt"))
+        //    {
+        //        MessageBox.Show("В каталоге " + folder.FullName + " должен быть файл times.txt с двумя строками: смещение второго видео относительно первого, и длина первого видео");
+        //        return false;
+        //    }
+        //    using (var reader = new StreamReader("times.txt"))
+        //    {
+        //        var shift = ParseMS(reader.ReadLine());
+        //        var length = ParseMS(reader.ReadLine());
+        //        model = new EditorModel { Shift = shift, TotalLength = length };
+        //        model.Chunks.Add(new ChunkData { StartTime = 0, Length = length, Mode = Mode.Undefined });
+        //        model.CurrentMode = Mode.Face;
+        //    }
+        //    return true;
+        //}
 
         static bool InitFromFile(string f)
         {
@@ -74,14 +74,16 @@ namespace Editor
                 return;
             }
 
-            if (
-                (!InitFromFolder(args[0]) && !InitFromFile(args[0]) )
-                ||
-                model==null
-                )
+            folder=new DirectoryInfo(args[0]);
+
+            if (!InitFromFile(args[0]+"\\montage.editor"))
             {
-                MessageBox.Show("Ошибка инициализации");
-                return;
+                model=new EditorModel
+                {
+                    Shift=0,
+                    TotalLength = 90*60*1000 //TODO: как-то по-разумному определить это время
+                };
+                model.Chunks.Add(new ChunkData { StartTime=0, Length=model.TotalLength, Mode= Mode.Undefined });      
             }
 
             var window = new MainWindow();

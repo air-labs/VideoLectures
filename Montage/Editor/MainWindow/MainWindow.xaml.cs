@@ -9,7 +9,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -41,6 +40,7 @@ namespace Editor
         internal void Initialize(EditorModel model, DirectoryInfo folder)
         {
             this.model = model;
+
             SetMode(model.EditorMode);
 
             switch (model.EditorMode)
@@ -52,7 +52,16 @@ namespace Editor
             BordersMode.Checked += (s, a) => { SetMode(EditorModes.Border); };
             GeneralMode.Checked += (s, a) => { SetMode(EditorModes.General); };
 
-            
+            Synchronizer.Click += (s, a) =>
+                {
+                    if (model.Shift != 0)
+                    {
+                        var response = MessageBox.Show("Вы уже синхронизировали это видео. Точно хотите пересинхронизировать?", "", MessageBoxButton.YesNoCancel);
+                        if (response != MessageBoxResult.Yes) return;
+                    }
+                    model.Shift = model.CurrentPosition;
+                    SetPosition(model.CurrentPosition);
+                };
 
             var facePath = folder.FullName+"\\face.mp4";
             videoAvailable = File.Exists(facePath);
@@ -70,7 +79,7 @@ namespace Editor
             this.DataContext = model;
             Timeline.DataContext = model;
 
-            Timer t = new Timer();
+            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
             t.Interval = timerInterval;
             t.Tick += (s, a) => { CheckPlayTime(); };
             t.Start();
