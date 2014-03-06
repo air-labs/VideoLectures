@@ -41,8 +41,22 @@ namespace Editor
         {
             this.model = model;
 
-            SetMode(model.EditorMode);
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
 
+            MouseDown += Timeline_MouseDown;
+            PreviewKeyDown += MainWindow_KeyDown;
+            Pause.Click += (a, b) => CmPause();
+
+            var binding = new CommandBinding(Commands.Save);
+            binding.Executed += Save;
+            CommandBindings.Add(binding);
+
+
+            Statistics.Click += ShowStatistics;
+
+
+            SetMode(model.EditorMode);
             switch (model.EditorMode)
             {
                 case EditorModes.Border: BordersMode.IsChecked = true; break;
@@ -61,6 +75,16 @@ namespace Editor
                     }
                     model.Shift = model.CurrentPosition;
                     SetPosition(model.CurrentPosition);
+                };
+
+            Infos.Click += (s, a) =>
+                {
+                    if (model.Information.Episodes.Count == 0)
+                        for (int i = 0; i < model.Chunks.Count(z => z.StartsNewEpisode); i++)
+                            model.Information.Episodes.Add(new EpisodInfo());
+                    var wnd = new InfoWindow();
+                    wnd.DataContext = model.Information;
+                    wnd.ShowDialog();
                 };
 
             var facePath = folder.FullName+"\\face.mp4";
@@ -90,20 +114,7 @@ namespace Editor
         public MainWindow()
         {
             InitializeComponent();
-            FaceVideo.LoadedBehavior = MediaState.Manual;
-            ScreenVideo.LoadedBehavior = MediaState.Manual;
-
-
-            MouseDown += Timeline_MouseDown;
-            PreviewKeyDown += MainWindow_KeyDown;
-            Pause.Click += (a, b) => CmPause();
-
-            var binding = new CommandBinding(Commands.Save);
-            binding.Executed += Save;
-            CommandBindings.Add(binding);
-
-            
-            Statistics.Click += ShowStatistics;
+          
         }
 
      
@@ -118,6 +129,10 @@ namespace Editor
 
         void Export(object sender, ExecutedRoutedEventArgs ce)
         {
+
+            File.WriteAllLines("titles.txt", model.Information.Episodes.Select(z => z.Name).Where(z => z != null).ToArray(), Encoding.UTF8);
+
+
             var file="log.txt";
             MontageCommandIO.Clear(file);
             MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartFace, Id = 1, Time = 0 }, file);
@@ -331,9 +346,9 @@ namespace Editor
             }
             else
             {
-                MakePlay();
                 FaceVideo.Position = TimeSpan.FromMilliseconds(ms);
                 ScreenVideo.Position = TimeSpan.FromMilliseconds(ms - model.Shift);
+                MakePlay();
                 requestPause = true;
             }
         }

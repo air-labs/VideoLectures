@@ -86,6 +86,7 @@ namespace Editor
                 model.Chunks.Add(new ChunkData { StartTime=0, Length=model.TotalLength, Mode= Mode.Undefined });      
             }
 
+            Environment.CurrentDirectory = folder.FullName;
             var window = new MainWindow();
             window.Initialize(model,folder);
             new Application().Run(window);

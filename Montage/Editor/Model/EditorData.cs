@@ -44,10 +44,14 @@ namespace Editor
      
         public List<Border> Borders { get; set; }
 
+
+        public VideoInformation Information { get; set; }
+
         public EditorModel()
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
+            Information = new VideoInformation();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
