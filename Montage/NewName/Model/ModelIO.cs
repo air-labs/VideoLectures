@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using VideoLib;
 
 namespace Editor
 {
@@ -35,6 +36,96 @@ namespace Editor
             };
             model.Chunks.Add(new ChunkData { StartTime = 0, Length = model.TotalLength, Mode = Mode.Undefined });
             return model;
+        }
+
+
+        public static void Save(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        {
+            SaveV1(rootFolder, videoFolder, model);
+        }
+
+
+        static void SaveV1(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        {
+            
+            using (var stream = new StreamWriter(videoFolder.FullName+"\\montage.editor"))
+            {
+                stream.WriteLine(new JavaScriptSerializer().Serialize(model));
+            }
+            ExportV0(rootFolder, videoFolder, model);
+        }
+
+        static void ExportV0(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        {
+            File.WriteAllLines(videoFolder.FullName+"\\titles.txt", model.Information.Episodes.Select(z => z.Name).Where(z => z != null).ToArray(), Encoding.UTF8);
+
+
+            var file = videoFolder.FullName+"\\log.txt";
+            MontageCommandIO.Clear(file);
+            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartFace, Id = 1, Time = 0 }, file);
+            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartScreen, Id = 2, Time = model.Shift }, file);
+            int id = 3;
+
+
+            var list = model.Chunks.ToList();
+            list.Add(new ChunkData
+            {
+                StartTime = list[list.Count - 1].StartTime + list[list.Count - 1].Length,
+                Length = 0,
+                Mode = Mode.Undefined
+            });
+
+
+
+            var oldMode = Mode.Drop;
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var e = list[i];
+                bool newEp = false;
+                if (e.Mode != oldMode || e.StartsNewEpisode || i == list.Count - 1)
+                {
+                    var cmd = new MontageCommand();
+                    cmd.Id = id++;
+                    cmd.Time = e.StartTime;
+                    switch (oldMode)
+                    {
+                        case Mode.Drop: cmd.Action = MontageAction.Delete; break;
+                        case Mode.Face: cmd.Action = MontageAction.Commit; break;
+                        case Mode.Screen: cmd.Action = MontageAction.Commit; break;
+                        case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
+                    }
+                    MontageCommandIO.AppendCommand(cmd, file);
+                    oldMode = e.Mode;
+                    newEp = true;
+                }
+                if (e.StartsNewEpisode)
+                {
+                    MontageCommandIO.AppendCommand(
+                        new MontageCommand { Id = id++, Action = MontageAction.CommitAndSplit, Time = e.StartTime },
+                        file
+                        );
+                    newEp = true;
+                }
+                if (newEp)
+                {
+                    if (e.Mode == Mode.Face || e.Mode == Mode.Screen)
+                    {
+                        var cmd = new MontageCommand();
+                        cmd.Id = id++;
+                        cmd.Time = e.StartTime;
+                        switch (e.Mode)
+                        {
+                            case Mode.Face: cmd.Action = MontageAction.Face; break;
+                            case Mode.Screen: cmd.Action = MontageAction.Screen; break;
+                        }
+                        MontageCommandIO.AppendCommand(cmd, file);
+                    }
+
+                }
+
+            }
+            
         }
     }
 }
