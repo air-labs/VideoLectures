@@ -12,13 +12,24 @@ namespace Editor
     public class ModelIO
     {
 
-        static EditorModel ParseV1(FileInfo file)
+        static EditorModel ParseV1(DirectoryInfo videoFolder, FileInfo file)
         {
             var montageModel=new JavaScriptSerializer().Deserialize<MontageModel>(File.ReadAllText(file.FullName));
-            return new EditorModel
+            var model=new EditorModel()
             {
                 Montage = montageModel
             };
+            if (model.Montage.Information.Episodes.Count == 0)
+            {
+                var titles = videoFolder.GetFiles("titles.txt");
+                if (titles.Length != 0)
+                {
+                    var lines = File.ReadAllLines(titles[0].FullName);
+                    foreach (var e in lines)
+                        model.Montage.Information.Episodes.Add(new EpisodInfo { Name = e });
+                }
+            }
+            return model;
         }
 
 
@@ -34,7 +45,7 @@ namespace Editor
             EditorModel model = null;
 
             if (fileV1.Length == 1)
-                model = ParseV1(fileV1[0]);
+                model = ParseV1(videoFolder,fileV1[0]);
             else
             {
                 model = new EditorModel

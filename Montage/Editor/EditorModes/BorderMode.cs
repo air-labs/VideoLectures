@@ -55,7 +55,7 @@ namespace Editor
             model.Borders.AddRange(borders);
         }
 
-        public BorderMode(EditorModel model)
+        public BorderMode(EditorModel editorModel)
         {
             this.editorModel = editorModel;
             GenerateBorders();

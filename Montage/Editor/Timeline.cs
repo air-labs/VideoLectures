@@ -36,9 +36,7 @@ namespace Editor
 
         public Timeline()
         {
-            DataContext = new EditorModel
-            {
-                Montage = new MontageModel
+            DataContext = new MontageModel
                 {
                     TotalLength = 3600000,
                     Chunks = 
@@ -56,7 +54,7 @@ namespace Editor
                           Mode=Mode.Screen
                      }
                  }
-                }
+                
             };
         
             DataContextChanged += (o, a) =>

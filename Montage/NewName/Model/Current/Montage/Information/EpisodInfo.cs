@@ -8,7 +8,8 @@ namespace Editor
 {
     public class EpisodInfo
     {
-        public string Prefix { get; set; }
         public string Name { get; set; }
+        public Guid LectureId { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

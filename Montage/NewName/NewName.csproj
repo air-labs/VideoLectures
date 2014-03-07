@@ -42,17 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Current\Borders\Border.cs" />
-    <Compile Include="Model\Current\Borders\BorderList.cs" />
-    <Compile Include="Model\Current\Chunks\ChunkData.cs" />
-    <Compile Include="Model\Current\Chunks\ChunkList.cs" />
-    <Compile Include="Model\Current\Chunks\ChunkMode.cs" />
+    <Compile Include="Model\Current\Montage\Borders\Border.cs" />
+    <Compile Include="Model\Current\Montage\Borders\BorderList.cs" />
+    <Compile Include="Model\Current\Montage\Chunks\ChunkData.cs" />
+    <Compile Include="Model\Current\Montage\Chunks\ChunkList.cs" />
+    <Compile Include="Model\Current\Montage\Chunks\ChunkMode.cs" />
     <Compile Include="Model\Current\EditorModel.cs" />
     <Compile Include="Model\Current\EditorModes.cs" />
-    <Compile Include="Model\Current\Information\EpisodInfo.cs" />
-    <Compile Include="Model\Current\Information\VideoInformation.cs" />
+    <Compile Include="Model\Current\Montage\Information\EpisodInfo.cs" />
+    <Compile Include="Model\Current\Montage\Information\VideoInformation.cs" />
     <Compile Include="Model\ModelIO.cs" />
-    <Compile Include="Model\Current\MontageModel.cs" />
+    <Compile Include="Model\Current\Montage\MontageModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
