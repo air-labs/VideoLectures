@@ -14,7 +14,11 @@ namespace Editor
 
         static EditorModel ParseV1(FileInfo file)
         {
-            return new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
+            var montageModel=new JavaScriptSerializer().Deserialize<MontageModel>(File.ReadAllText(file.FullName));
+            return new EditorModel
+            {
+                Montage = montageModel
+            };
         }
 
 
@@ -31,10 +35,13 @@ namespace Editor
 
             var model = new EditorModel
             {
-                Shift = 0,
-                TotalLength = 90 * 60 * 1000 //TODO: как-то по-разумному определить это время
+                Montage = new MontageModel
+                {
+                    Shift = 0,
+                    TotalLength = 90 * 60 * 1000 //TODO: как-то по-разумному определить это время
+                }
             };
-            model.Chunks.Add(new ChunkData { StartTime = 0, Length = model.TotalLength, Mode = Mode.Undefined });
+            model.Montage.Chunks.Add(new ChunkData { StartTime = 0, Length = model.Montage.TotalLength, Mode = Mode.Undefined });
             return model;
         }
 
@@ -50,12 +57,12 @@ namespace Editor
             
             using (var stream = new StreamWriter(videoFolder.FullName+"\\montage.editor"))
             {
-                stream.WriteLine(new JavaScriptSerializer().Serialize(model));
+                stream.WriteLine(new JavaScriptSerializer().Serialize(model.Montage));
             }
-            ExportV0(rootFolder, videoFolder, model);
+            ExportV0(rootFolder, videoFolder, model.Montage);
         }
 
-        static void ExportV0(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        static void ExportV0(DirectoryInfo rootFolder, DirectoryInfo videoFolder, MontageModel model)
         {
             File.WriteAllLines(videoFolder.FullName+"\\titles.txt", model.Information.Episodes.Select(z => z.Name).Where(z => z != null).ToArray(), Encoding.UTF8);
 

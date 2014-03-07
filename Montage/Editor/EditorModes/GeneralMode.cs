@@ -9,11 +9,13 @@ namespace Editor
 {
     public class GeneralMode : IEditorMode
     {
-        EditorModel model;
+        EditorModel editorModel;
 
-        public GeneralMode(EditorModel model)
+        MontageModel model { get { return editorModel.Montage; } }
+
+        public GeneralMode(EditorModel edModel)
         {
-            this.model = model;
+            this.editorModel = edModel;
         }
 
         public WindowCommand CheckTime(WindowState state)

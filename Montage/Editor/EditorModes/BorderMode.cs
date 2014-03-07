@@ -12,7 +12,9 @@ namespace Editor
     {
         const int Margin = 3000;
 
-        EditorModel model;
+        EditorModel editorModel;
+
+        public MontageModel model { get { return editorModel.Montage; } }
 
 
         /*
@@ -55,7 +57,7 @@ namespace Editor
 
         public BorderMode(EditorModel model)
         {
-            this.model = model;
+            this.editorModel = editorModel;
             GenerateBorders();
         }
 

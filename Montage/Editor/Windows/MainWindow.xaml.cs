@@ -23,7 +23,10 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        EditorModel model;
+
+        EditorModel editorModel;
+
+        MontageModel model { get { return editorModel.Montage; } }
         DirectoryInfo folder;
 
         void SetMode(EditorModes mode)
@@ -31,15 +34,15 @@ namespace Editor
             model.EditorMode = mode;
             switch (mode)
             {
-                case EditorModes.Border: currentMode = new BorderMode(model); break;
-                case EditorModes.General: currentMode = new GeneralMode(model); break;
+                case EditorModes.Border: currentMode = new BorderMode(editorModel); break;
+                case EditorModes.General: currentMode = new GeneralMode(editorModel); break;
             }
             Timeline.InvalidateVisual();
         }
 
-        internal void Initialize(EditorModel model, DirectoryInfo folder)
+        internal void Initialize(EditorModel edModel, DirectoryInfo folder)
         {
-            this.model = model;
+            this.editorModel = edModel;
             this.folder = folder;
 
             FaceVideo.LoadedBehavior = MediaState.Manual;
@@ -119,7 +122,7 @@ namespace Editor
      
         void Save(object sender, ExecutedRoutedEventArgs e)
         {
-            ModelIO.Save(folder.Parent, folder, model);
+            ModelIO.Save(folder.Parent, folder, editorModel);
         }
 
         void ShowStatistics(object sender, EventArgs e)

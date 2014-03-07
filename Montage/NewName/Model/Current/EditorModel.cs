@@ -8,9 +8,17 @@ using System.Threading.Tasks;
 namespace Editor
 {
 
+    public class EditorModel
+    {
+        public MontageModel Montage { get; set; }
+        public EditorModel()
+        {
+            Montage=new MontageModel();
+        }
+    }
     
 
-   public class EditorModel : INotifyPropertyChanged
+   public class MontageModel : INotifyPropertyChanged
     {
         public int TotalLength { get; set; }
         public int Shift { get; set; }
@@ -47,7 +55,7 @@ namespace Editor
 
         public VideoInformation Information { get; set; }
 
-        public EditorModel()
+        public MontageModel()
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();

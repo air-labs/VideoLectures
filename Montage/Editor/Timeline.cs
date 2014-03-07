@@ -38,8 +38,10 @@ namespace Editor
         {
             DataContext = new EditorModel
             {
-                TotalLength = 3600000,
-                Chunks = 
+                Montage = new MontageModel
+                {
+                    TotalLength = 3600000,
+                    Chunks = 
                  {
                      new ChunkData
                      {
@@ -54,7 +56,9 @@ namespace Editor
                           Mode=Mode.Screen
                      }
                  }
+                }
             };
+        
             DataContextChanged += (o, a) =>
                 {
                     if (a.NewValue is INotifyPropertyChanged)
@@ -62,7 +66,8 @@ namespace Editor
                 };
         }
 
-        EditorModel model { get { return (EditorModel)DataContext; } }
+
+        MontageModel model { get { return (MontageModel)DataContext; } }
 
         protected void Timeline_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
