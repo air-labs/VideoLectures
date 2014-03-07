@@ -30,36 +30,46 @@ namespace Editor
                 throw new Exception("Video directory " + rootFolder.FullName + " is not found");
 
             var fileV1 = videoFolder.GetFiles("montage.editor");
-            if (fileV1.Length == 1)
-                return ParseV1(fileV1[0]);
 
-            var model = new EditorModel
+            EditorModel model = null;
+
+            if (fileV1.Length == 1)
+                model = ParseV1(fileV1[0]);
+            else
             {
-                Montage = new MontageModel
+                model = new EditorModel
                 {
-                    Shift = 0,
-                    TotalLength = 90 * 60 * 1000 //TODO: как-то по-разумному определить это время
-                }
-            };
-            model.Montage.Chunks.Add(new ChunkData { StartTime = 0, Length = model.Montage.TotalLength, Mode = Mode.Undefined });
+                    Montage = new MontageModel
+                    {
+                        Shift = 0,
+                        TotalLength = 90 * 60 * 1000 //TODO: как-то по-разумному определить это время
+                    },
+                    RootFolder = rootFolder,
+                    VideoFolder = videoFolder
+                };
+                model.Montage.Chunks.Add(new ChunkData { StartTime = 0, Length = model.Montage.TotalLength, Mode = Mode.Undefined });
+            }
+
+            model.RootFolder = rootFolder;
+            model.VideoFolder = videoFolder;
             return model;
         }
 
 
-        public static void Save(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        public static void Save(EditorModel model)
         {
-            SaveV1(rootFolder, videoFolder, model);
+            SaveV1(model.RootFolder, model.VideoFolder, model.Montage);
         }
 
 
-        static void SaveV1(DirectoryInfo rootFolder, DirectoryInfo videoFolder, EditorModel model)
+        static void SaveV1(DirectoryInfo rootFolder, DirectoryInfo videoFolder, MontageModel model)
         {
             
             using (var stream = new StreamWriter(videoFolder.FullName+"\\montage.editor"))
             {
-                stream.WriteLine(new JavaScriptSerializer().Serialize(model.Montage));
+                stream.WriteLine(new JavaScriptSerializer().Serialize(model));
             }
-            ExportV0(rootFolder, videoFolder, model.Montage);
+            ExportV0(rootFolder, videoFolder, model);
         }
 
         static void ExportV0(DirectoryInfo rootFolder, DirectoryInfo videoFolder, MontageModel model)

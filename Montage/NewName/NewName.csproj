@@ -52,6 +52,7 @@
     <Compile Include="Model\Current\Information\EpisodInfo.cs" />
     <Compile Include="Model\Current\Information\VideoInformation.cs" />
     <Compile Include="Model\ModelIO.cs" />
+    <Compile Include="Model\Current\MontageModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

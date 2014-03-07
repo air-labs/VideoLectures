@@ -79,7 +79,7 @@ namespace Editor
             Environment.CurrentDirectory = videoFolder.FullName;
             var model = ModelIO.Load(rootFolder, videoFolder);
             var window = new MainWindow();
-            window.Initialize(model,videoFolder);
+            window.Initialize(model);
             new Application().Run(window);
         }
     }

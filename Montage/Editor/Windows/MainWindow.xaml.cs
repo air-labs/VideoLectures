@@ -27,8 +27,7 @@ namespace Editor
         EditorModel editorModel;
 
         MontageModel model { get { return editorModel.Montage; } }
-        DirectoryInfo folder;
-
+        
         void SetMode(EditorModes mode)
         {
             model.EditorMode = mode;
@@ -40,10 +39,10 @@ namespace Editor
             Timeline.InvalidateVisual();
         }
 
-        internal void Initialize(EditorModel edModel, DirectoryInfo folder)
+        internal void Initialize(EditorModel edModel)
         {
             this.editorModel = edModel;
-            this.folder = folder;
+           
 
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
@@ -91,14 +90,14 @@ namespace Editor
                     wnd.ShowDialog();
                 };
 
-            var facePath = folder.FullName+"\\face.mp4";
+            var facePath = editorModel.VideoFolder.FullName+"\\face.mp4";
             videoAvailable = File.Exists(facePath);
 
             FaceVideo.Source = new Uri(facePath, UriKind.Absolute);
             FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
 
-            ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.avi", UriKind.Absolute);
+            ScreenVideo.Source = new Uri(editorModel.VideoFolder.FullName + "\\desktop.avi", UriKind.Absolute);
             ScreenVideo.SpeedRatio = 1;
             ScreenVideo.Volume = 0.0001;
             
@@ -122,7 +121,7 @@ namespace Editor
      
         void Save(object sender, ExecutedRoutedEventArgs e)
         {
-            ModelIO.Save(folder.Parent, folder, editorModel);
+            ModelIO.Save(editorModel);
         }
 
         void ShowStatistics(object sender, EventArgs e)
