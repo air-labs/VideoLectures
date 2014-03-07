@@ -36,7 +36,9 @@ namespace Editor
 
         public Timeline()
         {
-            DataContext = new MontageModel
+            DataContext = new EditorModel
+            {
+                Montage = new MontageModel
                 {
                     TotalLength = 3600000,
                     Chunks = 
@@ -54,25 +56,21 @@ namespace Editor
                           Mode=Mode.Screen
                      }
                  }
-                
-            };
-        
+                }};
+            
             DataContextChanged += (o, a) =>
                 {
-                    if (a.NewValue is INotifyPropertyChanged)
-                        (a.NewValue as INotifyPropertyChanged).PropertyChanged += Timeline_PropertyChanged;
+                    (a.NewValue as EditorModel).WindowState.PropertyChanged += Timeline_PropertyChanged;
                 };
         }
 
-
-        MontageModel model { get { return (MontageModel)DataContext; } }
+        EditorModel editorModel { get { return (EditorModel)DataContext; } }
+        MontageModel model { get { return editorModel.Montage;  } }
 
         protected void Timeline_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             InvalidateVisual();
         }
-
-     
 
         IEnumerable<Rect> GetRects(ChunkData chunk)
         {
@@ -127,7 +125,7 @@ namespace Editor
                    }
                }
 
-            if (model.EditorMode == EditorModes.Border)
+            if (editorModel.WindowState.CurrentMode == EditorModes.Border)
                 foreach (var e in model.Borders)
                 {
                     var From = GetCoordinate(e.StartTime);
@@ -140,7 +138,7 @@ namespace Editor
                         drawingContext.DrawLine(border,To,From);
                 }
 
-            var point=GetCoordinate(model.CurrentPosition);
+            var point=GetCoordinate(editorModel.WindowState.CurrentPosition);
             drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));
         }
     }

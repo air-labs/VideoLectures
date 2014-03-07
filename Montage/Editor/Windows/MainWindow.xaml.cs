@@ -30,7 +30,7 @@ namespace Editor
         
         void SetMode(EditorModes mode)
         {
-            model.EditorMode = mode;
+            editorModel.WindowState.CurrentMode = mode;
             switch (mode)
             {
                 case EditorModes.Border: currentMode = new BorderMode(editorModel); break;
@@ -59,8 +59,8 @@ namespace Editor
             Statistics.Click += ShowStatistics;
 
 
-            SetMode(model.EditorMode);
-            switch (model.EditorMode)
+            SetMode(editorModel.WindowState.CurrentMode);
+            switch (editorModel.WindowState.CurrentMode)
             {
                 case EditorModes.Border: BordersMode.IsChecked = true; break;
                 case EditorModes.General: GeneralMode.IsChecked = true; break;
@@ -76,8 +76,8 @@ namespace Editor
                         var response = MessageBox.Show("Вы уже синхронизировали это видео. Точно хотите пересинхронизировать?", "", MessageBoxButton.YesNoCancel);
                         if (response != MessageBoxResult.Yes) return;
                     }
-                    model.Shift = model.CurrentPosition;
-                    SetPosition(model.CurrentPosition);
+                    model.Shift = editorModel.WindowState.CurrentPosition;
+                    SetPosition(editorModel.WindowState.CurrentPosition);
                 };
 
             Infos.Click += (s, a) =>
@@ -101,10 +101,9 @@ namespace Editor
             ScreenVideo.SpeedRatio = 1;
             ScreenVideo.Volume = 0.0001;
             
-            SetPosition(model.CurrentPosition);
+            SetPosition(editorModel.WindowState.CurrentPosition);
 
-            this.DataContext = model;
-            Timeline.DataContext = model;
+            Timeline.DataContext = editorModel;
 
             System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
             t.Interval = timerInterval;
@@ -151,7 +150,7 @@ namespace Editor
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            var response = currentMode.ProcessKey(CreateState(), e);
+            var response = currentMode.ProcessKey(e);
             if (response.RequestProcessed)
             {
                 ProcessResponse(response);
@@ -208,11 +207,11 @@ namespace Editor
         void CheckPlayTime()
         {
             if (videoAvailable)
-                model.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+                editorModel.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
             else
             {
                 if (paused) return;
-                model.CurrentPosition += (int)(timerInterval * SpeedRatio);
+                editorModel.WindowState.CurrentPosition += (int)(timerInterval * SpeedRatio);
             }
 
             if (requestPause)
@@ -222,13 +221,9 @@ namespace Editor
                 return;
             }
 
-            ProcessResponse(currentMode.CheckTime(CreateState()));
+            ProcessResponse(currentMode.CheckTime());
         }
 
-        WindowState CreateState()
-        {
-            return new WindowState { Location = model.CurrentPosition, Paused = paused };
-        }
 
 
         void ProcessResponse(WindowCommand r)
@@ -260,7 +255,7 @@ namespace Editor
         }
         void SetPosition(double ms)
         {
-            model.CurrentPosition = (int)ms;
+            editorModel.WindowState.CurrentPosition = (int)ms;
 
             if (!paused)
             {
@@ -287,7 +282,7 @@ namespace Editor
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
-            ProcessResponse(currentMode.MouseClick(CreateState(), time, e));
+            ProcessResponse(currentMode.MouseClick(time, e));
         }
         #endregion 
     }

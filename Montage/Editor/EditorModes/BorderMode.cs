@@ -61,26 +61,31 @@ namespace Editor
             GenerateBorders();
         }
 
-        public WindowCommand CheckTime(WindowState state)
+        public WindowCommand CheckTime()
         {
-            if (model.Borders.FindBorder(state.Location) != -1) return WindowCommand.None;
+            return CheckTime(editorModel.WindowState.CurrentPosition);
+        }
+
+        public WindowCommand CheckTime(int ms)
+        {
+            if (model.Borders.FindBorder(ms) != -1) return WindowCommand.None;
             foreach (var e in model.Borders)
-                if (e.StartTime >= state.Location) return WindowCommand.JumpTo(e.StartTime);
+                if (e.StartTime >= ms) return WindowCommand.JumpTo(e.StartTime);
             return new WindowCommand { Pause = true };
         }
 
 
-        public WindowCommand MouseClick(WindowState state, int selectedLocation, MouseButtonEventArgs button)
+        public WindowCommand MouseClick(int selectedLocation, MouseButtonEventArgs button)
         {
-            var r = CheckTime(state);
+            var r = CheckTime(selectedLocation);
             if (!r.RequestProcessed) return WindowCommand.JumpTo(selectedLocation);
             return r;
         }
 
 
-        public WindowCommand ProcessKey(WindowState state, KeyEventArgs e)
+        public WindowCommand ProcessKey(KeyEventArgs e)
         {
-            var borderIndex = model.Borders.FindBorder(model.CurrentPosition);
+            var borderIndex = model.Borders.FindBorder(editorModel.WindowState.CurrentPosition);
             int leftBorderIndex = -1;
             int rightBorderIndex = -1;
             if (model.Borders[borderIndex].IsLeftBorder)

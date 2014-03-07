@@ -12,12 +12,34 @@ namespace Editor
     public class ModelIO
     {
 
+        static EditorModel ParseV2(FileInfo file)
+        {
+            var container = new JavaScriptSerializer().Deserialize<FileContainer>(File.ReadAllText(file.FullName));
+            return new EditorModel
+            {
+                Montage = container.Montage,
+                WindowState = container.WindowState
+            };
+        }
+
         static EditorModel ParseV1(DirectoryInfo videoFolder, FileInfo file)
         {
-            var montageModel=new JavaScriptSerializer().Deserialize<MontageModel>(File.ReadAllText(file.FullName));
-            var model=new EditorModel()
+            var montageModel=new JavaScriptSerializer().Deserialize<MontageModelV1>(File.ReadAllText(file.FullName));
+            var model = new EditorModel()
             {
-                Montage = montageModel
+                Montage = new MontageModel
+                {
+                    Borders = montageModel.Borders,
+                    Chunks = montageModel.Chunks,
+                    Shift = montageModel.Shift,
+                    TotalLength = montageModel.TotalLength,
+                    Information = montageModel.Information
+                },
+                WindowState = new WindowState
+                {
+                    CurrentMode = montageModel.EditorMode,
+                    CurrentPosition = montageModel.CurrentPosition,
+                }
             };
             if (model.Montage.Information.Episodes.Count == 0)
             {
@@ -40,11 +62,17 @@ namespace Editor
             if (!videoFolder.Exists)
                 throw new Exception("Video directory " + rootFolder.FullName + " is not found");
 
-            var fileV1 = videoFolder.GetFiles("montage.editor");
 
             EditorModel model = null;
 
-            if (fileV1.Length == 1)
+            var fileV2 = videoFolder.GetFiles("montage.v2");
+            var fileV1 = videoFolder.GetFiles("montage.editor");
+
+
+
+            if (fileV2.Length == 1)
+                model = ParseV2(fileV2[0]);
+            else if (fileV1.Length == 1)
                 model = ParseV1(videoFolder,fileV1[0]);
             else
             {
@@ -69,7 +97,22 @@ namespace Editor
 
         public static void Save(EditorModel model)
         {
-            SaveV1(model.RootFolder, model.VideoFolder, model.Montage);
+            SaveV2(model);
+        }
+
+        static void SaveV2(EditorModel model)
+        {
+            var container = new FileContainer()
+            {
+                FileFormat = "V2",
+                Montage = model.Montage,
+                WindowState = model.WindowState
+            };
+            using (var stream = new StreamWriter(model.VideoFolder.FullName + "\\montage.v2"))
+            {
+                stream.WriteLine(new JavaScriptSerializer().Serialize(container));
+            }
+            ExportV0(model.RootFolder, model.VideoFolder, model.Montage);
         }
 
 

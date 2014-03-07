@@ -9,35 +9,12 @@ using System.Threading.Tasks;
 namespace Editor
 {
 
-    public class MontageModel : INotifyPropertyChanged
+    public class MontageModel
     {
         public int TotalLength { get; set; }
         public int Shift { get; set; }
 
-        public EditorModes EditorMode { get; set; }
-
-        Mode currentMode;
-        public Mode CurrentMode
-        {
-            get { return currentMode; }
-            set
-            {
-                currentMode = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode"));
-            }
-        }
-
-        int currentPosition;
-        public int CurrentPosition
-        {
-            get { return currentPosition; }
-            set
-            {
-                currentPosition = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentPosition"));
-            }
-        }
-
+       
 
 
         public List<ChunkData> Chunks { get; set; }
@@ -55,6 +32,6 @@ namespace Editor
             Information = new VideoInformation();
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+       
     }
 }

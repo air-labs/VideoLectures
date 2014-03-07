@@ -12,6 +12,7 @@ namespace Editor
     public class EditorModel
     {
         public MontageModel Montage { get; set; }
+        public WindowState WindowState { get; set; }
         public DirectoryInfo RootFolder { get; set; }
         public DirectoryInfo VideoFolder { get; set; }
 
