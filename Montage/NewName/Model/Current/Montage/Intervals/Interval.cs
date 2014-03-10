@@ -15,6 +15,9 @@ namespace Editor
         public int EndTimeMS { get { return (int)Math.Round(EndTime * 1000); } }
 
         public bool HasVoice { get; set; }
+
+        public Interval() { }
+
         public Interval(double start, double end, bool hasVoice)
         {
             StartTime = start;

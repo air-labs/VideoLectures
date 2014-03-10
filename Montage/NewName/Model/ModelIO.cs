@@ -55,8 +55,20 @@ namespace Editor
         }
 
 
+        public static string DebugSubdir(string subdirectory)
+        {
+            if (subdirectory.StartsWith("debug\\"))
+            {
+                subdirectory = subdirectory.Replace("debug\\", "");
+                var path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\Model");
+                Environment.CurrentDirectory = path;
+            }
+            return subdirectory;
+        }
+
         public static EditorModel Load(string subdirectory)
         {
+
             var rootFolder = new DirectoryInfo(Environment.CurrentDirectory); //или это место, где лежит экзешник?
             var videoFolder = new DirectoryInfo(rootFolder.FullName + "\\" + subdirectory);
             return Load(rootFolder, videoFolder);

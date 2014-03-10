@@ -1,4 +1,5 @@
-﻿using NewName.Services;
+﻿using Editor;
+using NewName.Services;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,19 +24,15 @@ namespace NewName
                 return;
             }
 
-            if (args[1].StartsWith("debug\\"))
-            {
-                args[1] = args[1].Replace("debug\\", "");
-                var path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\Model");
-                Environment.CurrentDirectory = path;
-            }
-
+           
             
             AppDomain.CurrentDomain.UnhandledException += (sender, a) =>
                 {
                     Console.Error.WriteLine((a.ExceptionObject as Exception).Message);
                  //   Environment.Exit(1); //TODO: раскомментить эту строчку для релиза
                 };
+
+            args[1] = ModelIO.DebugSubdir(args[1]);
 
             switch (args[0].ToLower())
             {

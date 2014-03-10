@@ -11,8 +11,8 @@ namespace Editor
 {
     public class Timeline : FrameworkElement
     {
-        int RowHeight = 20;
-        int msInRow = 300000;
+        int RowHeight = 40;
+        int msInRow = 50000;
 
         Brush[] fills = new Brush[] { Brushes.White, Brushes.MistyRose, Brushes.LightGreen, Brushes.LightBlue};
         Pen borderPen = new Pen(Brushes.Black, 1);
