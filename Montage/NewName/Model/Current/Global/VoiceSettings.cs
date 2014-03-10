@@ -6,11 +6,10 @@ using System.Threading.Tasks;
 
 namespace Editor
 {
-    public class GlobalSettings
+    class VoiceSettings
     {
         public int MaxDeviationWhenBorderingBySound { get; set; }
-
-        public GlobalSettings()
+        public VoiceSettings()
         {
             MaxDeviationWhenBorderingBySound = 200;
         }

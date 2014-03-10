@@ -16,7 +16,7 @@ namespace Editor
         public DirectoryInfo RootFolder { get; set; }
         public DirectoryInfo VideoFolder { get; set; }
         public Locations Locations { get; private set; }
-        public GlobalSettings Global { get; set; }
+        public GlobalData Global { get; set; }
 
         public EditorModel()
         {

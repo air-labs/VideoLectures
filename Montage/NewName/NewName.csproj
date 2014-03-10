@@ -42,7 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Current\Global\GlobalSettings.cs" />
+    <Compile Include="Model\Current\Global\GlobalData.cs" />
+    <Compile Include="Model\Current\Global\VoiceSettings.cs" />
     <Compile Include="Shell.cs" />
     <Compile Include="Model\Current\FileContainer.cs" />
     <Compile Include="Model\Current\Locations.cs" />
