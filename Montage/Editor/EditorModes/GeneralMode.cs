@@ -9,20 +9,22 @@ namespace Editor
 {
     public class GeneralMode : IEditorMode
     {
-        EditorModel model;
+        EditorModel editorModel;
 
-        public GeneralMode(EditorModel model)
+        MontageModel model { get { return editorModel.Montage; } }
+
+        public GeneralMode(EditorModel edModel)
         {
-            this.model = model;
+            this.editorModel = edModel;
         }
 
-        public WindowCommand CheckTime(WindowState state)
+        public WindowCommand CheckTime()
         {
             return WindowCommand.None;
         }
 
 
-        public WindowCommand MouseClick(WindowState state, int selectedLocation, MouseButtonEventArgs e)
+        public WindowCommand MouseClick(int selectedLocation, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
@@ -37,7 +39,7 @@ namespace Editor
         }
 
 
-        public WindowCommand ProcessKey(WindowState state, System.Windows.Input.KeyEventArgs e)
+        public WindowCommand ProcessKey(System.Windows.Input.KeyEventArgs e)
         {
             var value = 0.0;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
@@ -52,11 +54,11 @@ namespace Editor
             {
                 case Key.D2:
                 case Key.Left:
-                    return WindowCommand.JumpTo((int)(model.CurrentPosition - 1000 * Math.Pow(5, value)));
+                    return WindowCommand.JumpTo((int)(editorModel.WindowState.CurrentPosition - 1000 * Math.Pow(5, value)));
 
                 case Key.D3:
                 case Key.Right:
-                    return WindowCommand.JumpTo((int)(model.CurrentPosition + 1000 * Math.Pow(5, value)));
+                    return WindowCommand.JumpTo((int)(editorModel.WindowState.CurrentPosition + 1000 * Math.Pow(5, value)));
 
                 case Key.D1:
                     return PrevChunk();
@@ -65,13 +67,11 @@ namespace Editor
                     return NextChunk();
 
                 case Key.D0:
-                    model.CurrentMode = Mode.Face;
-                    return Commit(model.CurrentMode, ctrl);
+                    return Commit(Mode.Face, ctrl);
                 
                 
                 case Key.OemMinus:
-                    model.CurrentMode = Mode.Screen;
-                    return Commit(model.CurrentMode, ctrl);
+                    return Commit(Mode.Screen, ctrl);
                 
                 case Key.OemPlus:
                     return Commit(Mode.Drop, ctrl);
@@ -95,7 +95,7 @@ namespace Editor
 
 
                 case Key.D9:
-                    var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
+                    var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
                     if (index != -1)
                         model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
                     return WindowCommand.Processed.AndInvalidate();    
@@ -106,7 +106,7 @@ namespace Editor
 
         WindowCommand RemoveChunk()
         {
-            var position = model.CurrentPosition;
+            var position = editorModel.WindowState.CurrentPosition;
             var index = model.Chunks.FindChunkIndex(position);
             if (index == -1) return WindowCommand.None;
             var chunk = model.Chunks[index];
@@ -127,7 +127,7 @@ namespace Editor
 
         WindowCommand ShiftLeft(int delta)
         {
-            var position = model.CurrentPosition;
+            var position = editorModel.WindowState.CurrentPosition;
             var index = model.Chunks.FindChunkIndex(position);
             if (index == -1 || index == 0) return WindowCommand.None;
             if (delta < 0 && model.Chunks[index - 1].Length < -delta) return WindowCommand.None;
@@ -140,7 +140,7 @@ namespace Editor
 
         WindowCommand ShiftRight(int delta)
         {
-            var position = model.CurrentPosition;
+            var position = editorModel.WindowState.CurrentPosition;
             var index = model.Chunks.FindChunkIndex(position);
             if (index == -1 || index == model.Chunks.Count - 1) return WindowCommand.None;
             if (delta < 0 && model.Chunks[index].Length < -delta) return WindowCommand.None;
@@ -153,7 +153,7 @@ namespace Editor
 
         WindowCommand NextChunk()
         {
-            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
+            var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
             index++;
             if (index < 0 || index >= model.Chunks.Count) return WindowCommand.None;
             return WindowCommand.JumpTo(model.Chunks[index].StartTime);
@@ -161,7 +161,7 @@ namespace Editor
 
         WindowCommand PrevChunk()
         {
-            var index = model.Chunks.FindChunkIndex(model.CurrentPosition);
+            var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
             index--;
             if (index < 0 || index >= model.Chunks.Count) return  WindowCommand.None;
             return WindowCommand.JumpTo(model.Chunks[index].StartTime);
@@ -170,7 +170,7 @@ namespace Editor
 
         WindowCommand Commit(Mode mode, bool ctrl)
         {
-            var position = model.CurrentPosition;
+            var position = editorModel.WindowState.CurrentPosition;
             var index = model.Chunks.FindChunkIndex(position);
             if (index == -1) return WindowCommand.None;
             var chunk = model.Chunks[index];

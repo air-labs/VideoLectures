@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Editor;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -9,9 +10,7 @@ using VideoLib;
 namespace Editor
 {
 
-    
-
-   public class EditorModel : INotifyPropertyChanged
+    public class MontageModelV1 : INotifyPropertyChanged
     {
         public int TotalLength { get; set; }
         public int Shift { get; set; }
@@ -22,18 +21,20 @@ namespace Editor
         public Mode CurrentMode
         {
             get { return currentMode; }
-            set { 
-                currentMode=value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode")); 
+            set
+            {
+                currentMode = value;
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode"));
             }
         }
 
         int currentPosition;
-        public int CurrentPosition 
+        public int CurrentPosition
         {
             get { return currentPosition; }
-            set { 
-                currentPosition=value;
+            set
+            {
+                currentPosition = value;
                 if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentPosition"));
             }
         }
@@ -41,17 +42,18 @@ namespace Editor
 
 
         public List<ChunkData> Chunks { get; set; }
+
+
         public List<Border> Borders { get; set; }
-        public List<Interval> Intervals { get; set; }
+
         
 
         public VideoInformation Information { get; set; }
 
-        public EditorModel()
+        public MontageModelV1()
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
-            Intervals = new List<Interval>();
             Information = new VideoInformation();
         }
 

@@ -38,8 +38,10 @@ namespace Editor
         {
             DataContext = new EditorModel
             {
-                TotalLength = 3600000,
-                Chunks = 
+                Montage = new MontageModel
+                {
+                    TotalLength = 3600000,
+                    Chunks = 
                  {
                      new ChunkData
                      {
@@ -54,22 +56,21 @@ namespace Editor
                           Mode=Mode.Screen
                      }
                  }
-            };
+                }};
+            
             DataContextChanged += (o, a) =>
                 {
-                    if (a.NewValue is INotifyPropertyChanged)
-                        (a.NewValue as INotifyPropertyChanged).PropertyChanged += Timeline_PropertyChanged;
+                    (a.NewValue as EditorModel).WindowState.PropertyChanged += Timeline_PropertyChanged;
                 };
         }
 
-        EditorModel model { get { return (EditorModel)DataContext; } }
+        EditorModel editorModel { get { return (EditorModel)DataContext; } }
+        MontageModel model { get { return editorModel.Montage;  } }
 
         protected void Timeline_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             InvalidateVisual();
         }
-
-     
 
         IEnumerable<Rect> GetRects(ChunkData chunk)
         {
@@ -124,17 +125,20 @@ namespace Editor
                    }
                }
 
-           foreach (var i in model.Intervals)
+           if (model.Intervals != null)
            {
-               var From = GetCoordinate(i.StartTimeMS);
-               From.Y += RowHeight-3;
-               var To = GetCoordinate(i.EndTimeMS);
-               To.Y += RowHeight - 3;
-               if (i.HasVoice)
-                   drawingContext.DrawLine(border, From, To);
+               foreach (var i in model.Intervals)
+               {
+                   var From = GetCoordinate(i.StartTimeMS);
+                   From.Y += RowHeight - 3;
+                   var To = GetCoordinate(i.EndTimeMS);
+                   To.Y += RowHeight - 3;
+                   if (i.HasVoice)
+                       drawingContext.DrawLine(border, From, To);
+               }
            }
 
-            if (model.EditorMode == EditorModes.Border)
+            if (editorModel.WindowState.CurrentMode == EditorModes.Border)
                 foreach (var e in model.Borders)
                 {
                     var From = GetCoordinate(e.StartTime);
@@ -142,12 +146,12 @@ namespace Editor
                     var To = GetCoordinate(e.EndTime);
                     To.Y += 3;
                     if (e.IsLeftBorder)
-                        drawingContext.DrawLine(border,From,To);
+                        drawingContext.DrawLine(border, From, To);
                     else
-                        drawingContext.DrawLine(border,To,From);
+                        drawingContext.DrawLine(border, To, From);
                 }
 
-            var point=GetCoordinate(model.CurrentPosition);
+            var point=GetCoordinate(editorModel.WindowState.CurrentPosition);
             drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));
         }
     }

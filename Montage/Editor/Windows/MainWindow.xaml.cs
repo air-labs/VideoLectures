@@ -23,23 +23,26 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
-        EditorModel model;
-       
 
+        EditorModel editorModel;
+
+        MontageModel model { get { return editorModel.Montage; } }
+        
         void SetMode(EditorModes mode)
         {
-            model.EditorMode = mode;
+            editorModel.WindowState.CurrentMode = mode;
             switch (mode)
             {
-                case EditorModes.Border: currentMode = new BorderMode(model); break;
-                case EditorModes.General: currentMode = new GeneralMode(model); break;
+                case EditorModes.Border: currentMode = new BorderMode(editorModel); break;
+                case EditorModes.General: currentMode = new GeneralMode(editorModel); break;
             }
             Timeline.InvalidateVisual();
         }
 
-        internal void Initialize(EditorModel model, DirectoryInfo folder)
+        internal void Initialize(EditorModel edModel)
         {
-            this.model = model;
+            this.editorModel = edModel;
+           
 
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
@@ -56,8 +59,8 @@ namespace Editor
             Statistics.Click += ShowStatistics;
 
 
-            SetMode(model.EditorMode);
-            switch (model.EditorMode)
+            SetMode(editorModel.WindowState.CurrentMode);
+            switch (editorModel.WindowState.CurrentMode)
             {
                 case EditorModes.Border: BordersMode.IsChecked = true; break;
                 case EditorModes.General: GeneralMode.IsChecked = true; break;
@@ -73,8 +76,8 @@ namespace Editor
                         var response = MessageBox.Show("Вы уже синхронизировали это видео. Точно хотите пересинхронизировать?", "", MessageBoxButton.YesNoCancel);
                         if (response != MessageBoxResult.Yes) return;
                     }
-                    model.Shift = model.CurrentPosition;
-                    SetPosition(model.CurrentPosition);
+                    model.Shift = editorModel.WindowState.CurrentPosition;
+                    SetPosition(editorModel.WindowState.CurrentPosition);
                 };
 
             Infos.Click += (s, a) =>
@@ -87,28 +90,25 @@ namespace Editor
                     wnd.ShowDialog();
                 };
 
-            var facePath = folder.FullName+"\\face.mp4";
+            var facePath = editorModel.VideoFolder.FullName+"\\face.mp4";
             videoAvailable = File.Exists(facePath);
 
             FaceVideo.Source = new Uri(facePath, UriKind.Absolute);
             FaceVideo.SpeedRatio = 1;
             FaceVideo.Volume = 0.1;
 
-            ScreenVideo.Source = new Uri(folder.FullName + "\\desktop.avi", UriKind.Absolute);
+            ScreenVideo.Source = new Uri(editorModel.VideoFolder.FullName + "\\desktop.avi", UriKind.Absolute);
             ScreenVideo.SpeedRatio = 1;
             ScreenVideo.Volume = 0.0001;
             
-            SetPosition(model.CurrentPosition);
+            SetPosition(editorModel.WindowState.CurrentPosition);
 
-            this.DataContext = model;
-            Timeline.DataContext = model;
+            Timeline.DataContext = editorModel;
 
             System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
             t.Interval = timerInterval;
             t.Tick += (s, a) => { CheckPlayTime(); };
             t.Start();
-
-            
         }
 
         public MainWindow()
@@ -120,85 +120,7 @@ namespace Editor
      
         void Save(object sender, ExecutedRoutedEventArgs e)
         {
-            using (var stream = new StreamWriter("montage.editor"))
-            {
-                stream.WriteLine(new JavaScriptSerializer().Serialize(model));
-            }
-            Export(sender, e);
-        }
-
-        void Export(object sender, ExecutedRoutedEventArgs ce)
-        {
-
-            File.WriteAllLines("titles.txt", model.Information.Episodes.Select(z => z.Name).Where(z => z != null).ToArray(), Encoding.UTF8);
-
-
-            var file="log.txt";
-            MontageCommandIO.Clear(file);
-            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartFace, Id = 1, Time = 0 }, file);
-            MontageCommandIO.AppendCommand(new MontageCommand { Action = MontageAction.StartScreen, Id = 2, Time = model.Shift },file);
-            int id = 3;
-
-        
-            var list = model.Chunks.ToList();
-            list.Add(new ChunkData
-            {
-                StartTime = list[list.Count - 1].StartTime + list[list.Count - 1].Length,
-                Length = 0,
-                Mode = Mode.Undefined
-            });
-
-
-
-            var oldMode = Mode.Drop;
-
-            for (int i=0;i<list.Count;i++)
-            {
-                var e = list[i];
-                bool newEp = false; 
-                if (e.Mode != oldMode || e.StartsNewEpisode || i==list.Count-1)
-                {
-                    var cmd = new MontageCommand();
-                    cmd.Id = id++;
-                    cmd.Time = e.StartTime;
-                    switch (oldMode)
-                    {
-                        case Mode.Drop: cmd.Action = MontageAction.Delete; break;
-                        case Mode.Face: cmd.Action = MontageAction.Commit; break;
-                        case Mode.Screen: cmd.Action = MontageAction.Commit; break;
-                        case Mode.Undefined: cmd.Action = MontageAction.Delete; break;
-                    }
-                    MontageCommandIO.AppendCommand(cmd, file);
-                    oldMode = e.Mode;
-                    newEp = true;
-                }
-                if (e.StartsNewEpisode)
-                {
-                    MontageCommandIO.AppendCommand(
-                        new MontageCommand { Id = id++, Action = MontageAction.CommitAndSplit, Time = e.StartTime },
-                        file
-                        );
-                    newEp = true;
-                }
-                if (newEp)
-                {
-                    if (e.Mode == Mode.Face || e.Mode == Mode.Screen)
-                    {
-                        var cmd = new MontageCommand();
-                        cmd.Id = id++;
-                        cmd.Time = e.StartTime;
-                        switch (e.Mode)
-                        {
-                            case Mode.Face: cmd.Action = MontageAction.Face; break;
-                            case Mode.Screen: cmd.Action = MontageAction.Screen; break;
-                        }
-                        MontageCommandIO.AppendCommand(cmd, file);
-                    }
-
-                }
-                
-            }
-            
+            ModelIO.Save(editorModel);
         }
 
         void ShowStatistics(object sender, EventArgs e)
@@ -228,7 +150,7 @@ namespace Editor
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            var response = currentMode.ProcessKey(CreateState(), e);
+            var response = currentMode.ProcessKey(e);
             if (response.RequestProcessed)
             {
                 ProcessResponse(response);
@@ -285,11 +207,11 @@ namespace Editor
         void CheckPlayTime()
         {
             if (videoAvailable)
-                model.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+                editorModel.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
             else
             {
                 if (paused) return;
-                model.CurrentPosition += (int)(timerInterval * SpeedRatio);
+                editorModel.WindowState.CurrentPosition += (int)(timerInterval * SpeedRatio);
             }
 
             if (requestPause)
@@ -299,13 +221,9 @@ namespace Editor
                 return;
             }
 
-            ProcessResponse(currentMode.CheckTime(CreateState()));
+            ProcessResponse(currentMode.CheckTime());
         }
 
-        WindowState CreateState()
-        {
-            return new WindowState { Location = model.CurrentPosition, Paused = paused };
-        }
 
 
         void ProcessResponse(WindowCommand r)
@@ -337,7 +255,7 @@ namespace Editor
         }
         void SetPosition(double ms)
         {
-            model.CurrentPosition = (int)ms;
+            editorModel.WindowState.CurrentPosition = (int)ms;
 
             if (!paused)
             {
@@ -364,7 +282,7 @@ namespace Editor
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
-            ProcessResponse(currentMode.MouseClick(CreateState(), time, e));
+            ProcessResponse(currentMode.MouseClick(time, e));
         }
         #endregion 
     }

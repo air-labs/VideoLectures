@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -14,21 +15,21 @@ namespace Editor
         public static string MontageFile="montage.editor";
         public static string TimesFile="times.txt";
 
-        static EditorModel model = null;
-        static DirectoryInfo folder = null;
+       
+        #region Obsolete
 
-        static int ParseMS(string s)
-        {
-            var parts = s.Split('.');
-            var result = 0;
-            if (parts.Length > 0)
-                result += int.Parse(parts[parts.Length - 1]);
-            if (parts.Length > 1)
-                result += int.Parse(parts[parts.Length - 2]) * 1000;
-            if (parts.Length > 2)
-                result += int.Parse(parts[parts.Length - 3]) * 60000;
-            return result;
-        }
+        //static int ParseMS(string s)
+        //{
+        //    var parts = s.Split('.');
+        //    var result = 0;
+        //    if (parts.Length > 0)
+        //        result += int.Parse(parts[parts.Length - 1]);
+        //    if (parts.Length > 1)
+        //        result += int.Parse(parts[parts.Length - 2]) * 1000;
+        //    if (parts.Length > 2)
+        //        result += int.Parse(parts[parts.Length - 3]) * 60000;
+        //    return result;
+        //}
 
         //static bool InitFromFolder(string f)
         //{
@@ -55,49 +56,31 @@ namespace Editor
         //    return true;
         //}
 
+        //static bool InitFromFile(string f)
+        //{
+        //    if (!File.Exists(f)) return false;
+           
+        //    model = new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
+        //    return true;
+        //}
+        #endregion
 
-        static bool InitFromFile(string f)
-        {
-            if (!File.Exists(f)) return false;
-            var file = new FileInfo(f);
-            folder = file.Directory;
-            Environment.CurrentDirectory = folder.FullName;
-            model = new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
-            // fix for existing work
-            try
-            {
-                model.Intervals.AddRange(SilenceSplitter.GetIntervals(SilenceSplitter.TextGridFilename));
-            }
-            catch {
-                MessageBox.Show(String.Format("Не удалось загрузить файл {0}. Запустите Splitter.exe", SilenceSplitter.TextGridFilename));
-            }
-            return true;
-        }
 
         [STAThread]
         public static void Main(string[] args)
         {
             if (args.Length == 0)
             {
-                MessageBox.Show("Pass the argument to the program: the file to process or the directory with movies");
+                MessageBox.Show("Pass the argument to the program: the directory with movies");
                 return;
             }
 
-            folder=new DirectoryInfo(args[0]);
-
-            if (!InitFromFile(args[0]+"\\montage.editor"))
-            {
-                model=new EditorModel
-                {
-                    Shift=0,
-                    TotalLength = 90*60*1000 //TODO: как-то по-разумному определить это время
-                };
-                model.Chunks.Add(new ChunkData { StartTime=0, Length=model.TotalLength, Mode= Mode.Undefined });      
-            }
-
-            Environment.CurrentDirectory = folder.FullName;
+            var rootFolder = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory; //TODO: upgrade to ModelIO.Load(args[0]);
+            var videoFolder = new DirectoryInfo(rootFolder.FullName + "\\" + args[0]);
+            Environment.CurrentDirectory = videoFolder.FullName;
+            var model = ModelIO.Load(rootFolder, videoFolder);
             var window = new MainWindow();
-            window.Initialize(model,folder);
+            window.Initialize(model);
             new Application().Run(window);
         }
     }

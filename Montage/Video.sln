@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblerOld", "AssemblerOl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Splitter", "Splitter\Splitter.csproj", "{FED79B70-2CFC-4873-9246-96D4F0298494}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Refactored", "Refactored", "{DE3470BC-8CE1-4F5E-BA45-2118846740B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewName", "NewName\NewName.csproj", "{E69F7E9F-ED66-4935-8976-FF548AE72AEC}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Video.vsmdi
@@ -157,6 +161,16 @@ Global
 		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{DCB11B64-1B28-4F79-8DA9-5A17AC87CE47}.Release|x86.ActiveCfg = Release|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|x86.ActiveCfg = Release|Any CPU
 		{FED79B70-2CFC-4873-9246-96D4F0298494}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FED79B70-2CFC-4873-9246-96D4F0298494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FED79B70-2CFC-4873-9246-96D4F0298494}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -170,5 +184,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC} = {DE3470BC-8CE1-4F5E-BA45-2118846740B2}
 	EndGlobalSection
 EndGlobal
