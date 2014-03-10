@@ -27,7 +27,7 @@ namespace Splitter
              5. (not here) draw data
              */
 
-            var inputFilename = "face-converted.avi";
+            var inputFilename = "face.mp4";
             var audioFilename = "voice.mp3";
 
             Environment.CurrentDirectory = args[0];
