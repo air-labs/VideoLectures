@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
+using VideoLib;
 namespace Editor
 {
     class Program
@@ -51,7 +52,6 @@ namespace Editor
         //        var length = ParseMS(reader.ReadLine());
         //        model = new EditorModel { Shift = shift, TotalLength = length };
         //        model.Chunks.Add(new ChunkData { StartTime = 0, Length = length, Mode = Mode.Undefined });
-        //        model.CurrentMode = Mode.Face;
         //    }
         //    return true;
         //}
@@ -64,6 +64,24 @@ namespace Editor
         //    return true;
         //}
         #endregion
+
+        static bool InitFromFile(string f)
+        {
+            if (!File.Exists(f)) return false;
+            var file = new FileInfo(f);
+            folder = file.Directory;
+            Environment.CurrentDirectory = folder.FullName;
+            model = new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
+            // fix for existing work
+            try
+            {
+                model.Intervals.AddRange(SilenceSplitter.GetIntervals(SilenceSplitter.TextGridFilename));
+            }
+            catch {
+                MessageBox.Show(String.Format("Не удалось загрузить файл {0}. Запустите Splitter.exe", SilenceSplitter.TextGridFilename));
+            }
+            return true;
+        }
 
         [STAThread]
         public static void Main(string[] args)
