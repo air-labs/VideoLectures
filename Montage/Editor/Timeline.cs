@@ -11,8 +11,8 @@ namespace Editor
 {
     public class Timeline : FrameworkElement
     {
-        int RowHeight = 40;
-        int msInRow = 50000;
+        int RowHeight = 20;
+        int msInRow = 300000;
 
         Brush[] fills = new Brush[] { Brushes.White, Brushes.MistyRose, Brushes.LightGreen, Brushes.LightBlue};
         Pen borderPen = new Pen(Brushes.Black, 1);
@@ -112,6 +112,24 @@ namespace Editor
                 y * RowHeight);
         }
 
+        void DrawLine(DrawingContext context, Pen pen, int startPoint, int endPoint, int verticalDisplacement)
+        {
+            var begin = GetCoordinate(startPoint);
+            var end = GetCoordinate(endPoint);
+            begin.Y += verticalDisplacement;
+            end.Y += verticalDisplacement;
+            if (begin.Y == end.Y)
+            {
+                context.DrawLine(pen, begin, end);
+            }
+            else
+            {
+                context.DrawLine(pen, begin, new Point(ActualWidth, begin.Y));
+                context.DrawLine(pen, new Point(0, end.Y), end);
+            }
+        }
+     
+
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
            foreach (var c in model.Chunks)
@@ -129,26 +147,15 @@ namespace Editor
            {
                foreach (var i in model.Intervals)
                {
-                   var From = GetCoordinate(i.StartTimeMS);
-                   From.Y += RowHeight - 3;
-                   var To = GetCoordinate(i.EndTimeMS);
-                   To.Y += RowHeight - 3;
-                   if (i.HasVoice)
-                       drawingContext.DrawLine(border, From, To);
+                   if (!i.HasVoice)
+                       DrawLine(drawingContext, border, i.StartTimeMS, i.EndTimeMS, RowHeight - 3);
                }
            }
 
             if (editorModel.WindowState.CurrentMode == EditorModes.Border)
                 foreach (var e in model.Borders)
                 {
-                    var From = GetCoordinate(e.StartTime);
-                    From.Y += 3;
-                    var To = GetCoordinate(e.EndTime);
-                    To.Y += 3;
-                    if (e.IsLeftBorder)
-                        drawingContext.DrawLine(border, From, To);
-                    else
-                        drawingContext.DrawLine(border, To, From);
+                    DrawLine(drawingContext, border, e.StartTime, e.EndTime, 3);
                 }
 
             var point=GetCoordinate(editorModel.WindowState.CurrentPosition);

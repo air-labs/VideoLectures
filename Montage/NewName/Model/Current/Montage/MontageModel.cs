@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace Editor
 {
 
-    public class MontageModel
+    public partial class MontageModel
     {
         public int TotalLength { get; set; }
         public int Shift { get; set; }
@@ -33,7 +33,5 @@ namespace Editor
             Borders = new List<Border>();
             Information = new VideoInformation();
         }
-
-       
     }
 }

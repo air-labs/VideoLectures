@@ -18,17 +18,18 @@ namespace NewName.Services
         const double TimeStep = 0;
 
         const double SilenceThreshold = -27;
-        const double MinSilentInterval = 0.5;
+        const double MinSilentInterval = 0.4;
         const double MinSoundInterval = 0.1;
 
         public void DoWork(string folder)
         {
             var model = ModelIO.Load(folder);
 
-            model.Locations.PraatVoice.Delete();
+           // model.Locations.PraatVoice.Delete();
             model.Locations.PraatOutput.Delete();
             
-            Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
+            if (!model.Locations.PraatVoice.Exists)
+                Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
 
             Shell.Exec(model.Locations.PraatExecutable, 
                 String.Format(
@@ -64,7 +65,7 @@ namespace NewName.Services
 
             ModelIO.Save(model);
 
-            model.Locations.PraatVoice.Delete();
+          //  model.Locations.PraatVoice.Delete();
             model.Locations.PraatOutput.Delete();
             
         }
