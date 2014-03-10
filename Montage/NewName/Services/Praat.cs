@@ -27,7 +27,7 @@ namespace NewName.Services
 
             if (model.Locations.PraatVoice.Exists) model.Locations.PraatVoice.Delete();
 
-            Shell.FFMPEG("-i \"{0}\" -vn -acodec copy \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
+            Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
 
             Shell.Exec(model.Locations.PraatExecutable, 
                 String.Format(
