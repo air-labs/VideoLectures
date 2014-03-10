@@ -124,6 +124,16 @@ namespace Editor
                    }
                }
 
+           foreach (var i in model.Intervals)
+           {
+               var From = GetCoordinate(i.StartTimeMS);
+               From.Y += RowHeight-3;
+               var To = GetCoordinate(i.EndTimeMS);
+               To.Y += RowHeight - 3;
+               if (i.HasVoice)
+                   drawingContext.DrawLine(border, From, To);
+           }
+
             if (model.EditorMode == EditorModes.Border)
                 foreach (var e in model.Borders)
                 {

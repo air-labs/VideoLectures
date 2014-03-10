@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VideoLib;
 
 namespace Editor
 {
@@ -40,10 +41,9 @@ namespace Editor
 
 
         public List<ChunkData> Chunks { get; set; }
-
-     
         public List<Border> Borders { get; set; }
-
+        public List<Interval> Intervals { get; set; }
+        
 
         public VideoInformation Information { get; set; }
 
@@ -51,6 +51,7 @@ namespace Editor
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
+            Intervals = new List<Interval>();
             Information = new VideoInformation();
         }
 
