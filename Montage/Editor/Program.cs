@@ -65,23 +65,6 @@ namespace Editor
         //}
         #endregion
 
-        static bool InitFromFile(string f)
-        {
-            if (!File.Exists(f)) return false;
-            var file = new FileInfo(f);
-            folder = file.Directory;
-            Environment.CurrentDirectory = folder.FullName;
-            model = new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
-            // fix for existing work
-            try
-            {
-                model.Intervals.AddRange(SilenceSplitter.GetIntervals(SilenceSplitter.TextGridFilename));
-            }
-            catch {
-                MessageBox.Show(String.Format("Не удалось загрузить файл {0}. Запустите Splitter.exe", SilenceSplitter.TextGridFilename));
-            }
-            return true;
-        }
 
         [STAThread]
         public static void Main(string[] args)
@@ -92,7 +75,7 @@ namespace Editor
                 return;
             }
 
-            var rootFolder = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory;
+            var rootFolder = new FileInfo(Assembly.GetExecutingAssembly().Location).Directory; //TODO: upgrade to ModelIO.Load(args[0]);
             var videoFolder = new DirectoryInfo(rootFolder.FullName + "\\" + args[0]);
             Environment.CurrentDirectory = videoFolder.FullName;
             var model = ModelIO.Load(rootFolder, videoFolder);

@@ -125,17 +125,20 @@ namespace Editor
                    }
                }
 
-           foreach (var i in model.Intervals)
+           if (model.Intervals != null)
            {
-               var From = GetCoordinate(i.StartTimeMS);
-               From.Y += RowHeight-3;
-               var To = GetCoordinate(i.EndTimeMS);
-               To.Y += RowHeight - 3;
-               if (i.HasVoice)
-                   drawingContext.DrawLine(border, From, To);
+               foreach (var i in model.Intervals)
+               {
+                   var From = GetCoordinate(i.StartTimeMS);
+                   From.Y += RowHeight - 3;
+                   var To = GetCoordinate(i.EndTimeMS);
+                   To.Y += RowHeight - 3;
+                   if (i.HasVoice)
+                       drawingContext.DrawLine(border, From, To);
+               }
            }
 
-            if (model.EditorMode == EditorModes.Border)
+            if (editorModel.WindowState.CurrentMode == EditorModes.Border)
                 foreach (var e in model.Borders)
                 {
                     var From = GetCoordinate(e.StartTime);
@@ -143,9 +146,9 @@ namespace Editor
                     var To = GetCoordinate(e.EndTime);
                     To.Y += 3;
                     if (e.IsLeftBorder)
-                        drawingContext.DrawLine(border,From,To);
+                        drawingContext.DrawLine(border, From, To);
                     else
-                        drawingContext.DrawLine(border,To,From);
+                        drawingContext.DrawLine(border, To, From);
                 }
 
             var point=GetCoordinate(editorModel.WindowState.CurrentPosition);

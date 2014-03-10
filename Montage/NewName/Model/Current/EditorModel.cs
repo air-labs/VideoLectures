@@ -15,12 +15,15 @@ namespace Editor
         public WindowState WindowState { get; set; }
         public DirectoryInfo RootFolder { get; set; }
         public DirectoryInfo VideoFolder { get; set; }
-
+        public Locations Locations { get; private set; }
 
         public EditorModel()
         {
             Montage=new MontageModel();
+            Locations = new Locations(this);
         }
+
+
     }
     
 

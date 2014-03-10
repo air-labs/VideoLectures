@@ -42,13 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Shell.cs" />
     <Compile Include="Model\Current\FileContainer.cs" />
+    <Compile Include="Model\Current\Locations.cs" />
     <Compile Include="Model\Current\Montage\Borders\Border.cs" />
     <Compile Include="Model\Current\Montage\Borders\BorderList.cs" />
     <Compile Include="Model\Current\Montage\Chunks\ChunkData.cs" />
     <Compile Include="Model\Current\Montage\Chunks\ChunkList.cs" />
     <Compile Include="Model\Current\Montage\Chunks\ChunkMode.cs" />
     <Compile Include="Model\Current\EditorModel.cs" />
+    <Compile Include="Model\Current\Montage\Intervals\Interval.cs" />
     <Compile Include="Model\Current\WindowState\EditorModes.cs" />
     <Compile Include="Model\Current\Montage\Information\EpisodInfo.cs" />
     <Compile Include="Model\Current\Montage\Information\VideoInformation.cs" />
@@ -58,6 +61,7 @@
     <Compile Include="Model\Obsolete\MontageModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\Praat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

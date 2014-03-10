@@ -55,12 +55,19 @@ namespace Editor
         }
 
 
+        public static EditorModel Load(string subdirectory)
+        {
+            var rootFolder = new DirectoryInfo(Environment.CurrentDirectory); //или это место, где лежит экзешник?
+            var videoFolder = new DirectoryInfo(rootFolder.FullName + "\\" + subdirectory);
+            return Load(rootFolder, videoFolder);
+        }
+
         public static EditorModel Load(DirectoryInfo rootFolder, DirectoryInfo videoFolder)
         {
             if (!rootFolder.Exists)
                 throw new Exception("Root directory " + rootFolder.FullName + " is not found");
             if (!videoFolder.Exists)
-                throw new Exception("Video directory " + rootFolder.FullName + " is not found");
+                throw new Exception("Video directory " + videoFolder.FullName + " is not found");
 
 
             EditorModel model = null;

@@ -22,6 +22,8 @@ namespace Editor
 
         public List<Border> Borders { get; set; }
 
+        public List<Interval> Intervals { get; set; }
+
 
         public VideoInformation Information { get; set; }
 

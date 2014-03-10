@@ -45,7 +45,7 @@ namespace Editor
 
 
         public List<Border> Borders { get; set; }
-        public List<Interval> Intervals { get; set; }
+
         
 
         public VideoInformation Information { get; set; }
@@ -54,7 +54,6 @@ namespace Editor
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
-            Intervals = new List<Interval>();
             Information = new VideoInformation();
         }
 
