@@ -25,8 +25,9 @@ namespace NewName.Services
         {
             var model = ModelIO.Load(folder);
 
-            if (model.Locations.PraatVoice.Exists) model.Locations.PraatVoice.Delete();
-
+            model.Locations.PraatVoice.Delete();
+            model.Locations.PraatOutput.Delete();
+            
             Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
 
             Shell.Exec(model.Locations.PraatExecutable, 
@@ -62,6 +63,9 @@ namespace NewName.Services
             }
 
             ModelIO.Save(model);
+
+            model.Locations.PraatVoice.Delete();
+            model.Locations.PraatOutput.Delete();
             
         }
     }
