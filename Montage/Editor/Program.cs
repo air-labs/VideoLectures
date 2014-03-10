@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
+using VideoLib;
 namespace Editor
 {
     class Program
@@ -50,6 +51,7 @@ namespace Editor
                 var length = ParseMS(reader.ReadLine());
                 model = new EditorModel { Shift = shift, TotalLength = length };
                 model.Chunks.Add(new ChunkData { StartTime = 0, Length = length, Mode = Mode.Undefined });
+                SilenceSplitter.GetIntervals(SilenceSplitter.TextGridFilename);
                 model.CurrentMode = Mode.Face;
             }
             return true;
@@ -62,6 +64,14 @@ namespace Editor
             folder = file.Directory;
             Environment.CurrentDirectory = folder.FullName;
             model = new JavaScriptSerializer().Deserialize<EditorModel>(File.ReadAllText(file.FullName));
+            // fix for existing work
+            try
+            {
+                model.Intervals.AddRange(SilenceSplitter.GetIntervals(SilenceSplitter.TextGridFilename));
+            }
+            catch {
+                MessageBox.Show(String.Format("Не удалось загрузить файл {0}. Запустите Splitter.exe", SilenceSplitter.TextGridFilename));
+            }
             return true;
         }
 
