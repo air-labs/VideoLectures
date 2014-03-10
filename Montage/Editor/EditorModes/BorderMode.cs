@@ -59,24 +59,24 @@ namespace Editor
             GenerateBorders();
         }
 
-        public Response CheckTime(int ms)
+        public WindowCommand CheckTime(WindowState state)
         {
-            if (model.Borders.FindBorder(ms) != -1) return Response.None;
+            if (model.Borders.FindBorder(state.Location) != -1) return WindowCommand.None;
             foreach (var e in model.Borders)
-                if (e.StartTime >= ms) return Response.Jump.To(e.StartTime);
-            return Response.Stop;
+                if (e.StartTime >= state.Location) return WindowCommand.JumpTo(e.StartTime);
+            return new WindowCommand { Pause = true };
         }
 
 
-        public Response MouseClick(int ms, MouseButtonEventArgs button)
+        public WindowCommand MouseClick(WindowState state, int selectedLocation, MouseButtonEventArgs button)
         {
-            var r = CheckTime(ms);
-            if (r.Action == ResponseAction.None) return Response.Jump.To(ms);
+            var r = CheckTime(state);
+            if (!r.RequestProcessed) return WindowCommand.JumpTo(selectedLocation);
             return r;
         }
 
 
-        public Response ProcessKey(KeyEventArgs e)
+        public WindowCommand ProcessKey(WindowState state, KeyEventArgs e)
         {
             var borderIndex = model.Borders.FindBorder(model.CurrentPosition);
             int leftBorderIndex = -1;
@@ -114,16 +114,16 @@ namespace Editor
                     return Shift(leftBorderIndex, -value);
 
             }
-            return Response.None;
+            return WindowCommand.None;
         }
 
-        Response Shift(int borderIndex, int shiftSize)
+        WindowCommand Shift(int borderIndex, int shiftSize)
         {
-            if (borderIndex == -1) return Response.None;
+            if (borderIndex == -1) return WindowCommand.None;
             var border = model.Borders[borderIndex];
             model.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
             GenerateBorders();
-            return Response.Jump.To(model.Borders[borderIndex].StartTime).AndInvalidate();
+            return WindowCommand.JumpTo(model.Borders[borderIndex].StartTime).AndInvalidate();
         }
     }
 }

@@ -7,6 +7,8 @@
         <Menu>
             <MenuItem Command="ed:Commands.Save"/>
             <MenuItem x:Name="Statistics" Header="Stat"/>
+            <MenuItem x:Name="Synchronizer" Header="Sync"/>
+            <MenuItem x:Name="Infos" Header="Infos"/>
         </Menu>
         <Grid>
             <Grid.RowDefinitions>
