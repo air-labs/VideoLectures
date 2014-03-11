@@ -62,9 +62,11 @@ namespace Editor
         {
             if (subdirectory.StartsWith("debug\\"))
             {
-                subdirectory = subdirectory.Replace("debug\\", "");
-                var path = Path.Combine(Environment.CurrentDirectory, @"..\..\..\..\Model");
-                Environment.CurrentDirectory = path;
+                subdirectory = subdirectory.Replace("debug\\", "..\\..\\..\\..\\Model\\");
+            }
+            else if (subdirectory.StartsWith("work\\"))
+            {
+                subdirectory = subdirectory.Replace("work\\", "..\\..\\..\\..\\..\\AIML-VIDEO\\");
             }
             return subdirectory;
         }

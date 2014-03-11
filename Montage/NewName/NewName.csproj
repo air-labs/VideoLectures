@@ -44,7 +44,7 @@
   <ItemGroup>
     <Compile Include="Model\Current\Global\GlobalData.cs" />
     <Compile Include="Model\Current\Global\VoiceSettings.cs" />
-    <Compile Include="Shell.cs" />
+    <Compile Include="Main\Shell.cs" />
     <Compile Include="Model\Current\FileContainer.cs" />
     <Compile Include="Model\Current\Locations.cs" />
     <Compile Include="Model\Current\Montage\Borders\Border.cs" />
@@ -61,18 +61,26 @@
     <Compile Include="Model\Current\WindowState\WindowState.cs" />
     <Compile Include="Model\ModelIO.cs" />
     <Compile Include="Model\Obsolete\MontageModel.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Praat.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="split_pauses.praat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VideoLib\VideoLib.csproj">
       <Project>{f54f3a10-472a-421b-895f-efd5a5086aca}</Project>
       <Name>VideoLib</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="praatcon.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

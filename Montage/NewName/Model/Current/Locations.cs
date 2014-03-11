@@ -17,8 +17,8 @@ namespace Editor
             return new FileInfo(Path.Combine(info.FullName, fname));
         }
 
-        public FileInfo PraatExecutable { get { return Make(model.RootFolder, "praatcon.exe"); } }
-        public FileInfo PraatScriptSource { get { return Make(model.RootFolder, "split_pauses.praat"); } }
+        public FileInfo PraatExecutable { get { return Make(model.ProgramFolder, "praatcon.exe"); } }
+        public FileInfo PraatScriptSource { get { return Make(model.ProgramFolder, "split_pauses.praat"); } }
      
         
         public FileInfo FaceVideo { get { return Make(model.VideoFolder, "face.mp4"); } }
