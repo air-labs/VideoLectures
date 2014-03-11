@@ -31,6 +31,12 @@ namespace Editor
             
 
             var model = ModelIO.Load(ModelIO.DebugSubdir(args[0]));
+
+            if (model.Montage.Intervals == null || model.Montage.Intervals.Count == 0)
+            {
+                new NewName.Services.Praat().DoWork(model);
+            }
+
             var window = new MainWindow();
             window.Initialize(model);
             new Application().Run(window);

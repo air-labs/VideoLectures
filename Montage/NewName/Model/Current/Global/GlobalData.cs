@@ -8,7 +8,7 @@ namespace Editor
 {
     public class GlobalData
     {
-        VoiceSettings VoiceSettings { get; set; }
+        public VoiceSettings VoiceSettings { get; set; }
 
         public GlobalData()
         {

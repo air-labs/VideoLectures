@@ -186,6 +186,8 @@ namespace Editor
             {
                 chunk.Mode = mode;
             }
+            editorModel.CorrectBorderBetweenChunksBySound(index - 1);
+            editorModel.CorrectBorderBetweenChunksBySound(index);
             return WindowCommand.Processed.AndInvalidate();
          }
 

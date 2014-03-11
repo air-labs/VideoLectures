@@ -13,6 +13,7 @@ namespace Editor
         public double EndTime { get; set; }
         public int StartTimeMS { get { return (int)Math.Round(StartTime * 1000); } }
         public int EndTimeMS { get { return (int)Math.Round(EndTime * 1000); } }
+        public int MiddleTimeMS { get { return (int)Math.Round(1000 * (StartTime + EndTime) / 2); } }
 
         public bool HasVoice { get; set; }
 
