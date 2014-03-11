@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
@@ -12,38 +13,40 @@ namespace Editor
     public class ModelIO
     {
 
-        static EditorModel ParseV2(FileInfo file)
+        static bool ParseV2(EditorModel model)
         {
+            var file = model.VideoFolder.GetFiles(Locations.LocalFileName).FirstOrDefault();
+            if (file == null) return false;
             var container = new JavaScriptSerializer().Deserialize<FileContainer>(File.ReadAllText(file.FullName));
-            return new EditorModel
-            {
-                Montage = container.Montage,
-                WindowState = container.WindowState
-            };
+            
+            model.Montage = container.Montage;
+            model.WindowState=container.WindowState;
+            return true;
         }
 
-        static EditorModel ParseV1(DirectoryInfo videoFolder, FileInfo file)
+        static bool ParseV1(EditorModel model)
         {
+            var file = model.VideoFolder.GetFiles(Locations.LocalFileNameV1).FirstOrDefault();
+            if (file == null) return false;
             var montageModel=new JavaScriptSerializer().Deserialize<MontageModelV1>(File.ReadAllText(file.FullName));
-            var model = new EditorModel()
-            {
-                Montage = new MontageModel
+            
+            model.Montage= new MontageModel
                 {
                     Borders = montageModel.Borders,
                     Chunks = montageModel.Chunks,
                     Shift = montageModel.Shift,
                     TotalLength = montageModel.TotalLength,
                     Information = montageModel.Information
-                },
-                WindowState = new WindowState
+                };
+            model.WindowState= new WindowState
                 {
                     CurrentMode = montageModel.EditorMode,
                     CurrentPosition = montageModel.CurrentPosition,
-                }
-            };
+                };
+            
             if (model.Montage.Information.Episodes.Count == 0)
             {
-                var titles = videoFolder.GetFiles("titles.txt");
+                var titles = model.VideoFolder.GetFiles("titles.txt");
                 if (titles.Length != 0)
                 {
                     var lines = File.ReadAllLines(titles[0].FullName);
@@ -51,7 +54,7 @@ namespace Editor
                         model.Montage.Information.Episodes.Add(new EpisodInfo { Name = e });
                 }
             }
-            return model;
+            return true;
         }
 
 
@@ -68,49 +71,42 @@ namespace Editor
 
         public static EditorModel Load(string subdirectory)
         {
-
-            var rootFolder = new DirectoryInfo(Environment.CurrentDirectory); //или это место, где лежит экзешник?
-            var videoFolder = new DirectoryInfo(rootFolder.FullName + "\\" + subdirectory);
-            return Load(rootFolder, videoFolder);
-        }
-
-        public static EditorModel Load(DirectoryInfo rootFolder, DirectoryInfo videoFolder)
-        {
-            if (!rootFolder.Exists)
-                throw new Exception("Root directory " + rootFolder.FullName + " is not found");
-            if (!videoFolder.Exists)
-                throw new Exception("Video directory " + videoFolder.FullName + " is not found");
-
-
-            EditorModel model = null;
-
-            var fileV2 = videoFolder.GetFiles("montage.v2");
-            var fileV1 = videoFolder.GetFiles("montage.editor");
-
-
-
-            if (fileV2.Length == 1)
-                model = ParseV2(fileV2[0]);
-            else if (fileV1.Length == 1)
-                model = ParseV1(videoFolder,fileV1[0]);
-            else
+            var localDirectory = new DirectoryInfo(subdirectory);
+            if (!localDirectory.Exists) throw new Exception("Local directory '"+subdirectory+"' is not found");
+            var rootDirectory = localDirectory;
+            while (true)
             {
-                model = new EditorModel
+                try
                 {
-                    Montage = new MontageModel
+                    rootDirectory = rootDirectory.Parent;
+                }
+                catch
+                {
+                    throw new Exception("Root directory is not found. Root directory must be a parent of '"+localDirectory.FullName+"' and contain global data file '"+Locations.GlobalFileName+"'");
+                }
+                if (rootDirectory.GetFiles(Locations.GlobalFileName).Length!=0)
+                    break;
+            }
+
+            var programFolder = new FileInfo(Assembly.GetExecutingAssembly().FullName).Directory;
+
+            var editorModel = new EditorModel { 
+                ProgramFolder = programFolder, 
+                VideoFolder = localDirectory,
+                RootFolder = rootDirectory
+            };
+
+          
+            if (!ParseV2(editorModel) && !ParseV1(editorModel))
+            {
+                editorModel.Montage = new MontageModel
                     {
                         Shift = 0,
                         TotalLength = 90 * 60 * 1000 //TODO: как-то по-разумному определить это время
-                    },
-                    RootFolder = rootFolder,
-                    VideoFolder = videoFolder
-                };
-                model.Montage.Chunks.Add(new ChunkData { StartTime = 0, Length = model.Montage.TotalLength, Mode = Mode.Undefined });
+                    };
+                editorModel.Montage.Chunks.Add(new ChunkData { StartTime = 0, Length = editorModel.Montage.TotalLength, Mode = Mode.Undefined });
             }
-
-            model.RootFolder = rootFolder;
-            model.VideoFolder = videoFolder;
-            return model;
+            return editorModel;
         }
 
 
