@@ -24,7 +24,7 @@ namespace Editor
 
         public EditorModel()
         {
-
+            Montage = new MontageModel();
             Locations = new Locations(this);
             WindowState = new WindowState();
             Global = new GlobalData();
@@ -40,9 +40,10 @@ namespace Editor
             if (leftChunk.Mode == Mode.Undefined || rightChunk.Mode == Mode.Undefined) return;
             if (leftChunk.Mode == rightChunk.Mode) return;
             var interval = Montage.Intervals
-                .Where(z => !z.HasVoice && z.StartTime < rightChunk.StartTime)
+                .Where(z => !z.HasVoice && z.StartTimeMS < rightChunk.StartTime)
                 .LastOrDefault();
             if (interval == null) return;
+
 
             int NewStart = rightChunk.StartTime;
             if (leftChunk.Mode == Mode.Drop) // значит, нужно начинать с конца интервала. Мы включаем в Drop как можно больше паузы
@@ -56,10 +57,11 @@ namespace Editor
             else
                 NewStart = interval.MiddleTimeMS;
 
-            if (Math.Abs(NewStart - rightChunk.StartTime) > Global.VoiceSettings.MaxDeviationWhenBorderingBySound)
-                return;
 
-            Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, NewStart - rightChunk.StartTime);
+            var delta = rightChunk.StartTime-NewStart;
+            if (-delta > Global.VoiceSettings.MaxDeviationWhenBorderingBySound) return;
+
+            Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, delta);
         }
     }
 }
