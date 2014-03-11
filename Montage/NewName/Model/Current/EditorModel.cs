@@ -24,7 +24,7 @@ namespace Editor
 
         public EditorModel()
         {
-            Montage = new MontageModel();
+
             Locations = new Locations(this);
             WindowState = new WindowState();
             Global = new GlobalData();

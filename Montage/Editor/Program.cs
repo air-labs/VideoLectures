@@ -28,7 +28,6 @@ namespace Editor
                 return;
             }
 
-            
 
             var model = ModelIO.Load(ModelIO.DebugSubdir(args[0]));
 

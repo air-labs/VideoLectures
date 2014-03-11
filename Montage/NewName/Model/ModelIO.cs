@@ -19,8 +19,10 @@ namespace Editor
             if (file == null) return false;
             var container = new JavaScriptSerializer().Deserialize<FileContainer>(File.ReadAllText(file.FullName));
             
-            model.Montage = container.Montage;
-            model.WindowState=container.WindowState;
+            if (container.Montage!=null)
+                model.Montage = container.Montage;
+            if (container.WindowState!=null)
+                model.WindowState=container.WindowState;
             return true;
         }
 
