@@ -29,12 +29,16 @@ namespace Editor
                 if (montage.Chunks[i].IsNotActive)
                 {
                     if (montage.Chunks[i - 1].IsActive)
+                    {
                         yield return Border.Right(montage.Chunks[i].StartTime, Margin, i - 1, i);
+                    }
                 }
                 else
                 {
                     if (montage.Chunks[i - 1].Mode != montage.Chunks[i].Mode)
+                    {
                         yield return Border.Left(montage.Chunks[i].StartTime, Margin, i - 1, i);
+                    }
                 }
             }
         }
@@ -54,8 +58,7 @@ namespace Editor
             montage.Borders.Clear();
             montage.Borders.AddRange(borders);
 
-            model.WindowState.DesktopVideoIsVisible = true;
-            model.WindowState.FaceVideoIsVisible = false;
+         
         }
 
         public BorderMode(EditorModel editorModel)

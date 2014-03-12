@@ -121,8 +121,11 @@ namespace Editor
             if (e.PropertyName == "SpeedRatio") RatioChanged();
             if (e.PropertyName == "CurrentPosition") PositionChanged();
 
-            //if (e.PropertyName == "FaceVideoIsVisible" || e.PropertyName == "DesktopVideoIsVisible")
-            //    InvalidateArrange();
+            if (e.PropertyName == "FaceVideoIsVisible" || e.PropertyName == "DesktopVideoIsVisible")
+            {
+                FaceVideo.Visibility = model.WindowState.FaceVideoIsVisible ? Visibility.Visible : Visibility.Collapsed;
+                ScreenVideo.Visibility = model.WindowState.DesktopVideoIsVisible? Visibility.Visible : Visibility.Collapsed;
+            }
         }
 
 
