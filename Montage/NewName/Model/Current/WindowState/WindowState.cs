@@ -54,7 +54,7 @@ namespace Editor
             }
         }
 
-     
+    
 
         public event PropertyChangedEventHandler PropertyChanged;
 

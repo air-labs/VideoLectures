@@ -68,10 +68,10 @@ namespace Editor
 
         public WindowCommand CheckTime(int ms)
         {
-            if (model.Borders.FindBorder(ms) != -1) return WindowCommand.None;
-            foreach (var e in model.Borders)
-                if (e.StartTime >= ms) return WindowCommand.JumpTo(e.StartTime);
-            return new WindowCommand { Pause = true };
+            if (model.Borders.FindBorder(ms) != -1)
+                return new WindowCommand { SpeedRatio = 1 };
+            else
+                return new WindowCommand { SpeedRatio = 2.5 };
         }
 
 

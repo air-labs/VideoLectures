@@ -40,7 +40,7 @@ namespace Editor
                         ModeChanged();
                         PausedChanged();
                         RatioChanged();
-                        SetPosition(model.WindowState.CurrentPosition);
+                        PositionChanged();
                         videoAvailable = model.Locations.FaceVideo.Exists;
                     }
                 };
@@ -54,6 +54,11 @@ namespace Editor
 
             PreviewKeyDown += MainWindow_KeyDown;
             Timeline.MouseDown+=Timeline_MouseDown;
+
+            Save.Click += (s, a) =>
+                {
+                    ModelIO.Save(model);
+                };
 
         }
 
@@ -91,9 +96,12 @@ namespace Editor
 
         bool pauseRequested;
 
-        void SetPosition(int ms)
+        bool supressPositionChanged;
+
+        void PositionChanged()
         {
-            model.WindowState.CurrentPosition = ms;
+            if (supressPositionChanged) return;
+
             if (model.WindowState.Paused)
             {
                 model.WindowState.Paused = false;
@@ -111,6 +119,7 @@ namespace Editor
             if (e.PropertyName == "Paused") PausedChanged();
             if (e.PropertyName == "CurrentMode") ModeChanged();
             if (e.PropertyName == "SpeedRatio") RatioChanged();
+            if (e.PropertyName == "CurrentPosition") PositionChanged();
            
 
         }
@@ -131,8 +140,7 @@ namespace Editor
         {
             if (command.JumpToLocation.HasValue)
             {
-                SetPosition(command.JumpToLocation.Value);
-                Timeline.InvalidateVisual();
+                model.WindowState.CurrentPosition = command.JumpToLocation.Value;
             }
             if (command.Invalidate)
             {
@@ -150,13 +158,15 @@ namespace Editor
 
         void CheckPlayTime()
         {
+            supressPositionChanged = true;
             if (videoAvailable)
                 model.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
             else
             {
-                if (model.WindowState.Paused) return;
-                model.WindowState.CurrentPosition += (int)(timerInterval * model.WindowState.SpeedRatio);
+                if (!model.WindowState.Paused)
+                    model.WindowState.CurrentPosition += (int)(timerInterval * model.WindowState.SpeedRatio);
             }
+            supressPositionChanged = false;
 
             if (pauseRequested)
             {
@@ -164,6 +174,8 @@ namespace Editor
                 pauseRequested = false;
                 return;
             }
+
+            if (model.WindowState.Paused) return;
 
             ProcessCommand(currentMode.CheckTime());
         }
