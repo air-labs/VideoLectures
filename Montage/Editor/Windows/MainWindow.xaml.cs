@@ -24,11 +24,64 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        EditorModel model;
 
         public MainWindow()
         {
             InitializeComponent();
+            DataContextChanged += (s, a) =>
+                {
+                    var value = a.NewValue as EditorModel;
+                    if (value != null)
+                    {
+                        model = value;
+                        model.WindowState.PropertyChanged += WindowState_PropertyChanged;
+                        ModeChanged();
+                        PausedChanged();
+                    }
+                };
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
         }
+
+        IEditorMode currentMode;
+
+        #region Реакция на изменение полей модели
+
+        void PausedChanged()
+        {
+            if (model.WindowState.Paused)
+            {
+                FaceVideo.Pause();
+                ScreenVideo.Pause();
+            }
+            else
+            {
+                FaceVideo.Play();
+                ScreenVideo.Play();
+            }
+        }
+
+        void ModeChanged()
+        {
+            if (model.WindowState.CurrentMode == EditorModes.Border)
+                currentMode = new BorderMode(model);
+            if (model.WindowState.CurrentMode == EditorModes.General)
+                currentMode = new GeneralMode(model);
+        }
+
+
+        void WindowState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Paused") PausedChanged();
+
+        }
+
+
+
+        #endregion
+
+
         /*
 
 

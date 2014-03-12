@@ -19,12 +19,12 @@
                 Content="{Binding WindowState.Paused, Converter={StaticResource PausedCnv}}"
                 />
             <ToggleButton 
-                IsChecked="{Binding WindowState.EditorMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='ed:EditorModes.GeneralMode'}">
-                PreviewMode
-            </ToggleButton>
+                IsChecked="{Binding WindowState.CurrentMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='General'}">
+                Preview
+                </ToggleButton>
             <ToggleButton 
-                IsChecked="{Binding WindowState.EditorMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='ed:EditorModes.Borders'}">
-                PreviewMode
+                IsChecked="{Binding WindowState.CurrentMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='Border'}">
+                Final
             </ToggleButton>
         </StackPanel>
         <StackPanel Orientation="Vertical">
@@ -38,7 +38,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <MediaElement Name="FaceVideo" Source="{Binding Locations.FaceVideo.FullName}" Grid.Column="0"/>
-                <MediaElement Name="ScreenVideo"  Source="{Binding Location.DesktopVideo.FullName}" Grid.Column="1"/>
+                <MediaElement Name="ScreenVideo"  Source="{Binding Locations.DesktopVideo.FullName}" Grid.Column="1"/>
             </Grid>
         </StackPanel>
     </DockPanel>

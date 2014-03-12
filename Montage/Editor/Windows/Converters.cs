@@ -13,13 +13,13 @@ namespace Editor
     {
         public object Convert(object _value, Type targetType, object _parameter, System.Globalization.CultureInfo culture)
         {
-            var parameter = (EditorModes)_parameter;
+            var parameter = (EditorModes)Enum.Parse(typeof(EditorModes),_parameter as string);
             var value = (EditorModes)_value;
             return value == parameter;
         }
         public object ConvertBack(object _value, Type targetType, object _parameter, System.Globalization.CultureInfo culture)
         {
-            var parameter = (EditorModes)_parameter;
+            var parameter = (EditorModes)Enum.Parse(typeof(EditorModes), _parameter as string);
             var value = (bool?)_value;
             if (!value.HasValue || !value.Value)
                 return DependencyProperty.UnsetValue;
