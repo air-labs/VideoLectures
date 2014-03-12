@@ -14,7 +14,7 @@ namespace Editor
         public int TotalLength { get; set; }
         public int Shift { get; set; }
 
-       
+
 
 
         public List<ChunkData> Chunks { get; set; }
@@ -33,5 +33,6 @@ namespace Editor
             Borders = new List<Border>();
             Information = new VideoInformation();
         }
+
     }
 }

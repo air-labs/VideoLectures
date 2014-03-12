@@ -21,5 +21,10 @@ namespace Editor
         {
             return StartTime.ToString() + " " + Length.ToString();
         }
+
+        public bool Contains(int ms)
+        {
+            return StartTime <= ms && ms < EndTime;
+        }
     }
 }

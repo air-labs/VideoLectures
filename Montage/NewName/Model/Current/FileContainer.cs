@@ -11,5 +11,7 @@ namespace Editor
         public MontageModel Montage { get; set; }
         public WindowState WindowState { get; set; }
         public string FileFormat { get; set; }
+
+       
     }
 }

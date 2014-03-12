@@ -18,11 +18,11 @@ namespace NewName
             var fullPath = Path.Combine(dir, command);
             process.StartInfo.FileName = fullPath;
             process.StartInfo.Arguments = args;
-            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.UseShellExecute = true;
             process.Start();
             process.WaitForExit();
             if (process.ExitCode != 0)
-                throw new ApplicationException(string.Format("Application returned an error code.\nApplication: {0}\nArguments:   {1}\nError code:  {2}",
+                throw new ApplicationException(string.Format("Application returned an error code.\nApplication: {0}\nArguments:   {1}\nError code:  {2}\nCommand line to check:\n\"{0}\" {1}",
                     fullPath,
                     args,
                     process.ExitCode));

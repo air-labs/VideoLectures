@@ -36,6 +36,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Refactored", "Refactored", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewName", "NewName\NewName.csproj", "{E69F7E9F-ED66-4935-8976-FF548AE72AEC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelCreator", "ModelCreator\ModelCreator.csproj", "{410F6739-6DD8-4B1C-9B80-6375FE715836}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Video.vsmdi
@@ -181,12 +183,23 @@ Global
 		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E69F7E9F-ED66-4935-8976-FF548AE72AEC}.Release|x86.ActiveCfg = Release|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Release|Any CPU.Build.0 = Release|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{410F6739-6DD8-4B1C-9B80-6375FE715836}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{E69F7E9F-ED66-4935-8976-FF548AE72AEC} = {DE3470BC-8CE1-4F5E-BA45-2118846740B2}
 		{68C87361-E095-4312-BC36-089CD63B79C3} = {DE3470BC-8CE1-4F5E-BA45-2118846740B2}
+		{E69F7E9F-ED66-4935-8976-FF548AE72AEC} = {DE3470BC-8CE1-4F5E-BA45-2118846740B2}
+		{410F6739-6DD8-4B1C-9B80-6375FE715836} = {DE3470BC-8CE1-4F5E-BA45-2118846740B2}
 	EndGlobalSection
 EndGlobal

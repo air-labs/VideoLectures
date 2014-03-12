@@ -86,6 +86,7 @@ namespace Editor
         public WindowCommand ProcessKey(KeyEventArgs e)
         {
             var borderIndex = model.Borders.FindBorder(editorModel.WindowState.CurrentPosition);
+            if (borderIndex == -1) return WindowCommand.None;
             int leftBorderIndex = -1;
             int rightBorderIndex = -1;
             if (model.Borders[borderIndex].IsLeftBorder)

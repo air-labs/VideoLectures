@@ -21,29 +21,27 @@ namespace NewName.Services
         const double MinSilentInterval = 0.4;
         const double MinSoundInterval = 0.1;
 
-        public void DoWork(string folder)
+        public void DoWork(EditorModel model)
         {
-            var model = ModelIO.Load(folder);
-
-           // model.Locations.PraatVoice.Delete();
+            // model.Locations.PraatVoice.Delete();
             model.Locations.PraatOutput.Delete();
-            
+
             if (!model.Locations.PraatVoice.Exists)
                 Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
 
-            Shell.Exec(model.Locations.PraatExecutable, 
+            Shell.Exec(model.Locations.PraatExecutable,
                 String.Format(
                     CultureInfo.InvariantCulture,
-                    "\"{0}\" \"{1}\" \"{2}\" {3} {4} {5} {6} {7} {8} {9}", 
+                    "\"{0}\" \"{1}\" \"{2}\" {3} {4} {5} {6} {7} {8} {9}",
                     model.Locations.PraatScriptSource,
                     model.Locations.PraatVoice,
                     model.Locations.PraatOutput,
-                    SilentLabel, 
-                    SoundLabel, 
-                    MinPitch, 
-                    TimeStep, 
-                    SilenceThreshold, 
-                    MinSilentInterval, 
+                    SilentLabel,
+                    SoundLabel,
+                    MinPitch,
+                    TimeStep,
+                    SilenceThreshold,
+                    MinSilentInterval,
                     MinSoundInterval));
 
             model.Montage.Intervals = new List<Interval>();
@@ -59,15 +57,27 @@ namespace NewName.Services
                     var startTime = double.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
                     var endTime = double.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
                     var hasVoice = reader.ReadLine() == '"' + SoundLabel + '"';
-                    model.Montage.Intervals.Add(new Interval(startTime, endTime, hasVoice));
+                    model.Montage.Intervals.Add(
+                        new Interval(
+                            (int)Math.Round(startTime*1000), 
+                            (int)Math.Round(1000*endTime), 
+                            hasVoice));
                 }
             }
 
+            
+            //  model.Locations.PraatVoice.Delete();
+            model.Locations.PraatOutput.Delete();
+        }
+
+        public void DoWork(string folder)
+        {
+            var model = ModelIO.Load(folder);
+
+            DoWork(model);
+
             ModelIO.Save(model);
 
-          //  model.Locations.PraatVoice.Delete();
-            model.Locations.PraatOutput.Delete();
-            
         }
     }
 }
