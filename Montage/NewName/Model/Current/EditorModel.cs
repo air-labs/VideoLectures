@@ -39,31 +39,43 @@ namespace Editor
             var leftChunk = Montage.Chunks[leftChunkIndex];
             var rightChunk = Montage.Chunks[rightChunkIndex];
             if (leftChunk.Mode == Mode.Undefined || rightChunk.Mode == Mode.Undefined) return;
-            if (leftChunk.Mode == rightChunk.Mode) return;
+            
             var interval = Montage.Intervals
-                .Where(z => !z.HasVoice && z.StartTime < rightChunk.StartTime)
-                .LastOrDefault();
+                .Where(z => !z.HasVoice && z.DistanceTo(rightChunk.StartTime) < Global.VoiceSettings.MaxDistanceToSilence)
+                .FirstOrDefault();
             if (interval == null) return;
 
+            var leftDistance = Math.Abs(interval.StartTime - rightChunk.StartTime);
+            var rightDistance = Math.Abs(interval.EndTime - rightChunk.StartTime);
+            var distance = interval.DistanceTo(rightChunk.StartTime);
+            bool LeftIn = leftDistance < Global.VoiceSettings.MaxDistanceToSilence;
+            bool RightIn = rightDistance  < Global.VoiceSettings.MaxDistanceToSilence;
+
+            if (!LeftIn && !RightIn) return;
 
             int NewStart = rightChunk.StartTime;
-            if (leftChunk.Mode == Mode.Drop) // значит, нужно начинать с конца интервала. Мы включаем в Drop как можно больше паузы
+            if (LeftIn && RightIn)
             {
-
-                NewStart = Math.Max(interval.EndTime - Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
-            }
-            else if (rightChunk.Mode == Mode.Drop) // значит, с начала. 
-            {
-                NewStart = Math.Min(interval.StartTime + Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
-            }
-            else
+                //значит, оба конца интервала - близко от точки сечения, и точку нужно передвинуть на середину интервада
                 NewStart = interval.MiddleTimeMS;
+            }
+            else if (LeftIn && !RightIn)
+            {
+                //значит, только левая граница где-то недалеко. 
+                NewStart = interval.StartTime + Global.VoiceSettings.SilenceMargin;
+            }
+            else if (!LeftIn && RightIn)
+            {
+                NewStart = interval.EndTime - Global.VoiceSettings.SilenceMargin;
+            }
 
+            //не вылезли за границы интервала при перемещении
+            if (interval.DistanceTo(NewStart) > 0) return;
 
-            var delta = rightChunk.StartTime-NewStart;
-            if (-delta > Global.VoiceSettings.MediumSilence) return;
+            //не выскочили за границы чанков при перемещении
+            if (!rightChunk.Contains(NewStart) && !leftChunk.Contains(NewStart)) return;
 
-            Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, delta);
+            Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, rightChunk.StartTime-NewStart);
         }
     }
 }

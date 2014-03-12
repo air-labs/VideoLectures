@@ -23,6 +23,12 @@ namespace Editor
             EndTime = end;
             HasVoice = hasVoice;
         }
+        public int DistanceTo(int ms)
+        {
+            if (StartTime <= ms && ms <= EndTime) return 0;
+            return Math.Min(Math.Abs(StartTime - ms), Math.Abs(EndTime - ms));
+        }
+
         public override string ToString()
         {
             return String.Format("({0}..{1} {2})", StartTime, EndTime, HasVoice ? "+" : "-");
