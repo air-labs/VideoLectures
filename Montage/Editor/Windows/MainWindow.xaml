@@ -37,8 +37,18 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <MediaElement Name="FaceVideo" Source="{Binding Locations.FaceVideo.FullName}" Grid.Column="0"/>
-                <MediaElement Name="ScreenVideo"  Source="{Binding Locations.DesktopVideo.FullName}" Grid.Column="1"/>
+                <MediaElement 
+                    Name="FaceVideo" 
+                    Source="{Binding Locations.FaceVideo.FullName}" 
+                    Grid.Column="0"/>
+                <MediaElement 
+                    Name="ScreenVideo"  
+                    Source="{Binding Locations.DesktopVideo.FullName}" 
+                    Grid.Column="1"/>
+                <TextBlock>
+                    <TextBlock>X</TextBlock>
+                    <TextBlock Text="{Binding WindowState.SpeedRatio}"/>                            
+                </TextBlock>
             </Grid>
         </StackPanel>
     </DockPanel>

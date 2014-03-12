@@ -10,10 +10,13 @@ namespace Editor
 
     public class WindowCommand
     {
-        public int? JumpToLocation;
-        public bool Invalidate;
         public bool? Pause;
+        public double? SpeedRatio;
+        public int? JumpToLocation;
+        
+        public bool Invalidate;
         public bool RequestProcessed = true;
+        
 
         public WindowCommand AndInvalidate()
         {

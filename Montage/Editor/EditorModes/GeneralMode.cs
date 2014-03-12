@@ -91,7 +91,14 @@ namespace Editor
                 case Key.R:
                     return ShiftRight(200);
                 
-                
+                case Key.Up:
+                    return new WindowCommand { SpeedRatio = editorModel.WindowState.SpeedRatio +0.5 };
+
+                case Key.Down:
+                    return new WindowCommand { SpeedRatio = editorModel.WindowState.SpeedRatio - 0.5 };
+
+                case Key.Space:
+                    return new WindowCommand { Pause = !editorModel.WindowState.Paused };
 
 
                 case Key.D9:

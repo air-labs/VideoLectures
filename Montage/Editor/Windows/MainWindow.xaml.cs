@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -38,13 +39,25 @@ namespace Editor
                         model.WindowState.PropertyChanged += WindowState_PropertyChanged;
                         ModeChanged();
                         PausedChanged();
+                        RatioChanged();
+                        SetPosition(model.WindowState.CurrentPosition);
+                        videoAvailable = model.Locations.FaceVideo.Exists;
                     }
                 };
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
+
+            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
+            t.Interval = timerInterval;
+            t.Tick += (s, a) => { CheckPlayTime(); };
+            t.Start();
+
+            PreviewKeyDown += MainWindow_KeyDown;
+            Timeline.MouseDown+=Timeline_MouseDown;
+
         }
 
-        IEditorMode currentMode;
+       
 
         #region Реакция на изменение полей модели
 
@@ -70,15 +83,101 @@ namespace Editor
                 currentMode = new GeneralMode(model);
         }
 
+        void RatioChanged()
+        {
+            FaceVideo.SpeedRatio = model.WindowState.SpeedRatio;
+            ScreenVideo.SpeedRatio = model.WindowState.SpeedRatio;
+        }
+
+        bool pauseRequested;
+
+        void SetPosition(int ms)
+        {
+            model.WindowState.CurrentPosition = ms;
+            if (model.WindowState.Paused)
+            {
+                model.WindowState.Paused = false;
+                pauseRequested = true;
+            }
+
+            FaceVideo.Position = TimeSpan.FromMilliseconds(model.WindowState.CurrentPosition);
+            ScreenVideo.Position = TimeSpan.FromMilliseconds(model.WindowState.CurrentPosition - model.Montage.Shift);
+
+        }
+
 
         void WindowState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == "Paused") PausedChanged();
+            if (e.PropertyName == "CurrentMode") ModeChanged();
+            if (e.PropertyName == "SpeedRatio") RatioChanged();
+           
 
         }
 
 
 
+        #endregion
+
+        #region Взаимодействие с контроллером
+
+        int timerInterval = 10;
+        bool videoAvailable;
+
+        IEditorMode currentMode;
+
+        //TODO: на хера это надо? Пусть CurrentMode самостоятельно манипулирует полями модели!
+        void ProcessCommand(WindowCommand command)
+        {
+            if (command.JumpToLocation.HasValue)
+            {
+                SetPosition(command.JumpToLocation.Value);
+                Timeline.InvalidateVisual();
+            }
+            if (command.Invalidate)
+            {
+                Timeline.InvalidateVisual();
+            }
+            if (command.Pause.HasValue)
+            {
+                model.WindowState.Paused = command.Pause.Value;
+            }
+            if (command.SpeedRatio.HasValue)
+            {
+                model.WindowState.SpeedRatio = command.SpeedRatio.Value;
+            }
+        }
+
+        void CheckPlayTime()
+        {
+            if (videoAvailable)
+                model.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+            else
+            {
+                if (model.WindowState.Paused) return;
+                model.WindowState.CurrentPosition += (int)(timerInterval * model.WindowState.SpeedRatio);
+            }
+
+            if (pauseRequested)
+            {
+                model.WindowState.Paused = true;
+                pauseRequested = false;
+                return;
+            }
+
+            ProcessCommand(currentMode.CheckTime());
+        }
+
+        void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            ProcessCommand(currentMode.ProcessKey(e));
+        }
+
+        void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
+            ProcessCommand(currentMode.MouseClick(time, e));
+        }
         #endregion
 
 
@@ -266,25 +365,7 @@ namespace Editor
 
         IEditorMode currentMode;// = new BorderMode();
 
-        void CheckPlayTime()
-        {
-            if (videoAvailable)
-                editorModel.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
-            else
-            {
-                if (paused) return;
-                editorModel.WindowState.CurrentPosition += (int)(timerInterval * SpeedRatio);
-            }
 
-            if (requestPause)
-            {
-                MakePause();
-                requestPause = false;
-                return;
-            }
-
-            ProcessResponse(currentMode.CheckTime());
-        }
 
 
 

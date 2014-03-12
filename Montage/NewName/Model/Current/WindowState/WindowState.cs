@@ -31,6 +31,7 @@ namespace Editor
             }
         }
 
+
         bool paused;
         public bool Paused
         {
@@ -42,6 +43,26 @@ namespace Editor
             }
         }
 
+        double speedRatio;
+        public double SpeedRatio
+        {
+            get { return speedRatio; }
+            set
+            {
+                speedRatio = value;
+                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Paused"));
+            }
+        }
+
+     
+
         public event PropertyChangedEventHandler PropertyChanged;
+
+        public WindowState()
+        {
+            Paused = true;
+            CurrentMode = EditorModes.General;
+            speedRatio = 1;
+        }
     }
 }
