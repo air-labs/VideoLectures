@@ -26,16 +26,14 @@ namespace Editor
         {
             for (int i = 1; i < montage.Chunks.Count; i++)
             {
-                if (montage.Chunks[i].IsNotActive)
+                if (montage.Chunks[i].Mode != montage.Chunks[i-1].Mode)
                 {
                     if (montage.Chunks[i - 1].IsActive)
                     {
                         yield return Border.Right(montage.Chunks[i].StartTime, Margin, i - 1, i);
                     }
-                }
-                else
-                {
-                    if (montage.Chunks[i - 1].Mode != montage.Chunks[i].Mode)
+                
+                    if (montage.Chunks[i].IsActive)
                     {
                         yield return Border.Left(montage.Chunks[i].StartTime, Margin, i - 1, i);
                     }
