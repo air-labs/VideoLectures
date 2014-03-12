@@ -68,10 +68,29 @@ namespace Editor
 
         public void CheckTime(int ms)
         {
-            if (montage.Borders.FindBorder(ms) != -1)
-                model.WindowState.SpeedRatio = 1;
-            else
-                model.WindowState.SpeedRatio = 2.5;
+
+            var index = montage.Chunks.FindChunkIndex(ms);
+            if (index == -1)
+            {
+                model.WindowState.Paused = true;
+                return;
+            }
+
+            if (montage.Chunks[index].IsNotActive)
+            {
+                while (index < montage.Chunks.Count && montage.Chunks[index].IsNotActive)
+                    index++;
+
+                if (index >= montage.Chunks.Count)
+                {
+                    model.WindowState.Paused = true;
+                    return;
+                }
+                ms=model.WindowState.CurrentPosition = montage.Chunks[index].StartTime;
+            }
+
+            model.WindowState.SpeedRatio = montage.Borders.FindBorder(ms) == -1 ? 2 : 1;
+            
         }
 
 
