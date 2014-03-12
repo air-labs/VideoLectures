@@ -135,27 +135,6 @@ namespace Editor
 
         IEditorMode currentMode;
 
-        //TODO: на хера это надо? Пусть CurrentMode самостоятельно манипулирует полями модели!
-        void ProcessCommand(WindowCommand command)
-        {
-            if (command.JumpToLocation.HasValue)
-            {
-                model.WindowState.CurrentPosition = command.JumpToLocation.Value;
-            }
-            if (command.Invalidate)
-            {
-                Timeline.InvalidateVisual();
-            }
-            if (command.Pause.HasValue)
-            {
-                model.WindowState.Paused = command.Pause.Value;
-            }
-            if (command.SpeedRatio.HasValue)
-            {
-                model.WindowState.SpeedRatio = command.SpeedRatio.Value;
-            }
-        }
-
         void CheckPlayTime()
         {
             supressPositionChanged = true;
@@ -177,18 +156,18 @@ namespace Editor
 
             if (model.WindowState.Paused) return;
 
-            ProcessCommand(currentMode.CheckTime());
+            currentMode.CheckTime();
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            ProcessCommand(currentMode.ProcessKey(e));
+           currentMode.ProcessKey(e);
         }
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
             var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
-            ProcessCommand(currentMode.MouseClick(time, e));
+            currentMode.MouseClick(time, e);
         }
         #endregion
 

@@ -15,8 +15,11 @@ namespace Editor
             get { return currentMode; }
             set
             {
-                currentMode = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode"));
+                if (currentMode != value)
+                {
+                    currentMode = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentMode"));
+                }
             }
         }
 
@@ -26,8 +29,11 @@ namespace Editor
             get { return currentPosition; }
             set
             {
-                currentPosition = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentPosition"));
+                if (currentPosition != value)
+                {
+                    currentPosition = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("CurrentPosition"));
+                }
             }
         }
 
@@ -38,8 +44,11 @@ namespace Editor
             get { return paused; }
             set
             {
-                paused = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Paused"));
+                if (paused != value)
+                {
+                    paused = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Paused"));
+                }
             }
         }
 
@@ -49,8 +58,11 @@ namespace Editor
             get { return speedRatio; }
             set
             {
-                speedRatio = value;
-                if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("Paused"));
+                if (speedRatio != value)
+                {
+                    speedRatio = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("SpeedRatio"));
+                }
             }
         }
 
