@@ -8,13 +8,13 @@ namespace Editor
 {
     public class VoiceSettings
     {
-        public int MaxDeviationWhenBorderingBySound { get; set; }
+        public int MediumSilence { get; set; }
         public int SilenceMargin { get; set; }
 
         public VoiceSettings()
         {
-            MaxDeviationWhenBorderingBySound = 200;
-            SilenceMargin = 50;
+            MediumSilence = 500;
+            SilenceMargin = 300;
         }
     }
 }

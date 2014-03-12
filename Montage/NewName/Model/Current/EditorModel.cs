@@ -49,6 +49,7 @@ namespace Editor
             int NewStart = rightChunk.StartTime;
             if (leftChunk.Mode == Mode.Drop) // значит, нужно начинать с конца интервала. Мы включаем в Drop как можно больше паузы
             {
+
                 NewStart = Math.Max(interval.EndTime - Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
             }
             else if (rightChunk.Mode == Mode.Drop) // значит, с начала. 
@@ -60,7 +61,7 @@ namespace Editor
 
 
             var delta = rightChunk.StartTime-NewStart;
-            if (-delta > Global.VoiceSettings.MaxDeviationWhenBorderingBySound) return;
+            if (-delta > Global.VoiceSettings.MediumSilence) return;
 
             Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, delta);
         }
