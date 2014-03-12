@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -23,6 +24,14 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public MainWindow()
+        {
+            InitializeComponent();
+        }
+        /*
+
+
 
         EditorModel editorModel;
 
@@ -42,7 +51,7 @@ namespace Editor
         internal void Initialize(EditorModel edModel)
         {
             this.editorModel = edModel;
-           
+
 
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
@@ -285,5 +294,6 @@ namespace Editor
             ProcessResponse(currentMode.MouseClick(time, e));
         }
         #endregion 
+         * */
     }
 }

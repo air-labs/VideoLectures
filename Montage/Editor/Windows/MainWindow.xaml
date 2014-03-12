@@ -3,33 +3,43 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ed="clr-namespace:Editor"
         Title="MainWindow" WindowState="Maximized">
-    <StackPanel Orientation="Vertical">
-        <Menu>
-            <MenuItem Command="ed:Commands.Save"/>
-            <MenuItem x:Name="Statistics" Header="Stat"/>
-            <MenuItem x:Name="Synchronizer" Header="Sync"/>
-            <MenuItem x:Name="Infos" Header="Infos"/>
-        </Menu>
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <MediaElement Name="FaceVideo" Grid.Column="0"></MediaElement>
-            <MediaElement Name="ScreenVideo" Grid.Column="1"></MediaElement>
-        </Grid>
-        <StackPanel Orientation="Horizontal">
-            <Button Width="50"  Name="Pause">Play</Button>
-            <GroupBox Header="Mode:">
-                <StackPanel Orientation="Horizontal">
-                    <RadioButton x:Name="GeneralMode">General</RadioButton>
-                    <RadioButton x:Name="BordersMode">Borders</RadioButton>
-                </StackPanel>
-            </GroupBox>
+    <Window.Resources>
+        <ed:EditorModeConverter x:Key="EditorModeCnv"/>
+        <ed:PausedToStringConverter x:Key="PausedCnv"/>    
+    </Window.Resources>
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="40">
+            <Button x:Name="Save">Save</Button>
+            <Button x:Name="Statistics">Statistics</Button>
+            <Button x:Name="Synchronize">Synchronize</Button>
+            <Button x:Name="Infos">Infos</Button>
+            <Rectangle Width="50"/>
+            <ToggleButton 
+                IsChecked="{Binding WindowState.Paused}"
+                Content="{Binding WindowState.Paused, Converter={StaticResource PausedCnv}}"
+                />
+            <ToggleButton 
+                IsChecked="{Binding WindowState.EditorMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='ed:EditorModes.GeneralMode'}">
+                PreviewMode
+            </ToggleButton>
+            <ToggleButton 
+                IsChecked="{Binding WindowState.EditorMode, Converter={StaticResource EditorModeCnv}, ConverterParameter='ed:EditorModes.Borders'}">
+                PreviewMode
+            </ToggleButton>
         </StackPanel>
-        <ed:Timeline x:Name="Timeline"/>
-    </StackPanel>
+        <StackPanel Orientation="Vertical">
+            <ed:Timeline x:Name="Timeline" DataContext="{Binding}"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <MediaElement Name="FaceVideo" Source="{Binding Locations.FaceVideo.FullName}" Grid.Column="0"/>
+                <MediaElement Name="ScreenVideo"  Source="{Binding Location.DesktopVideo.FullName}" Grid.Column="1"/>
+            </Grid>
+        </StackPanel>
+    </DockPanel>
 </Window>

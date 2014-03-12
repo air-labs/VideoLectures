@@ -23,7 +23,7 @@ namespace Editor
         #region Размер
         protected override Size MeasureOverride(Size availableSize)
         {
-            var totalLength = model.TotalLength;
+            var totalLength=60*60*1000;            
             var rows = (int)Math.Ceiling(((double)totalLength) / msInRow);
             return new Size(availableSize.Width, rows * RowHeight + 5);
         }
@@ -36,32 +36,13 @@ namespace Editor
 
         public Timeline()
         {
-            DataContext = new EditorModel
-            {
-                Montage = new MontageModel
-                {
-                    TotalLength = 3600000,
-                    Chunks = 
-                 {
-                     new ChunkData
-                     {
-                         Length=3000,
-                          StartTime=0,
-                          Mode=Mode.Undefined
-                     },
-                     new ChunkData
-                     {
-                         Length=10000,
-                          StartTime=3000,
-                          Mode=Mode.Screen
-                     }
-                 }
-                }};
-            
             DataContextChanged += (o, a) =>
-                {
-                    (a.NewValue as EditorModel).WindowState.PropertyChanged += Timeline_PropertyChanged;
-                };
+            {
+                var value = a.NewValue as EditorModel;
+                if (value != null)
+                    value.WindowState.PropertyChanged += Timeline_PropertyChanged;
+                InvalidateVisual();
+            };
         }
 
         EditorModel editorModel { get { return (EditorModel)DataContext; } }
@@ -132,6 +113,8 @@ namespace Editor
 
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
+            if (editorModel == null) return;
+
            foreach (var c in model.Chunks)
                foreach (var r in GetRects(c))
                {
