@@ -6,6 +6,7 @@
     <Window.Resources>
         <ed:EditorModeConverter x:Key="EditorModeCnv"/>
         <ed:PausedToStringConverter x:Key="PausedCnv"/>    
+        <ed:BoolToVisibilityConverter x:Key="BTVCnv"/>
     </Window.Resources>
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="40">
@@ -40,10 +41,12 @@
                 <MediaElement 
                     Name="FaceVideo" 
                     Source="{Binding Locations.FaceVideo.FullName}" 
+                    Visibility="{Binding WindowState.FaceVideoIsVisible, Converter={StaticResource BTVCnv}}"
                     Grid.Column="0"/>
                 <MediaElement 
                     Name="ScreenVideo"  
                     Source="{Binding Locations.DesktopVideo.FullName}" 
+                    Visibility="{Binding WindowState.DesktopVideoIsVisible, Converter={StaticResource BTVCnv}}"
                     Grid.Column="1"/>
                 <TextBlock>
                     <TextBlock>X</TextBlock>

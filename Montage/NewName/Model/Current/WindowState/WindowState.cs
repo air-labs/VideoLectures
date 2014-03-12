@@ -66,7 +66,34 @@ namespace Editor
             }
         }
 
-    
+        bool faceVideoIsVisible;
+        public bool FaceVideoIsVisible
+        {
+            get { return faceVideoIsVisible; }
+            set
+            {
+                if (faceVideoIsVisible != value)
+                {
+                    faceVideoIsVisible = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("FaceVideoIsVisible"));
+                }
+            }
+        }
+
+        bool desktopVideoIsVisible;
+        public bool DesktopVideoIsVisible
+        {
+            get { return desktopVideoIsVisible; }
+            set
+            {
+                if (desktopVideoIsVisible != value)
+                {
+                    desktopVideoIsVisible = value;
+                    if (PropertyChanged != null) PropertyChanged(this, new PropertyChangedEventArgs("DesktopVideoIsVisible"));
+                }
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -75,6 +102,7 @@ namespace Editor
             Paused = true;
             CurrentMode = EditorModes.General;
             speedRatio = 1;
+            FaceVideoIsVisible = DesktopVideoIsVisible = true;
         }
     }
 }

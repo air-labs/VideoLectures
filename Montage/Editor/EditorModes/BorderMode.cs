@@ -53,6 +53,9 @@ namespace Editor
             }
             montage.Borders.Clear();
             montage.Borders.AddRange(borders);
+
+            model.WindowState.DesktopVideoIsVisible = true;
+            model.WindowState.FaceVideoIsVisible = false;
         }
 
         public BorderMode(EditorModel editorModel)
@@ -88,6 +91,10 @@ namespace Editor
                 }
                 ms=model.WindowState.CurrentPosition = montage.Chunks[index].StartTime;
             }
+
+            model.WindowState.FaceVideoIsVisible = montage.Chunks[index].Mode == Mode.Face;
+            model.WindowState.DesktopVideoIsVisible = montage.Chunks[index].Mode == Mode.Screen;
+            
 
             model.WindowState.SpeedRatio = montage.Borders.FindBorder(ms) == -1 ? 2 : 1;
             

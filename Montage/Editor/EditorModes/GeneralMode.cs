@@ -16,6 +16,7 @@ namespace Editor
         public GeneralMode(EditorModel edModel)
         {
             this.model = edModel;
+            model.WindowState.FaceVideoIsVisible = model.WindowState.DesktopVideoIsVisible = true;
         }
 
         public void CheckTime()

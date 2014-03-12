@@ -120,8 +120,9 @@ namespace Editor
             if (e.PropertyName == "CurrentMode") ModeChanged();
             if (e.PropertyName == "SpeedRatio") RatioChanged();
             if (e.PropertyName == "CurrentPosition") PositionChanged();
-           
 
+            //if (e.PropertyName == "FaceVideoIsVisible" || e.PropertyName == "DesktopVideoIsVisible")
+            //    InvalidateArrange();
         }
 
 

@@ -27,6 +27,19 @@ namespace Editor
         }
     }
 
+    public class BoolToVisibilityConverter : IValueConverter
+    {
+        public object Convert(object _value, Type targetType, object _parameter, System.Globalization.CultureInfo culture)
+        {
+            var value = (bool)_value;
+            return value ? Visibility.Visible : Visibility.Collapsed;
+        }
+        public object ConvertBack(object _value, Type targetType, object _parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class PausedToStringConverter : IValueConverter
     {
         public object Convert(object _value, Type targetType, object _parameter, System.Globalization.CultureInfo culture)
