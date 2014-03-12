@@ -154,11 +154,11 @@ namespace Editor
         {
             var container = new FileContainer()
             {
-                FileFormat = "V2",
+                FileFormat = "V3",
                 Montage = model.Montage,
                 WindowState = model.WindowState
             };
-            using (var stream = new StreamWriter(model.VideoFolder.FullName + "\\montage.v2"))
+            using (var stream = new StreamWriter(Path.Combine(model.VideoFolder.FullName,Locations.LocalFileName)))
             {
                 stream.WriteLine(new JavaScriptSerializer().Serialize(container));
             }
