@@ -13,7 +13,9 @@ namespace Editor
     public class ModelIO
     {
 
-        static bool ParseV2(EditorModel model)
+
+
+        static bool ParseV3(EditorModel model)
         {
             var file = model.VideoFolder.GetFiles(Locations.LocalFileName).FirstOrDefault();
             if (file == null) return false;
@@ -25,6 +27,35 @@ namespace Editor
                 model.WindowState=container.WindowState;
             return true;
         }
+
+        static bool ParseV2(EditorModel model)
+        {
+            var file = model.VideoFolder.GetFiles(Locations.LocalFileNameV2).FirstOrDefault();
+            if (file == null) return false;
+            var container = new JavaScriptSerializer().Deserialize<FileContainerV2>(File.ReadAllText(file.FullName));
+
+            if (container.Montage != null)
+            {
+                model.Montage.Chunks = container.Montage.Chunks;
+                model.Montage.Borders = container.Montage.Borders;
+                model.Montage.Information = container.Montage.Information;
+                model.Montage.Shift = container.Montage.Shift;
+                model.Montage.TotalLength = container.Montage.TotalLength;
+                model.Montage.Intervals = new List<Interval>();
+                if (container.Montage.Intervals!=null)
+                foreach (var e in container.Montage.Intervals)
+                    model.Montage.Intervals.Add(new Interval(
+                        (int)Math.Round(e.StartTime * 1000),
+                        (int)Math.Round(e.EndTime * 1000),
+                        e.HasVoice));
+            }
+            if (container.WindowState != null)
+                model.WindowState = container.WindowState;
+            return true;
+        }
+
+
+
 
         static bool ParseV1(EditorModel model)
         {
@@ -101,7 +132,7 @@ namespace Editor
             };
 
           
-            if (!ParseV2(editorModel) && !ParseV1(editorModel))
+            if (!ParseV3(editorModel) && !ParseV2(editorModel) && !ParseV1(editorModel))
             {
                 editorModel.Montage = new MontageModel
                     {

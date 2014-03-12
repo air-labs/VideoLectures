@@ -57,7 +57,11 @@ namespace NewName.Services
                     var startTime = double.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
                     var endTime = double.Parse(reader.ReadLine(), CultureInfo.InvariantCulture);
                     var hasVoice = reader.ReadLine() == '"' + SoundLabel + '"';
-                    model.Montage.Intervals.Add(new Interval(startTime, endTime, hasVoice));
+                    model.Montage.Intervals.Add(
+                        new Interval(
+                            (int)Math.Round(startTime*1000), 
+                            (int)Math.Round(1000*endTime), 
+                            hasVoice));
                 }
             }
 

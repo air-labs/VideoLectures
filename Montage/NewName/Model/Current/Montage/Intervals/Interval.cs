@@ -9,17 +9,15 @@ namespace Editor
 
     public class Interval
     {
-        public double StartTime { get; set; }
-        public double EndTime { get; set; }
-        public int StartTimeMS { get { return (int)Math.Round(StartTime * 1000); } }
-        public int EndTimeMS { get { return (int)Math.Round(EndTime * 1000); } }
-        public int MiddleTimeMS { get { return (int)Math.Round(1000 * (StartTime + EndTime) / 2); } }
+        public int StartTime { get; set; }
+        public int EndTime { get; set; }
+        public int MiddleTimeMS { get { return (StartTime+EndTime)/2; } }
 
         public bool HasVoice { get; set; }
 
         public Interval() { }
 
-        public Interval(double start, double end, bool hasVoice)
+        public Interval(int start, int end, bool hasVoice)
         {
             StartTime = start;
             EndTime = end;

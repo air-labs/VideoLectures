@@ -30,6 +30,7 @@ namespace Editor
             Global = new GlobalData();
         }
 
+
         public void CorrectBorderBetweenChunksBySound(int leftChunkIndex)
         {
             if (leftChunkIndex < 0) return;
@@ -40,7 +41,7 @@ namespace Editor
             if (leftChunk.Mode == Mode.Undefined || rightChunk.Mode == Mode.Undefined) return;
             if (leftChunk.Mode == rightChunk.Mode) return;
             var interval = Montage.Intervals
-                .Where(z => !z.HasVoice && z.StartTimeMS < rightChunk.StartTime)
+                .Where(z => !z.HasVoice && z.StartTime < rightChunk.StartTime)
                 .LastOrDefault();
             if (interval == null) return;
 
@@ -48,11 +49,11 @@ namespace Editor
             int NewStart = rightChunk.StartTime;
             if (leftChunk.Mode == Mode.Drop) // значит, нужно начинать с конца интервала. Мы включаем в Drop как можно больше паузы
             {
-                NewStart = Math.Max(interval.EndTimeMS - Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
+                NewStart = Math.Max(interval.EndTime - Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
             }
             else if (rightChunk.Mode == Mode.Drop) // значит, с начала. 
             {
-                NewStart = Math.Min(interval.StartTimeMS + Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
+                NewStart = Math.Min(interval.StartTime + Global.VoiceSettings.SilenceMargin, interval.MiddleTimeMS);
             }
             else
                 NewStart = interval.MiddleTimeMS;

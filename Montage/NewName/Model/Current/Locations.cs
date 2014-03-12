@@ -27,7 +27,8 @@ namespace Editor
         
         public FileInfo PraatOutput { get { return Make(model.VideoFolder, "praat.output"); } }
 
-        public const string LocalFileName = "montage.v2";
+        public const string LocalFileName = "montage.v3";
+        public const string LocalFileNameV2 = "montage.v2";
         public const string LocalFileNameV1 = "montage.editor";
         public const string GlobalFileName = "montage.global.txt";
     }

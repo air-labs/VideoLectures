@@ -60,6 +60,7 @@
     <Compile Include="Model\Current\Montage\MontageModel.cs" />
     <Compile Include="Model\Current\WindowState\WindowState.cs" />
     <Compile Include="Model\ModelIO.cs" />
+    <Compile Include="Model\Obsolete\InvervalsV2.cs" />
     <Compile Include="Model\Obsolete\MontageModel.cs" />
     <Compile Include="Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -148,7 +148,7 @@ namespace Editor
                foreach (var i in model.Intervals)
                {
                    if (!i.HasVoice)
-                       DrawLine(drawingContext, border, i.StartTimeMS, i.EndTimeMS, RowHeight - 3);
+                       DrawLine(drawingContext, border, i.StartTime, i.EndTime, RowHeight - 3);
                }
            }
 
