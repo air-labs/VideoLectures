@@ -10,7 +10,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -60,9 +59,62 @@ namespace Editor
                     ModelIO.Save(model);
                 };
 
+            Synchronize.Click += Synchronize_Click;
+
+            Infos.Click += Infos_Click;
+
+        }
+
+        void Synchronize_Click(object sender, RoutedEventArgs e)
+        {
+            if (model.Montage.Shift != 0)
+            {
+                var response = MessageBox.Show("Вы уже синхронизировали это видео. Точно хотите пересинхронизировать?", "", MessageBoxButton.YesNoCancel);
+                if (response != MessageBoxResult.Yes) return;
+            }
+            model.Montage.Shift = model.WindowState.CurrentPosition;
+            model.WindowState.CurrentPosition = model.WindowState.CurrentPosition + 1;
+            ModelIO.Save(model);
         }
 
        
+        void Infos_Click(object sender, RoutedEventArgs e)
+        {
+            var times = new List<int>();
+            var current = 0;
+            foreach (var c in model.Montage.Chunks)
+            {
+                if (c.StartsNewEpisode)
+                {
+                    times.Add(current);
+                    current = 0;
+                }
+                if (c.Mode == Mode.Face || c.Mode == Mode.Screen)
+                    current += c.Length;
+            }
+            times.Add(current);
+
+            if (model.Montage.Information.Episodes.Count == 0)
+            {
+                model.Montage.Information.Episodes.AddRange(Enumerable.Range(0, times.Count).Select(z => new EpisodInfo()));
+            }
+            else if (model.Montage.Information.Episodes.Count != times.Count)
+            {
+                MessageBox.Show("The stored information contains wrong count of records, i.e. describes wrong number of episodes. Please check it", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                while (model.Montage.Information.Episodes.Count < times.Count)
+                    model.Montage.Information.Episodes.Add(new EpisodInfo());
+            }
+
+            for (int i = 0; i < times.Count; i++)
+                model.Montage.Information.Episodes[i].Duration = TimeSpan.FromMilliseconds(times[i]);
+
+            var wnd = new InfoWindow();
+            wnd.DataContext = model.Montage.Information;
+            wnd.ShowDialog();
+            ModelIO.Save(model);
+        }
+
+
 
         #region Реакция на изменение полей модели
 
@@ -171,6 +223,7 @@ namespace Editor
                 return;
             }
            currentMode.ProcessKey(e);
+
         }
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)

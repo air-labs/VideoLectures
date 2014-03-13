@@ -95,9 +95,24 @@ namespace Editor
 
             model.WindowState.FaceVideoIsVisible = montage.Chunks[index].Mode == Mode.Face;
             model.WindowState.DesktopVideoIsVisible = montage.Chunks[index].Mode == Mode.Screen;
-            
 
-            model.WindowState.SpeedRatio = montage.Borders.FindBorder(ms) == -1 ? 2 : 1;
+            double speed = 2.5;
+            var bindex = montage.Borders.FindBorder(ms);
+            if (bindex != -1)
+            {
+                var border = montage.Borders[bindex];
+                if (!border.IsLeftBorder)
+                {
+                    if (border.EndTime - ms < 2000) speed = 1;
+                }
+                else
+                {
+                    if (ms - border.StartTime < 1000) speed = 1;
+                }
+
+            }
+
+            model.WindowState.SpeedRatio = speed;
             
         }
 
@@ -150,6 +165,10 @@ namespace Editor
                 case Key.P:
                     Shift(leftBorderIndex, -value);
                     return;
+
+                case Key.Space:
+                    model.WindowState.Paused = !model.WindowState.Paused;
+                    return;
             }
         }
 
@@ -160,6 +179,7 @@ namespace Editor
             montage.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
             GenerateBorders();
             model.WindowState.CurrentPosition = montage.Borders[borderIndex].StartTime;
+            if (montage.Borders[borderIndex].IsLeftBorder) model.WindowState.SpeedRatio = 1;
         }
     }
 }

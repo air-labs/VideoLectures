@@ -6,6 +6,8 @@
         <Button x:Name="Ok" DockPanel.Dock="Bottom">OK</Button>
         <DataGrid ItemsSource="{Binding Episodes}" AutoGenerateColumns="False">
             <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding NumberInTopic}" Header="#" Width="1*"/>
+                <DataGridTextColumn Binding="{Binding Duration}" IsReadOnly="True" Header="Duration" Width="3*"/>
                 <DataGridTextColumn Binding="{Binding Name}" Header="Name" Width="9*"/>
             </DataGrid.Columns>
         </DataGrid>

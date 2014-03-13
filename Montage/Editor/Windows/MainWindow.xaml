@@ -30,20 +30,15 @@
         </StackPanel>
         <StackPanel Orientation="Vertical">
             <ed:Timeline x:Name="Timeline" DataContext="{Binding}"/>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <StackPanel Orientation="Horizontal">
                 <MediaElement 
+                    Width="600"
                     Name="FaceVideo" 
                     Source="{Binding Locations.FaceVideo.FullName}" 
                     Visibility="{Binding WindowState.FaceVideoIsVisible, Converter={StaticResource BTVCnv}}"
                     Grid.Column="0"/>
                 <MediaElement 
+                    Width="600"
                     Name="ScreenVideo"  
                     Source="{Binding Locations.DesktopVideo.FullName}" 
                     Visibility="{Binding WindowState.DesktopVideoIsVisible, Converter={StaticResource BTVCnv}}"
@@ -52,7 +47,7 @@
                     <TextBlock>X</TextBlock>
                     <TextBlock Text="{Binding WindowState.SpeedRatio}"/>                            
                 </TextBlock>
-            </Grid>
+            </StackPanel>
         </StackPanel>
     </DockPanel>
 </Window>
