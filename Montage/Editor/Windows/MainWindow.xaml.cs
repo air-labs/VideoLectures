@@ -223,6 +223,7 @@ namespace Editor
                 return;
             }
            currentMode.ProcessKey(e);
+            e.Handled=true;
 
         }
 

@@ -11,7 +11,6 @@
     <DockPanel>
         <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Height="40">
             <Button x:Name="Save">Save</Button>
-            <Button x:Name="Statistics">Statistics</Button>
             <Button x:Name="Synchronize">Synchronize</Button>
             <Button x:Name="Infos">Infos</Button>
             <Rectangle Width="50"/>
