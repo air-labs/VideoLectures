@@ -30,6 +30,12 @@ namespace Editor
             Global = new GlobalData();
         }
 
+        public void SetChunkMode(Mode mode, bool ctrl)
+        {
+            SetChunkMode(WindowState.CurrentPosition, mode, ctrl);
+            Montage.SetChanged();
+        }
+
         public void SetChunkMode(int position, Mode mode, bool ctrl)
         {
             var index = Montage.Chunks.FindChunkIndex(position);

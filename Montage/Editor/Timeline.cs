@@ -99,7 +99,10 @@ namespace Editor
     {
         public Slider()
         {
-            this.DataContextChanged += (s, a) => { InvalidateVisual(); };
+            this.DataContextChanged += (s, a) => { 
+                InvalidateVisual();
+                editorModel.WindowState.PropertyChanged += (ss, aa) => InvalidateVisual();
+            };
         }
 
         protected override void OnRender(DrawingContext drawingContext)
@@ -114,7 +117,10 @@ namespace Editor
     {
         public ModelView()
         {
-            this.DataContextChanged += (s, a) => { InvalidateVisual(); };
+            this.DataContextChanged += (s, a) => { 
+                InvalidateVisual();
+                editorModel.Montage.Changed += (ss, aa) => InvalidateVisual();
+            };
         }
 
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)

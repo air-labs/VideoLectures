@@ -214,8 +214,7 @@ namespace Editor
             if (model.WindowState.Paused) return;
 
             currentMode.CheckTime();
-            //Timeline.InvalidateVisual();
-            Slider.InvalidateVisual();
+           
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

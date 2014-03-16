@@ -71,19 +71,20 @@ namespace Editor
                     return;
 
                 case Key.D0:
-                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Face, ctrl);
+                    model.SetChunkMode(Mode.Face, ctrl);
                     return;
                 
                 case Key.OemMinus:
-                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Screen, ctrl);
+                    model.SetChunkMode(Mode.Screen, ctrl);
                     return;
 
                 case Key.OemPlus:
-                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Drop, ctrl);
+                    model.SetChunkMode(Mode.Drop, ctrl);
                     return;
                 
                 case Key.Back:
                     RemoveChunk();
+
                     return;
 
                 case Key.Q:
@@ -94,11 +95,11 @@ namespace Editor
                     ShiftLeft(200);
                     return;
 
-                case Key.E:
+                case Key.O:
                     ShiftRight(-200);
                     return;
                 
-                case Key.R:
+                case Key.P:
                     ShiftRight(200);
                     return;
 
@@ -143,6 +144,7 @@ namespace Editor
                 chunk.Length += montage.Chunks[index - 1].Length;
                 montage.Chunks.RemoveAt(index - 1);
             }
+            montage.SetChanged();
         }
 
         void ShiftLeft(int delta)
@@ -157,6 +159,7 @@ namespace Editor
             montage.Chunks[index - 1].Length += delta;
 
             model.WindowState.CurrentPosition = montage.Chunks[index].StartTime;
+            montage.SetChanged();
         }
 
         void ShiftRight(int delta)
@@ -171,6 +174,7 @@ namespace Editor
             montage.Chunks[index + 1].StartTime += delta;
 
             model.WindowState.CurrentPosition = montage.Chunks[index + 1].StartTime - 2000;
+            montage.SetChanged();
         }
 
         void NextChunk()
