@@ -32,6 +32,7 @@ namespace Editor
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
             Information = new VideoInformation();
+            Intervals = new List<Interval>();
         }
 
     }

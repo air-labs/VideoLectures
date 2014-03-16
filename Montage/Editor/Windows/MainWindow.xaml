@@ -28,7 +28,10 @@
             </ToggleButton>
         </StackPanel>
         <StackPanel Orientation="Vertical">
-            <ed:Timeline x:Name="Timeline" DataContext="{Binding}"/>
+            <Grid>
+                <ed:ModelView x:Name="ModelView" DataContext="{Binding}"/>
+                <ed:Slider x:Name="Slider" DataContext="{Binding}"/>
+            </Grid>
             <StackPanel Orientation="Horizontal">
                 <MediaElement 
                     Width="600"

@@ -52,7 +52,8 @@ namespace Editor
             t.Start();
 
             PreviewKeyDown += MainWindow_KeyDown;
-            Timeline.MouseDown+=Timeline_MouseDown;
+            ModelView.MouseDown+=Timeline_MouseDown;
+            Slider.MouseDown += Timeline_MouseDown;
 
             Save.Click += (s, a) =>
                 {
@@ -213,6 +214,8 @@ namespace Editor
             if (model.WindowState.Paused) return;
 
             currentMode.CheckTime();
+            //Timeline.InvalidateVisual();
+            Slider.InvalidateVisual();
         }
 
         void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
@@ -229,7 +232,7 @@ namespace Editor
 
         void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            var time = Timeline.MsAtPoint(e.GetPosition(Timeline));
+            var time = Slider.MsAtPoint(e.GetPosition(Slider));
             currentMode.MouseClick(time, e);
         }
         #endregion

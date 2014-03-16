@@ -71,15 +71,15 @@ namespace Editor
                     return;
 
                 case Key.D0:
-                    Commit(Mode.Face, ctrl);
+                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Face, ctrl);
                     return;
                 
                 case Key.OemMinus:
-                    Commit(Mode.Screen, ctrl);
+                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Screen, ctrl);
                     return;
 
                 case Key.OemPlus:
-                    Commit(Mode.Drop, ctrl);
+                    model.SetChunkMode(model.WindowState.CurrentPosition,Mode.Drop, ctrl);
                     return;
                 
                 case Key.Back:
@@ -190,29 +190,7 @@ namespace Editor
 
         }
 
-        void Commit(Mode mode, bool ctrl)
-        {
-            var position = model.WindowState.CurrentPosition;
-            var index = montage.Chunks.FindChunkIndex(position);
-            if (index == -1) return;
-            var chunk = montage.Chunks[index];
-            if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
-            {
-                var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
-                var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
-                montage.Chunks.RemoveAt(index);
-                montage.Chunks.Insert(index, chunk1);
-                montage.Chunks.Insert(index + 1, chunk2);
-            }
-            else
-            {
-                chunk.Mode = mode;
-            }
-            model.CorrectBorderBetweenChunksBySound(index - 1);
-            model.CorrectBorderBetweenChunksBySound(index);
-            
-         }
-
+      
 
     }
 }
