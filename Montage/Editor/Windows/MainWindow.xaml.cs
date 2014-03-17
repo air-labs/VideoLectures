@@ -26,44 +26,52 @@ namespace Editor
     {
         EditorModel model;
 
+
+
         public MainWindow()
+
         {
+            Loaded += MainWindow_Initialized;
             InitializeComponent();
-            DataContextChanged += (s, a) =>
-                {
-                    var value = a.NewValue as EditorModel;
-                    if (value != null)
-                    {
-                        model = value;
-                        model.WindowState.PropertyChanged += WindowState_PropertyChanged;
-                        ModeChanged();
-                        PausedChanged();
-                        RatioChanged();
-                        PositionChanged();
-                        videoAvailable = model.Locations.FaceVideo.Exists;
-                    }
-                };
+
+            
+           
+
+        }
+
+        void MainWindow_Initialized(object sender, EventArgs e)
+        {
+            model = (EditorModel)DataContext;
+            model.WindowState.PropertyChanged += WindowState_PropertyChanged;
+
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
 
+            
+            ModeChanged();
+            PositionChanged();
+            PausedChanged();
+            RatioChanged();
+            videoAvailable = model.Locations.FaceVideo.Exists;
+
+        
             System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
             t.Interval = timerInterval;
             t.Tick += (s, a) => { CheckPlayTime(); };
             t.Start();
 
             PreviewKeyDown += MainWindow_KeyDown;
-            ModelView.MouseDown+=Timeline_MouseDown;
+            ModelView.MouseDown += Timeline_MouseDown;
             Slider.MouseDown += Timeline_MouseDown;
 
             Save.Click += (s, a) =>
-                {
-                    ModelIO.Save(model);
-                };
+            {
+                ModelIO.Save(model);
+            };
 
             Synchronize.Click += Synchronize_Click;
 
             Infos.Click += Infos_Click;
-
         }
 
         void Synchronize_Click(object sender, RoutedEventArgs e)
