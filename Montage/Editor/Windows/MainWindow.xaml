@@ -36,14 +36,10 @@
                 <MediaElement 
                     Width="600"
                     Name="FaceVideo" 
-                    Source="{Binding Locations.FaceVideo.FullName}" 
-                    Visibility="{Binding WindowState.FaceVideoIsVisible, Converter={StaticResource BTVCnv}}"
                     Grid.Column="0"/>
                 <MediaElement 
                     Width="600"
                     Name="ScreenVideo"  
-                    Source="{Binding Locations.DesktopVideo.FullName}" 
-                    Visibility="{Binding WindowState.DesktopVideoIsVisible, Converter={StaticResource BTVCnv}}"
                     Grid.Column="1"/>
                 <TextBlock>
                     <TextBlock>X</TextBlock>

@@ -44,6 +44,9 @@ namespace Editor
             model = (EditorModel)DataContext;
             model.WindowState.PropertyChanged += WindowState_PropertyChanged;
 
+
+            FaceVideo.Source = new Uri(model.Locations.FaceVideo.FullName);
+            ScreenVideo.Source = new Uri(model.Locations.DesktopVideo.FullName);
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
 
