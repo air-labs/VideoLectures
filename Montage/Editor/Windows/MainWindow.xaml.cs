@@ -33,9 +33,11 @@ namespace Editor
         {
             Loaded += MainWindow_Initialized;
             InitializeComponent();
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
 
             
-           
+            
 
         }
 
@@ -136,11 +138,13 @@ namespace Editor
             {
                 FaceVideo.Pause();
                 ScreenVideo.Pause();
+                MessageBox.Show("Paused");
             }
             else
             {
                 FaceVideo.Play();
                 ScreenVideo.Play();
+                MessageBox.Show("Played");
             }
         }
 
