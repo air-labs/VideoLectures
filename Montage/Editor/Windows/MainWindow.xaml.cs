@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VideoLib;
 
 namespace Editor
@@ -59,11 +60,11 @@ namespace Editor
             RatioChanged();
             videoAvailable = model.Locations.FaceVideo.Exists;
 
-        
-            System.Windows.Forms.Timer t = new System.Windows.Forms.Timer();
-            t.Interval = timerInterval;
-            t.Tick += (s, a) => { CheckPlayTime(); };
-            t.Start();
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(timerInterval);
+            timer.Tick += (s, a) => { CheckPlayTime(); };
+            timer.Start();
 
             PreviewKeyDown += MainWindow_KeyDown;
             ModelView.MouseDown += Timeline_MouseDown;
@@ -138,13 +139,13 @@ namespace Editor
             {
                 FaceVideo.Pause();
                 ScreenVideo.Pause();
-                MessageBox.Show("Paused");
+       //         MessageBox.Show("Paused");
             }
             else
             {
                 FaceVideo.Play();
                 ScreenVideo.Play();
-                MessageBox.Show("Played");
+       //         MessageBox.Show("Played");
             }
         }
 
