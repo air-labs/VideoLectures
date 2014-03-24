@@ -12,9 +12,9 @@ namespace Editor
     {
         const int Margin = 3000;
 
-        EditorModel editorModel;
+        EditorModel model;
 
-        public MontageModel model { get { return editorModel.Montage; } }
+        public MontageModel montage { get { return model.Montage; } }
 
 
         /*
@@ -24,17 +24,19 @@ namespace Editor
          */
         IEnumerable<Border> GenerateBordersPreview()
         {
-            for (int i = 1; i < model.Chunks.Count; i++)
+            for (int i = 1; i < montage.Chunks.Count; i++)
             {
-                if (model.Chunks[i].IsNotActive)
+                if (montage.Chunks[i].Mode != montage.Chunks[i-1].Mode)
                 {
-                    if (model.Chunks[i - 1].IsActive)
-                        yield return Border.Right(model.Chunks[i].StartTime, Margin, i - 1, i);
-                }
-                else
-                {
-                    if (model.Chunks[i - 1].Mode != model.Chunks[i].Mode)
-                        yield return Border.Left(model.Chunks[i].StartTime, Margin, i - 1, i);
+                    if (montage.Chunks[i - 1].IsActive)
+                    {
+                        yield return Border.Right(montage.Chunks[i].StartTime, Margin, i - 1, i);
+                    }
+                
+                    if (montage.Chunks[i].IsActive)
+                    {
+                        yield return Border.Left(montage.Chunks[i].StartTime, Margin, i - 1, i);
+                    }
                 }
             }
         }
@@ -51,54 +53,93 @@ namespace Editor
                     borders[i].StartTime = time;
                 }
             }
-            model.Borders.Clear();
-            model.Borders.AddRange(borders);
+            montage.Borders.Clear();
+            montage.Borders.AddRange(borders);
+
+         
         }
 
         public BorderMode(EditorModel editorModel)
         {
-            this.editorModel = editorModel;
+            this.model = editorModel;
             GenerateBorders();
         }
 
-        public WindowCommand CheckTime()
+        public void CheckTime()
         {
-            return CheckTime(editorModel.WindowState.CurrentPosition);
+            CheckTime(model.WindowState.CurrentPosition);
         }
 
-        public WindowCommand CheckTime(int ms)
+        public void CheckTime(int ms)
         {
-            if (model.Borders.FindBorder(ms) != -1) return WindowCommand.None;
-            foreach (var e in model.Borders)
-                if (e.StartTime >= ms) return WindowCommand.JumpTo(e.StartTime);
-            return new WindowCommand { Pause = true };
+
+            var index = montage.Chunks.FindChunkIndex(ms);
+            if (index == -1)
+            {
+                model.WindowState.Paused = true;
+                return;
+            }
+
+            if (montage.Chunks[index].IsNotActive)
+            {
+                while (index < montage.Chunks.Count && montage.Chunks[index].IsNotActive)
+                    index++;
+
+                if (index >= montage.Chunks.Count)
+                {
+                    model.WindowState.Paused = true;
+                    return;
+                }
+                ms=model.WindowState.CurrentPosition = montage.Chunks[index].StartTime;
+            }
+
+            model.WindowState.FaceVideoIsVisible = montage.Chunks[index].Mode == Mode.Face;
+            model.WindowState.DesktopVideoIsVisible = montage.Chunks[index].Mode == Mode.Screen;
+
+            double speed = 2.5;
+            var bindex = montage.Borders.FindBorder(ms);
+            if (bindex != -1)
+            {
+                var border = montage.Borders[bindex];
+                if (!border.IsLeftBorder)
+                {
+                    if (border.EndTime - ms < 2000) speed = 1;
+                }
+                else
+                {
+                    if (ms - border.StartTime < 1000) speed = 1;
+                }
+
+            }
+
+            model.WindowState.SpeedRatio = speed;
+            
         }
 
 
-        public WindowCommand MouseClick(int selectedLocation, MouseButtonEventArgs button)
+        public void MouseClick(int selectedLocation, MouseButtonEventArgs button)
         {
-            var r = CheckTime(selectedLocation);
-            if (!r.RequestProcessed) return WindowCommand.JumpTo(selectedLocation);
-            return r;
+            model.WindowState.CurrentPosition = selectedLocation;
+            CheckTime(selectedLocation);
         }
 
 
-        public WindowCommand ProcessKey(KeyEventArgs e)
+        public void ProcessKey(KeyEventArgs e)
         {
-            var borderIndex = model.Borders.FindBorder(editorModel.WindowState.CurrentPosition);
-            if (borderIndex == -1) return WindowCommand.None;
+            var borderIndex = montage.Borders.FindBorder(model.WindowState.CurrentPosition);
+            if (borderIndex == -1) return;
             int leftBorderIndex = -1;
             int rightBorderIndex = -1;
-            if (model.Borders[borderIndex].IsLeftBorder)
+            if (montage.Borders[borderIndex].IsLeftBorder)
             {
                 leftBorderIndex = borderIndex;
-                if (borderIndex != 0 && !model.Borders[borderIndex - 1].IsLeftBorder)
+                if (borderIndex != 0 && !montage.Borders[borderIndex - 1].IsLeftBorder)
                     rightBorderIndex = borderIndex - 1;
             }
             else
             {
                 rightBorderIndex = borderIndex;
-                if (borderIndex != model.Borders.Count - 1 && model.Borders[borderIndex + 1].IsLeftBorder)
+                if (borderIndex != montage.Borders.Count - 1 && montage.Borders[borderIndex + 1].IsLeftBorder)
                     leftBorderIndex = borderIndex + 1;
             }
 
@@ -110,28 +151,36 @@ namespace Editor
             switch (e.Key)
             {
                 case Key.Q:
-                    return Shift(rightBorderIndex, value);
+                    Shift(rightBorderIndex, value);
+                    return;
 
                 case Key.W:
-                    return Shift(rightBorderIndex, -value);
+                    Shift(rightBorderIndex, -value);
+                    return;
 
                 case Key.O:
-                    return Shift(leftBorderIndex, value);
+                    Shift(leftBorderIndex, value);
+                    return;
 
                 case Key.P:
-                    return Shift(leftBorderIndex, -value);
+                    Shift(leftBorderIndex, -value);
+                    return;
 
+                case Key.Space:
+                    model.WindowState.Paused = !model.WindowState.Paused;
+                    return;
             }
-            return WindowCommand.None;
         }
 
-        WindowCommand Shift(int borderIndex, int shiftSize)
+        void Shift(int borderIndex, int shiftSize)
         {
-            if (borderIndex == -1) return WindowCommand.None;
-            var border = model.Borders[borderIndex];
-            model.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
+            if (borderIndex == -1) return;
+            var border = montage.Borders[borderIndex];
+            montage.Chunks.ShiftLeftBorderToRight(border.RightChunk, shiftSize);
             GenerateBorders();
-            return WindowCommand.JumpTo(model.Borders[borderIndex].StartTime).AndInvalidate();
+            model.WindowState.CurrentPosition = montage.Borders[borderIndex].StartTime;
+            if (montage.Borders[borderIndex].IsLeftBorder) model.WindowState.SpeedRatio = 1;
+            montage.SetChanged();
         }
     }
 }

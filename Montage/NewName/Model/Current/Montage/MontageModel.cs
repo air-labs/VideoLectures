@@ -27,11 +27,20 @@ namespace Editor
 
         public VideoInformation Information { get; set; }
 
+        public event EventHandler Changed;
+
+        public void SetChanged()
+        {
+            if (Changed != null)
+                Changed(this, EventArgs.Empty);
+        }
+
         public MontageModel()
         {
             Chunks = new List<ChunkData>();
             Borders = new List<Border>();
             Information = new VideoInformation();
+            Intervals = new List<Interval>();
         }
 
     }

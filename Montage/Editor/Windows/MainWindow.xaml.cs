@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VideoLib;
 
 namespace Editor
@@ -23,6 +25,237 @@ namespace Editor
     /// </summary>
     public partial class MainWindow : Window
     {
+        EditorModel model;
+
+
+
+        public MainWindow()
+
+        {
+            Loaded += MainWindow_Initialized;
+            InitializeComponent();
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
+
+            
+            
+
+        }
+
+        void MainWindow_Initialized(object sender, EventArgs e)
+        {
+            model = (EditorModel)DataContext;
+            model.WindowState.PropertyChanged += WindowState_PropertyChanged;
+
+
+            FaceVideo.Source = new Uri(model.Locations.FaceVideo.FullName);
+            ScreenVideo.Source = new Uri(model.Locations.DesktopVideo.FullName);
+            FaceVideo.LoadedBehavior = MediaState.Manual;
+            ScreenVideo.LoadedBehavior = MediaState.Manual;
+
+            
+            ModeChanged();
+            PositionChanged();
+            PausedChanged();
+            RatioChanged();
+            videoAvailable = model.Locations.FaceVideo.Exists;
+
+
+            DispatcherTimer timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(timerInterval);
+            timer.Tick += (s, a) => { CheckPlayTime(); };
+            timer.Start();
+
+            PreviewKeyDown += MainWindow_KeyDown;
+            ModelView.MouseDown += Timeline_MouseDown;
+            Slider.MouseDown += Timeline_MouseDown;
+
+            Save.Click += (s, a) =>
+            {
+                ModelIO.Save(model);
+            };
+
+            Synchronize.Click += Synchronize_Click;
+
+            Infos.Click += Infos_Click;
+        }
+
+        void Synchronize_Click(object sender, RoutedEventArgs e)
+        {
+            if (model.Montage.Shift != 0)
+            {
+                var response = MessageBox.Show("Вы уже синхронизировали это видео. Точно хотите пересинхронизировать?", "", MessageBoxButton.YesNoCancel);
+                if (response != MessageBoxResult.Yes) return;
+            }
+            model.Montage.Shift = model.WindowState.CurrentPosition;
+            model.WindowState.CurrentPosition = model.WindowState.CurrentPosition + 1;
+            ModelIO.Save(model);
+        }
+
+       
+        void Infos_Click(object sender, RoutedEventArgs e)
+        {
+            var times = new List<int>();
+            var current = 0;
+            foreach (var c in model.Montage.Chunks)
+            {
+                if (c.StartsNewEpisode)
+                {
+                    times.Add(current);
+                    current = 0;
+                }
+                if (c.Mode == Mode.Face || c.Mode == Mode.Screen)
+                    current += c.Length;
+            }
+            times.Add(current);
+
+            if (model.Montage.Information.Episodes.Count == 0)
+            {
+                model.Montage.Information.Episodes.AddRange(Enumerable.Range(0, times.Count).Select(z => new EpisodInfo()));
+            }
+            else if (model.Montage.Information.Episodes.Count != times.Count)
+            {
+                MessageBox.Show("The stored information contains wrong count of records, i.e. describes wrong number of episodes. Please check it", "", MessageBoxButton.OK, MessageBoxImage.Information);
+                while (model.Montage.Information.Episodes.Count < times.Count)
+                    model.Montage.Information.Episodes.Add(new EpisodInfo());
+            }
+
+            for (int i = 0; i < times.Count; i++)
+                model.Montage.Information.Episodes[i].Duration = TimeSpan.FromMilliseconds(times[i]);
+
+            var wnd = new InfoWindow();
+            wnd.DataContext = model.Montage.Information;
+            wnd.ShowDialog();
+            ModelIO.Save(model);
+        }
+
+
+
+        #region Реакция на изменение полей модели
+
+        void PausedChanged()
+        {
+            if (model.WindowState.Paused)
+            {
+                FaceVideo.Pause();
+                ScreenVideo.Pause();
+       //         MessageBox.Show("Paused");
+            }
+            else
+            {
+                FaceVideo.Play();
+                ScreenVideo.Play();
+       //         MessageBox.Show("Played");
+            }
+        }
+
+        void ModeChanged()
+        {
+            if (model.WindowState.CurrentMode == EditorModes.Border)
+                currentMode = new BorderMode(model);
+            if (model.WindowState.CurrentMode == EditorModes.General)
+                currentMode = new GeneralMode(model);
+        }
+
+        void RatioChanged()
+        {
+            FaceVideo.SpeedRatio = model.WindowState.SpeedRatio;
+            ScreenVideo.SpeedRatio = model.WindowState.SpeedRatio;
+        }
+
+        bool pauseRequested;
+
+        bool supressPositionChanged;
+
+        void PositionChanged()
+        {
+            if (supressPositionChanged) return;
+
+            if (model.WindowState.Paused)
+            {
+                model.WindowState.Paused = false;
+                pauseRequested = true;
+            }
+
+            FaceVideo.Position = TimeSpan.FromMilliseconds(model.WindowState.CurrentPosition);
+            ScreenVideo.Position = TimeSpan.FromMilliseconds(model.WindowState.CurrentPosition - model.Montage.Shift);
+
+        }
+
+
+        void WindowState_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Paused") PausedChanged();
+            if (e.PropertyName == "CurrentMode") ModeChanged();
+            if (e.PropertyName == "SpeedRatio") RatioChanged();
+            if (e.PropertyName == "CurrentPosition") PositionChanged();
+
+            if (e.PropertyName == "FaceVideoIsVisible" || e.PropertyName == "DesktopVideoIsVisible")
+            {
+                FaceVideo.Visibility = model.WindowState.FaceVideoIsVisible ? Visibility.Visible : Visibility.Collapsed;
+                ScreenVideo.Visibility = model.WindowState.DesktopVideoIsVisible? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+
+
+        #endregion
+
+        #region Взаимодействие с контроллером
+
+        int timerInterval = 10;
+        bool videoAvailable;
+
+        IEditorMode currentMode;
+
+        void CheckPlayTime()
+        {
+            supressPositionChanged = true;
+            if (videoAvailable)
+                model.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
+            else
+            {
+                if (!model.WindowState.Paused)
+                    model.WindowState.CurrentPosition += (int)(timerInterval * model.WindowState.SpeedRatio);
+            }
+            supressPositionChanged = false;
+
+            if (pauseRequested)
+            {
+                model.WindowState.Paused = true;
+                pauseRequested = false;
+                return;
+            }
+
+            if (model.WindowState.Paused) return;
+
+            currentMode.CheckTime();
+           
+        }
+
+        void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.S)
+            {
+                ModelIO.Save(model);
+                return;
+            }
+           currentMode.ProcessKey(e);
+            e.Handled=true;
+
+        }
+
+        void Timeline_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            var time = Slider.MsAtPoint(e.GetPosition(Slider));
+            currentMode.MouseClick(time, e);
+        }
+        #endregion
+
+
+        /*
+
+
 
         EditorModel editorModel;
 
@@ -42,7 +275,7 @@ namespace Editor
         internal void Initialize(EditorModel edModel)
         {
             this.editorModel = edModel;
-           
+
 
             FaceVideo.LoadedBehavior = MediaState.Manual;
             ScreenVideo.LoadedBehavior = MediaState.Manual;
@@ -204,25 +437,7 @@ namespace Editor
 
         IEditorMode currentMode;// = new BorderMode();
 
-        void CheckPlayTime()
-        {
-            if (videoAvailable)
-                editorModel.WindowState.CurrentPosition = (int)FaceVideo.Position.TotalMilliseconds;
-            else
-            {
-                if (paused) return;
-                editorModel.WindowState.CurrentPosition += (int)(timerInterval * SpeedRatio);
-            }
 
-            if (requestPause)
-            {
-                MakePause();
-                requestPause = false;
-                return;
-            }
-
-            ProcessResponse(currentMode.CheckTime());
-        }
 
 
 
@@ -285,5 +500,6 @@ namespace Editor
             ProcessResponse(currentMode.MouseClick(time, e));
         }
         #endregion 
+         * */
     }
 }

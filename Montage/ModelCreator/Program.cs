@@ -14,14 +14,16 @@ namespace ModelCreator
         {
             var path=ModelIO.DebugSubdir("debug\\20");
             Directory.CreateDirectory(path);
-            File.Delete(path + "\\montage.v2");
+            File.Delete(path + "\\montage.v3");
             var model = ModelIO.Load(path);
-            model.Montage.Intervals=new List<Interval>();
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 1000; i++)
             {
-                model.Montage.Intervals.Add(new Interval(10 * i, 10 * i + 8, true));
-                model.Montage.Intervals.Add(new Interval(10 * i+8, 10 * i + 10, false));
-
+                model.SetChunkMode(i*3000, (i%2==0)?Mode.Face:Mode.Screen,false);
+            }
+            for (int i = 0; i < 1000; i++)
+            {
+                model.Montage.Intervals.Add(new Interval { StartTime = i * 3000, EndTime = i * 3000 + 500, HasVoice = false });
+                model.Montage.Intervals.Add(new Interval { StartTime = i * 3000+500, EndTime = i * 3000+ 3000, HasVoice = true });
             }
             ModelIO.Save(model);
         }

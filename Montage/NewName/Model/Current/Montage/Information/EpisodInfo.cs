@@ -11,5 +11,7 @@ namespace Editor
         public string Name { get; set; }
         public Guid LectureId { get; set; }
         public Guid AuthorId { get; set; }
+        public TimeSpan Duration { get; set; }
+        public int NumberInTopic { get; set; }
     }
 }

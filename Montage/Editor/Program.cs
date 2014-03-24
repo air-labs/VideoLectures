@@ -37,7 +37,7 @@ namespace Editor
             }
 
             var window = new MainWindow();
-            window.Initialize(model);
+            window.DataContext=model;
             new Application().Run(window);
         }
     }

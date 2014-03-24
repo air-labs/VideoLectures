@@ -30,6 +30,34 @@ namespace Editor
             Global = new GlobalData();
         }
 
+        public void SetChunkMode(Mode mode, bool ctrl)
+        {
+            SetChunkMode(WindowState.CurrentPosition, mode, ctrl);
+            Montage.SetChanged();
+        }
+
+        public void SetChunkMode(int position, Mode mode, bool ctrl)
+        {
+            var index = Montage.Chunks.FindChunkIndex(position);
+            if (index == -1) return;
+            var chunk = Montage.Chunks[index];
+            if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
+            {
+                var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
+                var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
+                Montage.Chunks.RemoveAt(index);
+                Montage.Chunks.Insert(index, chunk1);
+                Montage.Chunks.Insert(index + 1, chunk2);
+            }
+            else
+            {
+                chunk.Mode = mode;
+            }
+            CorrectBorderBetweenChunksBySound(index - 1);
+            CorrectBorderBetweenChunksBySound(index);
+
+        }
+
 
         public void CorrectBorderBetweenChunksBySound(int leftChunkIndex)
         {

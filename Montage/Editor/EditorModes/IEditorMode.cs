@@ -9,8 +9,8 @@ namespace Editor
 {
     public interface IEditorMode
     {
-        WindowCommand CheckTime();
-        WindowCommand MouseClick(int SelectedLocation, MouseButtonEventArgs button);
-        WindowCommand ProcessKey(KeyEventArgs key);
+        void CheckTime();
+        void MouseClick(int SelectedLocation, MouseButtonEventArgs button);
+        void ProcessKey(KeyEventArgs key);
     }
 }

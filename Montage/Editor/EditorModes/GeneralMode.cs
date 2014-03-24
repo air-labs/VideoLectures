@@ -9,37 +9,37 @@ namespace Editor
 {
     public class GeneralMode : IEditorMode
     {
-        EditorModel editorModel;
+        EditorModel model;
 
-        MontageModel model { get { return editorModel.Montage; } }
+        MontageModel montage { get { return model.Montage; } }
 
         public GeneralMode(EditorModel edModel)
         {
-            this.editorModel = edModel;
+            this.model = edModel;
+            model.WindowState.FaceVideoIsVisible = model.WindowState.DesktopVideoIsVisible = true;
         }
 
-        public WindowCommand CheckTime()
+        public void CheckTime()
         {
-            return WindowCommand.None;
         }
 
 
-        public WindowCommand MouseClick(int selectedLocation, MouseButtonEventArgs e)
+        public void MouseClick(int selectedLocation, MouseButtonEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var index = model.Chunks.FindChunkIndex(selectedLocation);
-                if (index == -1) return WindowCommand.None;
-                return WindowCommand.JumpTo(model.Chunks[index].StartTime);
+                var index = montage.Chunks.FindChunkIndex(selectedLocation);
+                if (index == -1) return;
+                model.WindowState.CurrentPosition=montage.Chunks[index].StartTime;
             }
             else
             {
-                return WindowCommand.JumpTo(selectedLocation);
+                model.WindowState.CurrentPosition=selectedLocation;
             }
         }
 
 
-        public WindowCommand ProcessKey(System.Windows.Input.KeyEventArgs e)
+        public void ProcessKey(System.Windows.Input.KeyEventArgs e)
         {
             var value = 0.0;
             if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
@@ -54,143 +54,150 @@ namespace Editor
             {
                 case Key.D2:
                 case Key.Left:
-                    return WindowCommand.JumpTo((int)(editorModel.WindowState.CurrentPosition - 1000 * Math.Pow(5, value)));
+                    model.WindowState.CurrentPosition=((int)(model.WindowState.CurrentPosition - 1000 * Math.Pow(5, value)));
+                    return;
 
                 case Key.D3:
                 case Key.Right:
-                    return WindowCommand.JumpTo((int)(editorModel.WindowState.CurrentPosition + 1000 * Math.Pow(5, value)));
-
+                    model.WindowState.CurrentPosition = ((int)(model.WindowState.CurrentPosition + 1000 * Math.Pow(5, value)));
+                    return;
+                   
                 case Key.D1:
-                    return PrevChunk();
+                    PrevChunk();
+                    return;
 
                 case Key.D4:
-                    return NextChunk();
+                    NextChunk();
+                    return;
 
                 case Key.D0:
-                    return Commit(Mode.Face, ctrl);
-                
+                    model.SetChunkMode(Mode.Face, ctrl);
+                    return;
                 
                 case Key.OemMinus:
-                    return Commit(Mode.Screen, ctrl);
-                
+                    model.SetChunkMode(Mode.Screen, ctrl);
+                    return;
+
                 case Key.OemPlus:
-                    return Commit(Mode.Drop, ctrl);
+                    model.SetChunkMode(Mode.Drop, ctrl);
+                    return;
                 
                 case Key.Back:
-                    return RemoveChunk();
-                
-                case Key.Q:
-                    return ShiftLeft(-200);
-                
-                case Key.W:
-                    return ShiftLeft(200);
+                    RemoveChunk();
 
-                case Key.E:
-                    return ShiftRight(-200);
+                    return;
+
+                case Key.Q:
+                    ShiftLeft(-200);
+                    return;
+
+                case Key.W:
+                    ShiftLeft(200);
+                    return;
+
+                case Key.O:
+                    ShiftRight(-200);
+                    return;
                 
-                case Key.R:
-                    return ShiftRight(200);
-                
-                
+                case Key.P:
+                    ShiftRight(200);
+                    return;
+
+                case Key.Up:
+                    model.WindowState.SpeedRatio+=0.5;
+                    return;
+
+                case Key.Down:
+                    model.WindowState.SpeedRatio -= 0.5;
+                    return;
+
+                case Key.Space:
+                    model.WindowState.Paused = !model.WindowState.Paused;
+                    return;
 
 
                 case Key.D9:
-                    var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
+                    var index = montage.Chunks.FindChunkIndex(model.WindowState.CurrentPosition);
                     if (index != -1)
-                        model.Chunks[index].StartsNewEpisode = !model.Chunks[index].StartsNewEpisode;
-                    return WindowCommand.Processed.AndInvalidate();    
+                    {
+                        montage.Chunks[index].StartsNewEpisode = !montage.Chunks[index].StartsNewEpisode;
+                        model.Montage.SetChanged();
+                    }
+                    return;
 
             }
-            return WindowCommand.None;
+
         }
 
-        WindowCommand RemoveChunk()
+        void RemoveChunk()
         {
-            var position = editorModel.WindowState.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1) return WindowCommand.None;
-            var chunk = model.Chunks[index];
+            var position = model.WindowState.CurrentPosition;
+            var index = montage.Chunks.FindChunkIndex(position);
+            if (index == -1) return;
+            var chunk = montage.Chunks[index];
             chunk.Mode = Mode.Undefined;
-            if (index != model.Chunks.Count - 1 && model.Chunks[index + 1].Mode == Mode.Undefined)
+            if (index != montage.Chunks.Count - 1 && montage.Chunks[index + 1].Mode == Mode.Undefined)
             {
-                chunk.Length += model.Chunks[index + 1].Length;
-                model.Chunks.RemoveAt(index + 1);
+                chunk.Length += montage.Chunks[index + 1].Length;
+                montage.Chunks.RemoveAt(index + 1);
             }
-            if (index != 0 && model.Chunks[index - 1].Mode == Mode.Undefined)
+            if (index != 0 && montage.Chunks[index - 1].Mode == Mode.Undefined)
             {
-                chunk.StartTime = model.Chunks[index - 1].StartTime;
-                chunk.Length += model.Chunks[index - 1].Length;
-                model.Chunks.RemoveAt(index - 1);
+                chunk.StartTime = montage.Chunks[index - 1].StartTime;
+                chunk.Length += montage.Chunks[index - 1].Length;
+                montage.Chunks.RemoveAt(index - 1);
             }
-            return WindowCommand.Processed.AndInvalidate();
+            montage.SetChanged();
         }
 
-        WindowCommand ShiftLeft(int delta)
+        void ShiftLeft(int delta)
         {
-            var position = editorModel.WindowState.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1 || index == 0) return WindowCommand.None;
-            if (delta < 0 && model.Chunks[index - 1].Length < -delta) return WindowCommand.None;
-            if (delta > 0 && model.Chunks[index].Length < delta) return WindowCommand.None;
-            model.Chunks[index].StartTime += delta;
-            model.Chunks[index].Length -= delta;
-            model.Chunks[index - 1].Length += delta;
-            return WindowCommand.JumpTo(model.Chunks[index].StartTime).AndInvalidate();
+            var position = model.WindowState.CurrentPosition;
+            var index = montage.Chunks.FindChunkIndex(position);
+            if (index == -1 || index == 0) return;
+            if (delta < 0 && montage.Chunks[index - 1].Length < -delta) return;
+            if (delta > 0 && montage.Chunks[index].Length < delta) return ;
+            montage.Chunks[index].StartTime += delta;
+            montage.Chunks[index].Length -= delta;
+            montage.Chunks[index - 1].Length += delta;
+
+            model.WindowState.CurrentPosition = montage.Chunks[index].StartTime;
+            montage.SetChanged();
         }
 
-        WindowCommand ShiftRight(int delta)
+        void ShiftRight(int delta)
         {
-            var position = editorModel.WindowState.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1 || index == model.Chunks.Count - 1) return WindowCommand.None;
-            if (delta < 0 && model.Chunks[index].Length < -delta) return WindowCommand.None;
-            if (delta > 0 && model.Chunks[index + 1].Length < delta) return WindowCommand.None;
-            model.Chunks[index].Length += delta;
-            model.Chunks[index + 1].Length -= delta;
-            model.Chunks[index + 1].StartTime += delta;
-            return WindowCommand.JumpTo(model.Chunks[index + 1].StartTime - 2000).AndInvalidate();
+            var position = model.WindowState.CurrentPosition;
+            var index = montage.Chunks.FindChunkIndex(position);
+            if (index == -1 || index == montage.Chunks.Count - 1) return;
+            if (delta < 0 && montage.Chunks[index].Length < -delta) return;
+            if (delta > 0 && montage.Chunks[index + 1].Length < delta) return;
+            montage.Chunks[index].Length += delta;
+            montage.Chunks[index + 1].Length -= delta;
+            montage.Chunks[index + 1].StartTime += delta;
+
+            model.WindowState.CurrentPosition = montage.Chunks[index + 1].StartTime - 2000;
+            montage.SetChanged();
         }
 
-        WindowCommand NextChunk()
+        void NextChunk()
         {
-            var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
+            var index = montage.Chunks.FindChunkIndex(model.WindowState.CurrentPosition);
             index++;
-            if (index < 0 || index >= model.Chunks.Count) return WindowCommand.None;
-            return WindowCommand.JumpTo(model.Chunks[index].StartTime);
+            if (index < 0 || index >= montage.Chunks.Count) return;
+            model.WindowState.CurrentPosition=montage.Chunks[index].StartTime;
         }
 
-        WindowCommand PrevChunk()
+        void PrevChunk()
         {
-            var index = model.Chunks.FindChunkIndex(editorModel.WindowState.CurrentPosition);
+            var index = montage.Chunks.FindChunkIndex(model.WindowState.CurrentPosition);
             index--;
-            if (index < 0 || index >= model.Chunks.Count) return  WindowCommand.None;
-            return WindowCommand.JumpTo(model.Chunks[index].StartTime);
+            if (index < 0 || index >= montage.Chunks.Count) return;
+            model.WindowState.CurrentPosition=montage.Chunks[index].StartTime;
 
         }
 
-        WindowCommand Commit(Mode mode, bool ctrl)
-        {
-            var position = editorModel.WindowState.CurrentPosition;
-            var index = model.Chunks.FindChunkIndex(position);
-            if (index == -1) return WindowCommand.None;
-            var chunk = model.Chunks[index];
-            if (chunk.Mode == Mode.Undefined && chunk.Length > 500 && !ctrl)
-            {
-                var chunk1 = new ChunkData { StartTime = chunk.StartTime, Length = position - chunk.StartTime, Mode = mode };
-                var chunk2 = new ChunkData { StartTime = position, Length = chunk.Length - chunk1.Length, Mode = Mode.Undefined };
-                model.Chunks.RemoveAt(index);
-                model.Chunks.Insert(index, chunk1);
-                model.Chunks.Insert(index + 1, chunk2);
-            }
-            else
-            {
-                chunk.Mode = mode;
-            }
-            editorModel.CorrectBorderBetweenChunksBySound(index - 1);
-            editorModel.CorrectBorderBetweenChunksBySound(index);
-            return WindowCommand.Processed.AndInvalidate();
-         }
-
+      
 
     }
 }

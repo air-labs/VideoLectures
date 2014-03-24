@@ -9,21 +9,23 @@ using System.Windows.Media;
 
 namespace Editor
 {
-    public class Timeline : FrameworkElement
+    public class TimelineBase : FrameworkElement
     {
-        int RowHeight = 20;
-        int msInRow = 300000;
+        protected EditorModel editorModel { get { return (EditorModel)DataContext; } }
+        protected MontageModel model { get { return editorModel.Montage; } }
 
-        Brush[] fills = new Brush[] { Brushes.White, Brushes.MistyRose, Brushes.LightGreen, Brushes.LightBlue};
-        Pen borderPen = new Pen(Brushes.Black, 1);
-        Pen currentPen = new Pen(Brushes.Red, 3);
-        Pen episode = new Pen(Brushes.Yellow,3);
-        Pen border = new Pen(Brushes.Gray, 3) { EndLineCap = PenLineCap.Triangle };
+        protected readonly int RowHeight = 20;
+        protected readonly int msInRow = 300000;
 
-        #region Размер
+        protected readonly Brush[] fills = new Brush[] { Brushes.White, Brushes.MistyRose, Brushes.LightGreen, Brushes.LightBlue };
+        protected readonly Pen borderPen = new Pen(Brushes.Black, 1);
+        protected readonly Pen currentPen = new Pen(Brushes.Red, 3);
+        protected readonly Pen episode = new Pen(Brushes.Yellow, 3);
+        protected readonly Pen border = new Pen(Brushes.Gray, 3) { EndLineCap = PenLineCap.Triangle };
+
         protected override Size MeasureOverride(Size availableSize)
         {
-            var totalLength = model.TotalLength;
+            var totalLength = 60 * 60 * 1000;
             var rows = (int)Math.Ceiling(((double)totalLength) / msInRow);
             return new Size(availableSize.Width, rows * RowHeight + 5);
         }
@@ -32,47 +34,9 @@ namespace Editor
         {
             return base.ArrangeOverride(finalSize);
         }
-        #endregion
 
-        public Timeline()
-        {
-            DataContext = new EditorModel
-            {
-                Montage = new MontageModel
-                {
-                    TotalLength = 3600000,
-                    Chunks = 
-                 {
-                     new ChunkData
-                     {
-                         Length=3000,
-                          StartTime=0,
-                          Mode=Mode.Undefined
-                     },
-                     new ChunkData
-                     {
-                         Length=10000,
-                          StartTime=3000,
-                          Mode=Mode.Screen
-                     }
-                 }
-                }};
-            
-            DataContextChanged += (o, a) =>
-                {
-                    (a.NewValue as EditorModel).WindowState.PropertyChanged += Timeline_PropertyChanged;
-                };
-        }
 
-        EditorModel editorModel { get { return (EditorModel)DataContext; } }
-        MontageModel model { get { return editorModel.Montage;  } }
-
-        protected void Timeline_PropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            InvalidateVisual();
-        }
-
-        IEnumerable<Rect> GetRects(ChunkData chunk)
+        protected IEnumerable<Rect> GetRects(ChunkData chunk)
         {
             double SWidth = ActualWidth / msInRow;
 
@@ -86,10 +50,10 @@ namespace Editor
             {
                 if (x + length <= msInRow)
                 {
-                    yield return new Rect(x*SWidth, y*RowHeight, length*SWidth, RowHeight);
+                    yield return new Rect(x * SWidth, y * RowHeight, length * SWidth, RowHeight);
                     yield break;
                 }
-                yield return new Rect(x * SWidth, y * RowHeight, (msInRow-x)* SWidth, RowHeight);
+                yield return new Rect(x * SWidth, y * RowHeight, (msInRow - x) * SWidth, RowHeight);
                 length -= (msInRow - x);
                 x = 0;
                 y++;
@@ -112,7 +76,7 @@ namespace Editor
                 y * RowHeight);
         }
 
-        void DrawLine(DrawingContext context, Pen pen, int startPoint, int endPoint, int verticalDisplacement)
+        protected void DrawLine(DrawingContext context, Pen pen, int startPoint, int endPoint, int verticalDisplacement)
         {
             var begin = GetCoordinate(startPoint);
             var end = GetCoordinate(endPoint);
@@ -128,10 +92,41 @@ namespace Editor
                 context.DrawLine(pen, new Point(0, end.Y), end);
             }
         }
-     
+    }
+
+
+    public class Slider : TimelineBase
+    {
+        public Slider()
+        {
+            this.DataContextChanged += (s, a) => { 
+                InvalidateVisual();
+                editorModel.WindowState.PropertyChanged += (ss, aa) => InvalidateVisual();
+            };
+        }
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            if (editorModel == null) return;
+            var point = GetCoordinate(editorModel.WindowState.CurrentPosition);
+            drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));
+        }
+    }
+
+    public class ModelView : TimelineBase
+    {
+        public ModelView()
+        {
+            this.DataContextChanged += (s, a) => { 
+                InvalidateVisual();
+                editorModel.Montage.Changed += (ss, aa) => InvalidateVisual();
+            };
+        }
 
         protected override void OnRender(System.Windows.Media.DrawingContext drawingContext)
         {
+            if (editorModel == null) return;
+
            foreach (var c in model.Chunks)
                foreach (var r in GetRects(c))
                {
@@ -158,8 +153,7 @@ namespace Editor
                     DrawLine(drawingContext, border, e.StartTime, e.EndTime, 3);
                 }
 
-            var point=GetCoordinate(editorModel.WindowState.CurrentPosition);
-            drawingContext.DrawLine(currentPen, point, new Point(point.X, point.Y + RowHeight));
+          
         }
     }
 }
