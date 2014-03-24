@@ -119,7 +119,10 @@ namespace Editor
                 case Key.D9:
                     var index = montage.Chunks.FindChunkIndex(model.WindowState.CurrentPosition);
                     if (index != -1)
+                    {
                         montage.Chunks[index].StartsNewEpisode = !montage.Chunks[index].StartsNewEpisode;
+                        model.Montage.SetChanged();
+                    }
                     return;
 
             }
