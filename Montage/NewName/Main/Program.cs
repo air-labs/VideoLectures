@@ -10,21 +10,23 @@ using System.Web.Script.Serialization;
 
 namespace NewName
 {
-   
-
     class Program
     {
-        
-
         static void Main(string[] args)
         {
-            if (args.Length < 2)
+            var services = new List<Service>
             {
-                Console.WriteLine(Help);
+                new PraatService(),
+                new MontagerService(),
+                //new Assembler()
+            };
+
+            if (args.Length < 1)
+            {
+                var serviceDescriptions = String.Join("\n", services.Select(s => String.Format("{0}  {1}", s.Name, s.Description)));
+                Console.WriteLine(Help, serviceDescriptions);
                 return;
             }
-
-           
             
             AppDomain.CurrentDomain.UnhandledException += (sender, a) =>
                 {
@@ -32,25 +34,33 @@ namespace NewName
                  //   Environment.Exit(1); //TODO: раскомментить эту строчку для релиза
                 };
 
-            args[1] = ModelIO.DebugSubdir(args[1]);
+            //args[1] = ModelIO.DebugSubdir(args[1]);
 
-            switch (args[0].ToLower())
+            var service = services.Find(s => s.Name.ToLower() == args[0].ToLower());
+            if(service == null)
+                throw new Exception("Service " + args[0] + " is not recognized");
+            if (args.Length == 1)
             {
-                case "praat": new Praat().DoWork(args[1]); return;
+                Console.WriteLine(
+                    "{0} service usage: {1}",
+                    service.Name,
+                    service.Help
+                    );
+                return;
             }
-
-            throw new Exception("Service " + args[0] + " is not recognized");
+            service.DoWork(args);
         }
 
 
 
         const string Help = @"
-using NewName <service> <folder>
+Usage: NewName <service> [args]
 
 service: one of the available services:
-- praat: uses praat software, analyzes input video and searches intervals of silence and speech
+{0}
 
-folder: a folder containing video";
+Run service without args to get specific help.
+";
 
 
     }

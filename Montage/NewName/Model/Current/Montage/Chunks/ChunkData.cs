@@ -13,7 +13,7 @@ namespace Editor
         public int Length { get; set; } //Надо убрать или это поле, или StartTime. Сейчас здесь дублирование!
         public Mode Mode { get; set; }
 
-        public bool IsActive { get { return Mode == Editor.Mode.Screen || Mode == Editor.Mode.Face; } }
+        public bool IsActive { get { return Mode == Editor.Mode.Screen || Mode == Mode.Face; } }
         public bool IsNotActive { get { return !IsActive; } }
         public int EndTime { get { return StartTime + Length; } }
 
@@ -26,5 +26,9 @@ namespace Editor
         {
             return StartTime <= ms && ms < EndTime;
         }
+
+        public string AudioFilename { get { return String.Format("audio_{0}_{1}.avi", StartTime, Length); } }
+        public string VideoFilename { get { return String.Format("video_{0}_{1}.avi", StartTime, Length); } }
+        public string ChunkFilename { get { return String.Format("chunk_{0}_{1}.avi", StartTime, Length); } }
     }
 }

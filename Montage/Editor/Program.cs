@@ -33,7 +33,7 @@ namespace Editor
 
             if (model.Montage.Intervals == null || model.Montage.Intervals.Count == 0)
             {
-                new NewName.Services.Praat().DoWork(model);
+                new NewName.Services.PraatService().DoWork(model);
             }
 
             var window = new MainWindow();

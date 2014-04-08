@@ -13,6 +13,7 @@ namespace Editor
     {
         public DirectoryInfo RootFolder { get; set; }
         public DirectoryInfo VideoFolder { get; set; }
+        public DirectoryInfo ChunkFolder { get; set; }
         public DirectoryInfo ProgramFolder { get; set; }
 
         public Locations Locations { get; private set; }

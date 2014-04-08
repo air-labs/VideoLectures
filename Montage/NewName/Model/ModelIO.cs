@@ -128,6 +128,7 @@ namespace Editor
             var editorModel = new EditorModel { 
                 ProgramFolder = programFolder, 
                 VideoFolder = localDirectory,
+                ChunkFolder = localDirectory.CreateSubdirectory("chunks"),
                 RootFolder = rootDirectory
             };
 

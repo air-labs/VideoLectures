@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NewName.Services
 {
-    public class Praat
+    public class PraatService : Service
     {
         const string SilentLabel = "--";
         const string SoundLabel = "++";
@@ -21,15 +21,39 @@ namespace NewName.Services
         const double MinSilentInterval = 0.4;
         const double MinSoundInterval = 0.1;
 
+        public override string Name
+        {
+            get { return "praat"; }
+        }
+
+        public override string Description
+        {
+            get { return DescriptionString; }
+        }
+
+        public override string Help
+        {
+            get { return HelpString; }
+        }
+
+        public override void DoWork(string[] args)
+        {
+            var folder = args[1];
+
+            var model = ModelIO.Load(folder);
+            DoWork(model);
+            ModelIO.Save(model);
+        }
+
         public void DoWork(EditorModel model)
         {
             // model.Locations.PraatVoice.Delete();
             model.Locations.PraatOutput.Delete();
 
             if (!model.Locations.PraatVoice.Exists)
-                Shell.FFMPEG("-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
+                Shell.FFMPEG(false, "-i \"{0}\" -vn -q:a 0 \"{1}\"", model.Locations.FaceVideo, model.Locations.PraatVoice);
 
-            Shell.Exec(model.Locations.PraatExecutable,
+            Shell.Exec(false, model.Locations.PraatExecutable,
                 String.Format(
                     CultureInfo.InvariantCulture,
                     "\"{0}\" \"{1}\" \"{2}\" {3} {4} {5} {6} {7} {8} {9}",
@@ -69,15 +93,11 @@ namespace NewName.Services
             //  model.Locations.PraatVoice.Delete();
             model.Locations.PraatOutput.Delete();
         }
+        const string DescriptionString =
+@"PraatService service. Analyzes input video and searches intervals of silence and speech.";
+        const string HelpString =
+@"<folder>
 
-        public void DoWork(string folder)
-        {
-            var model = ModelIO.Load(folder);
-
-            DoWork(model);
-
-            ModelIO.Save(model);
-
-        }
+folder: directory containing video";
     }
 }

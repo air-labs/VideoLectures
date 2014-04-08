@@ -12,7 +12,7 @@ namespace Editor
         readonly EditorModel model;
         internal Locations(EditorModel model) { this.model = model; }
 
-        FileInfo Make(DirectoryInfo info, string fname)
+        internal FileInfo Make(DirectoryInfo info, string fname)
         {
             return new FileInfo(Path.Combine(info.FullName, fname));
         }

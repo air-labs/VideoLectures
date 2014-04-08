@@ -12,40 +12,49 @@ namespace NewName
     {
 
 
-        public static void Exec(string dir, string command, string args)
+        public static void Exec(bool print, string dir, string command, string args)
         {
-            var process = new Process();
             var fullPath = Path.Combine(dir, command);
-            process.StartInfo.FileName = fullPath;
-            process.StartInfo.Arguments = args;
-            process.StartInfo.UseShellExecute = true;
-            process.Start();
-            process.WaitForExit();
-            if (process.ExitCode != 0)
-                throw new ApplicationException(string.Format("Application returned an error code.\nApplication: {0}\nArguments:   {1}\nError code:  {2}\nCommand line to check:\n\"{0}\" {1}",
-                    fullPath,
-                    args,
-                    process.ExitCode));
+            if (print)
+            {
+                Console.WriteLine("{0} {1}", fullPath, args);
+            }
+            else
+            {
+                var process = new Process();
+                process.StartInfo.FileName = fullPath;
+                process.StartInfo.Arguments = args;
+                process.StartInfo.UseShellExecute = true;
+                process.Start();
+                process.WaitForExit();
+                if (process.ExitCode != 0)
+                    throw new ApplicationException(
+                        string.Format(
+                            "Application returned an error code.\nApplication: {0}\nArguments:   {1}\nError code:  {2}\nCommand line to check:\n\"{0}\" {1}",
+                            fullPath,
+                            args,
+                            process.ExitCode));
+            }
         }
 
-        public static void Exec(FileInfo executable, string args)
+        public static void Exec(bool print, FileInfo executable, string args)
         {
-            Exec("", executable.FullName, args);
+            Exec(print, "", executable.FullName, args);
         }
 
-        public static void Exec(FileInfo executable, string argumentFormat, params object[] arguments)
+        public static void Exec(bool print, FileInfo executable, string argumentFormat, params object[] arguments)
         {
-             Exec(executable, string.Format(argumentFormat, arguments));
+             Exec(print, executable, string.Format(argumentFormat, arguments));
         }
 
-        public static void Cmd(string argumentFormat, params object[] arguments)
+        public static void Cmd(bool print, string argumentFormat, params object[] arguments)
         {
-             Exec(Environment.SystemDirectory,"cmd", string.Format(argumentFormat,arguments));
+             Exec(print, Environment.SystemDirectory,"cmd", string.Format(argumentFormat,arguments));
         }
 
-        public static void FFMPEG(string argumentFormat, params object[] arguments)
+        public static void FFMPEG(bool print, string argumentFormat, params object[] arguments)
         {
-             Exec(@"C:\ffmpeg\bin", "ffmpeg", string.Format(argumentFormat, arguments));
+             Exec(print, @"C:\ffmpeg\bin", "ffmpeg", string.Format(argumentFormat, arguments));
         }
     }
 }
