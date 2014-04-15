@@ -9,7 +9,7 @@ namespace NewName.Services.Montager
 {
     public abstract class FFMPEGCommand
     {
-        public abstract void Execute(bool fast, bool print);
+        public abstract void Execute(bool print);
 
         public string MS(int milliseconds)
         {
@@ -33,11 +33,11 @@ namespace NewName.Services.Montager
                 StartTime + Duration);
         }
 
-        public override void Execute(bool fast, bool print)
+        public override void Execute(bool print)
         {
             Shell.FFMPEG(
                 print,
-                fast ? "-i {0} -ss {1} -t {2} -acodec copy -vn {3}" : "-i {0} -ss {1} -t {2} -vn -q:v 0 {3}",
+                "-i {0} -ss {1} -t {2} -vn -q:v 0 {3}",
                 AudioInput,
                 MS(StartTime),
                 MS(Duration),
@@ -52,11 +52,11 @@ namespace NewName.Services.Montager
         public int StartTime;
         public int Duration;
 
-        public override void Execute(bool fast, bool print)
+        public override void Execute(bool print)
         {
             Shell.FFMPEG(
                 print,
-                fast ? "-i {0} -ss {1} -t {2} -acodec copy -vcodec copy {3}" : "-i {0} -ss {1} -t {2} -q:v 0 {3}",
+                "-i {0} -ss {1} -t {2} -q:v 0 {3}",
                 VideoInput,
                 MS(StartTime),
                 MS(Duration),
@@ -93,7 +93,7 @@ namespace NewName.Services.Montager
         }
 
 
-        public override void Execute(bool fast, bool print)
+        public override void Execute(bool print)
         {
             Shell.FFMPEG(
                 print,
@@ -101,35 +101,6 @@ namespace NewName.Services.Montager
                 VideoInput,
                 AudioInput,
                 VideoOutput);
-        }
-    }
-
-    public class ConcatCommand : FFMPEGCommand
-    {
-        public bool AudioOnly = false;
-        public List<string> Files = new List<string>();
-        public string Result;
-
-        public override string ToString()
-        {
-            return "Объединение файлов";
-        }
-
-        public override void Execute(bool fast, bool print)
-        {
-            throw new NotImplementedException();
-            /*
-                var temp = "ConcatFilesList.txt";
-                File.WriteAllText(temp, Files.Select(z => "file '" + z + "'").Aggregate((a, b) => a + "\r\n" + b));
-                var args = "-f concat -i ConcatFilesList.txt ";
-                if (AudioOnly)
-                    args += " -acodec copy ";
-                else
-                    args += " -c copy ";
-                args += Result;
-                WriteFFMPEGCommand(context, args);
-                //File.Delete(temp);
-                */
         }
     }
 }

@@ -18,12 +18,12 @@ namespace NewName
             {
                 new PraatService(),
                 new MontagerService(),
-                //new Assembler()
+                new AssemblerService()
             };
 
             if (args.Length < 1)
             {
-                var serviceDescriptions = String.Join("\n", services.Select(s => String.Format("{0}  {1}", s.Name, s.Description)));
+                var serviceDescriptions = String.Join("\n", services.Select(s => String.Format("{0}\t{1}", s.Name, s.Description)));
                 Console.WriteLine(Help, serviceDescriptions);
                 return;
             }

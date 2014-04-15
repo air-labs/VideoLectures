@@ -11,13 +11,12 @@ namespace NewName.Services.Montager
     class ProcessingCommands
     {   
 
-        #region Первый способ обработки
-        public static IEnumerable<FFMPEGCommand> Processing1(EditorModel model, List<ChunkData> chunks)
+        public static IEnumerable<FFMPEGCommand> Processing(EditorModel model, List<ChunkData> chunks)
         {
-            return chunks.SelectMany(z => Commands1(model, z));
+            return chunks.SelectMany(z => Commands(model, z));
         }
 
-        public static IEnumerable<FFMPEGCommand> Commands1(EditorModel model, ChunkData chunk)
+        public static IEnumerable<FFMPEGCommand> Commands(EditorModel model, ChunkData chunk)
         {
             if (chunk.Mode == Mode.Face)
             {
@@ -54,6 +53,5 @@ namespace NewName.Services.Montager
             }
 
         }
-        #endregion
     }
 }

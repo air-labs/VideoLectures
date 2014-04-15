@@ -31,13 +31,13 @@ namespace NewName.Services
             get { return HelpString; }
         }
 
-        public void DoWork(EditorModel model, bool fast, bool print)
+        public void DoWork(EditorModel model, bool print)
         {
             model.ChunkFolder.Delete(true);
             model.ChunkFolder.Create();
-            foreach (var e in Montager.ProcessingCommands.Processing1(model, model.Montage.Chunks))
+            foreach (var e in Montager.ProcessingCommands.Processing(model, model.Montage.Chunks))
             {
-                e.Execute(fast, print);
+                e.Execute(print);
             }
         }
 
@@ -50,19 +50,17 @@ namespace NewName.Services
             if (!Enum.TryParse(args[2], true, out mode))
                 throw (new ArgumentException(String.Format("Unknown mode: {0}", args[2])));
             var print = mode == MontagerMode.Print;
-            var fast = args.Length >= 4 && args[3].ToLower() == "fast";
 
             var model = ModelIO.Load(folder);
-            DoWork(model, fast, print);
+            DoWork(model, print);
             ModelIO.Save(model);
         }
         const string DescriptionString =
-@"MontagerService service. (TODO) add description.";
+@"MontagerService service. Muxes audio and video from different sources to chunks for assembling.";
         const string HelpString =
 @"<folder> <mode> [fast]
 
 folder: directory containing video
-mode: run or print. Execute commands or write them to stdout
-fast: optional argument. If specified, some processing operations should take less time.";
+mode: run or print. Execute commands or write them to stdout";
     }
 }
