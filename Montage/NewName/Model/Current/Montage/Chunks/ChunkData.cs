@@ -13,7 +13,7 @@ namespace Editor
         public int Length { get; set; } //Надо убрать или это поле, или StartTime. Сейчас здесь дублирование!
         public Mode Mode { get; set; }
 
-        public bool IsActive { get { return Mode == Editor.Mode.Screen || Mode == Mode.Face; } }
+        public bool IsActive { get { return Mode == Mode.Screen || Mode == Mode.Face; } }
         public bool IsNotActive { get { return !IsActive; } }
         public int EndTime { get { return StartTime + Length; } }
 
