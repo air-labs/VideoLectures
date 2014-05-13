@@ -35,7 +35,7 @@ namespace NewName.Services
         {
             model.ChunkFolder.Delete(true);
             model.ChunkFolder.Create();
-            foreach (var e in Montager.ProcessingCommands.Processing(model, model.Montage.Chunks))
+            foreach (var e in Montager.ProcessingCommands.Processing(model, model.Montage.FileChunks))
             {
                 e.Execute(print);
             }

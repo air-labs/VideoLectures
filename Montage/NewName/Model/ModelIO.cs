@@ -54,9 +54,6 @@ namespace Editor
             return true;
         }
 
-
-
-
         static bool ParseV1(EditorModel model)
         {
             var file = model.VideoFolder.GetFiles(Locations.LocalFileNameV1).FirstOrDefault();
@@ -153,6 +150,7 @@ namespace Editor
 
         static void SaveV2(EditorModel model)
         {
+            model.CreateFileChunks();
             var container = new FileContainer()
             {
                 FileFormat = "V3",

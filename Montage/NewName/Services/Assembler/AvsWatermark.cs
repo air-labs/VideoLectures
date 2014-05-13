@@ -15,12 +15,13 @@ namespace NewName.Services.Assembler
 
         public override void SerializeToContext(AvsContext context)
         {
+            id = context.Id;
             Payload.SerializeToContext(context);
             var video = Payload.Id;
             var script = string.Format(Format, Id, video, ImageFile, X, Y);
             context.AddData(script);
         }
 
-        protected virtual string Format { get { return "{0} = AddWatermarkPNG({1}, {2}, {3}, {4})"; } }
+        protected override string Format { get { return "{0} = AddWatermarkPNG({1}, \"{2}\", {3}, {4})"; } }
     }
 }

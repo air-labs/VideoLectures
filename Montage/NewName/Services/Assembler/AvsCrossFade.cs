@@ -10,6 +10,7 @@
 
         public override void SerializeToContext(AvsContext context)
         {
+            id = context.Id;
             FadeFrom.SerializeToContext(context);
             FadeTo.SerializeToContext(context);
             var from = FadeFrom.Id;
@@ -18,6 +19,6 @@
             context.AddData(script);
         }
 
-        private string Format { get { return "{0} = {2} + CrossFadeTime({1}, {2}, {3})"; } }
+        protected override string Format { get { return "{0} = {2} + CrossFadeTime({1}, {2}, {3})"; } }
     }
 }

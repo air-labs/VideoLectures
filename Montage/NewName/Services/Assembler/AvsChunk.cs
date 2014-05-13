@@ -10,9 +10,13 @@ namespace NewName.Services.Assembler
 
         public override void SerializeToContext(AvsContext context)
         {
-            context.AddData(String.Format(template, Id, ChunkFile));
+            id = context.Id;
+            context.AddData(String.Format(Format, Id, ChunkFile));
         }
-        
-        private const string template = "{0} = DirectShowSource(\"{1}\")";
+
+        protected override string Format 
+        {
+            get { return "{0} = DirectShowSource(\"{1}\")"; }
+        }
     }
 }

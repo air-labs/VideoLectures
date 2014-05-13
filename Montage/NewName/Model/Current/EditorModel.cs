@@ -106,6 +106,36 @@ namespace Editor
 
             Montage.Chunks.ShiftLeftBorderToRight(rightChunkIndex, rightChunk.StartTime-NewStart);
         }
+
+        public void CreateFileChunks()
+        {
+            // Collapse adjacent chunks of same type into one FileChunk
+            Montage.FileChunks = new List<FileChunk>();
+            var activeChunks = Montage.Chunks.Where(c => c.IsActive).ToList();
+            activeChunks.Add(new ChunkData
+            {
+                StartsNewEpisode = true
+            });
+            var oldChunk = activeChunks[0];
+            for (var i = 1; i < activeChunks.Count; i++)
+            {
+                var currentChunk = activeChunks[i];
+                var prevChunk =  activeChunks[i-1];
+                // collect adjacent chunks starting with oldChunk
+                if (!currentChunk.StartsNewEpisode && currentChunk.Mode == oldChunk.Mode)
+                    continue;
+                // or flush adjacent chunks into one and start new sequence
+                Montage.FileChunks.Add(new FileChunk
+                {
+                    Mode = oldChunk.Mode,
+                    StartTime = oldChunk.StartTime,
+                    Length = prevChunk.EndTime - oldChunk.StartTime,
+                    //SourceFilename = oldChunk.Mode == Mode.Face ? Locations.FaceVideo : Locations.DesktopVideo,
+                    StartsNewEpisode = oldChunk.StartsNewEpisode
+                });
+                oldChunk = currentChunk;
+            }
+        }
     }
 }
 

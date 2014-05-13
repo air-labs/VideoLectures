@@ -12,6 +12,7 @@ namespace NewName.Services.Assembler
 
         public override void SerializeToContext(AvsContext context)
         {
+            id = context.Id;
             var reference = new AvsChunk() {ChunkFile = VideoReference};
             reference.SerializeToContext(context);
             context.AddData(string.Format(Format, Id, reference.Id, ImageFile, Duration));
@@ -22,6 +23,6 @@ namespace NewName.Services.Assembler
                         ", pathToReference, pathToImage, EffectDuration);
              */
         }
-        private string Format {get { return "{0} = Intro({1}, {2}, {3})"; }}
+        protected override string Format { get { return "{0} = Intro({1}, \"{2}\", {3})"; } }
     }
 }

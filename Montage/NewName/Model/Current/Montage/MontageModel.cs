@@ -14,11 +14,8 @@ namespace Editor
         public int TotalLength { get; set; }
         public int Shift { get; set; }
 
-
-
-
         public List<ChunkData> Chunks { get; set; }
-
+        public List<FileChunk> FileChunks { get; set; }
 
         public List<Border> Borders { get; set; }
 
@@ -38,10 +35,10 @@ namespace Editor
         public MontageModel()
         {
             Chunks = new List<ChunkData>();
+            FileChunks = new List<FileChunk>();
             Borders = new List<Border>();
             Information = new VideoInformation();
             Intervals = new List<Interval>();
         }
-
     }
 }

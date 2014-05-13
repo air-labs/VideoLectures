@@ -20,6 +20,21 @@ namespace NewName.Services.Montager
         }
     }
 
+    public class RenderAvsScript : FFMPEGCommand
+    {
+        public FileInfo AvsInput;
+        public FileInfo VideoOutput;
+
+        public override void Execute(bool print)
+        {
+            Shell.FFMPEG(
+                print,
+                "-i {0} -q:v 0 {1}",
+                AvsInput,
+                VideoOutput);
+        }
+    }
+
     public class ExtractAudioCommand : FFMPEGCommand
     {
         public FileInfo AudioInput;

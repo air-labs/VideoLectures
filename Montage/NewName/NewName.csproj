@@ -53,6 +53,7 @@
     <Compile Include="Model\Current\Montage\Chunks\ChunkList.cs" />
     <Compile Include="Model\Current\Montage\Chunks\ChunkMode.cs" />
     <Compile Include="Model\Current\EditorModel.cs" />
+    <Compile Include="Model\Current\Montage\Chunks\FileChunk.cs" />
     <Compile Include="Model\Current\Montage\Intervals\Interval.cs" />
     <Compile Include="Model\Current\WindowState\EditorModes.cs" />
     <Compile Include="Model\Current\Montage\Information\EpisodInfo.cs" />
@@ -65,15 +66,19 @@
     <Compile Include="Main\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\AssemblerService.cs" />
+    <Compile Include="Services\Assembler\AvsAutoLevels.cs" />
+    <Compile Include="Services\Assembler\AvsChangeFramerate.cs" />
     <Compile Include="Services\Assembler\AvsChunk.cs" />
     <Compile Include="Services\Assembler\AvsConcatList.cs" />
     <Compile Include="Services\Assembler\AvsConcatTwo.cs" />
     <Compile Include="Services\Assembler\AvsContext.cs" />
+    <Compile Include="Services\Assembler\AvsConvertToYUY2.cs" />
     <Compile Include="Services\Assembler\AvsCrossFade.cs" />
     <Compile Include="Services\Assembler\AvsFadeIn.cs" />
     <Compile Include="Services\Assembler\AvsFadeOut.cs" />
     <Compile Include="Services\Assembler\AvsIntro.cs" />
     <Compile Include="Services\Assembler\AvsNode.cs" />
+    <Compile Include="Services\Assembler\AvsResize.cs" />
     <Compile Include="Services\Assembler\AvsWatermark.cs" />
     <Compile Include="Services\MontagerService.cs" />
     <Compile Include="Services\Montager\FFMPEGCommands.cs" />

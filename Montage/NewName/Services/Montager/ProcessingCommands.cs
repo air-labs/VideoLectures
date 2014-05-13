@@ -11,19 +11,19 @@ namespace NewName.Services.Montager
     class ProcessingCommands
     {   
 
-        public static IEnumerable<FFMPEGCommand> Processing(EditorModel model, List<ChunkData> chunks)
+        public static IEnumerable<FFMPEGCommand> Processing(EditorModel model, List<FileChunk> chunks)
         {
-            return chunks.Where(c => c.IsActive).SelectMany(z => Commands(model, z));
+            return chunks.SelectMany(z => Commands(model, z));
         }
 
-        public static IEnumerable<FFMPEGCommand> Commands(EditorModel model, ChunkData chunk)
+        public static IEnumerable<FFMPEGCommand> Commands(EditorModel model, FileChunk chunk)
         {
             switch (chunk.Mode)
             {
                 case Mode.Face:
                     yield return new ExtractFaceVideoCommand
                     {
-                        VideoInput = model.Locations.FaceVideo,
+                        VideoInput = /*chunk.SourceFilename,*/ model.Locations.FaceVideo,
                         StartTime = chunk.StartTime,
                         Duration = chunk.Length,
                         VideoOutput = model.Locations.Make(model.ChunkFolder, chunk.ChunkFilename)
@@ -32,14 +32,14 @@ namespace NewName.Services.Montager
                 case Mode.Screen:
                     yield return new ExtractAudioCommand
                     {
-                        AudioInput = model.Locations.FaceVideo,
+                        AudioInput = /*chunk.SourceFilename,*/ model.Locations.FaceVideo,
                         StartTime = chunk.StartTime,
                         Duration = chunk.Length,
                         AudioOutput = model.Locations.Make(model.ChunkFolder, chunk.AudioFilename)
                     };
                     yield return new ExtractScreenVideoCommand
                     {
-                        VideoInput = model.Locations.DesktopVideo,
+                        VideoInput = /*chunk.SourceFilename,*/ model.Locations.DesktopVideo,
                         StartTime = chunk.StartTime,
                         Duration = chunk.Length,
                         VideoOutput = model.Locations.Make(model.ChunkFolder, chunk.VideoFilename)

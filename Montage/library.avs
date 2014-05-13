@@ -11,7 +11,7 @@ function Intro(clip reference, string image, float ms) {
 	logo = ImageSource(image, end=length-1, fps=fps, pixel_type="rgb24")  # no alpha!
 	
 	# add silent audio stream
-	silence = KillVideo(BlankClip(audio_rate=44100, channels=2))
+	silence = KillVideo(BlankClip(audio_rate=44100, channels=1))
 	mixed = AudioDub(logo, silence)
 	trimmed = Trim(mixed, 0, length)
 	assert(trimmed.frameCount == length, "Invalid length: "+string(trimmed.frameCount)+" != "+string(length))
